@@ -1,0 +1,7 @@
+my-crawler/files
+my-crawler/files-bak
+my-crawler/storage
+my-crawler/pages.json
+uv.lock
+__pycache__/
+*.py[cod]

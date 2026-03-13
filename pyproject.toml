@@ -1,0 +1,11 @@
+[project]
+name = "agreste-crawler"
+version = "0.1.0"
+description = "Crawler for extracting text from web pages"
+requires-python = ">=3.10"
+dependencies = [
+    "beautifulsoup4>=4.12.0",
+    "certifi>=2024.0.0",
+    "crawlee>=1.5.0",
+    "requests>=2.31.0",
+]

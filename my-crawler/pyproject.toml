@@ -1,0 +1,13 @@
+[project]
+name = "my-crawler"
+version = "0.0.1"
+description = ""
+authors = [
+    {name = "Your Name",email = "you@example.com"}
+]
+readme = "README.md"
+requires-python = ">=3.10,<4.0"
+dependencies = [
+    "crawlee[beautifulsoup]",
+]
+
