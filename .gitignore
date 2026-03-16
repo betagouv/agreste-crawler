@@ -6,3 +6,4 @@ uv.lock
 __pycache__/
 *.py[cod]
 downloads/
+download_results.csv
