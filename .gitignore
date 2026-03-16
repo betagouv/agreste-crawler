@@ -1,7 +1,8 @@
 my-crawler/files
 my-crawler/files-bak
-my-crawler/storage
+storage
 my-crawler/pages.json
 uv.lock
 __pycache__/
 *.py[cod]
+downloads/
