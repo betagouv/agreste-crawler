@@ -42,9 +42,10 @@ async def main() -> None:
 
     urls = [e["url_fichier"] for e in entries]
 
-    # Prepare timestamped results CSV for this run
+    # Prepare timestamped results CSV for this run (in my-downloader directory)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    results_path = project_root / f"results_{timestamp}.csv"
+    results_dir = Path(__file__).resolve().parents[1]  # .../my-downloader
+    results_path = results_dir / f"results_{timestamp}.csv"
     with results_path.open("w", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(
             f,
