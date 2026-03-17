@@ -19,26 +19,35 @@ async def main() -> None:
     # main.py is under .../agreste-crawler/my-downloader/my_downloader/
     # Project root (agreste-crawler) is two levels up from the package dir.
     project_root = Path(__file__).resolve().parents[2]
-    csv_path = project_root / "files_to_download_clean.csv"
+    urls_path = project_root / "files_to_download.csv"
     results_path = project_root / "download_results.csv"
 
     urls: list[str] = []
 
-    if csv_path.exists():
-        with csv_path.open(encoding="utf-8", newline="") as f:
-            reader = csv.DictReader(f)
+    if urls_path.exists():
+        # Handle both CSV with header (url_fichier column) and plain text
+        with urls_path.open(encoding="utf-8", newline="") as f:
+            # Peek first line to decide
+            first = f.readline()
+            rest = f.read()
+            content = first + rest
+
+        # Try CSV with header
+        from io import StringIO
+
+        s = StringIO(content)
+        reader = csv.DictReader(s)
+        if reader.fieldnames and "url_fichier" in reader.fieldnames:
             for row in reader:
-                raw = (row.get("urls des fichiers") or "").strip()
-                if not raw:
-                    continue
-                try:
-                    row_urls = json.loads(raw)
-                except json.JSONDecodeError:
-                    continue
-                if isinstance(row_urls, list):
-                    urls.extend(str(u) for u in row_urls if u)
-                elif isinstance(row_urls, str):
-                    urls.append(row_urls)
+                url = (row.get("url_fichier") or "").strip()
+                if url:
+                    urls.append(url)
+        else:
+            # Fallback: one URL per non-empty line
+            for line in content.splitlines():
+                line = line.strip()
+                if line:
+                    urls.append(line)
 
     # Prepare results CSV (overwrite per run)
     with results_path.open("w", encoding="utf-8", newline="") as f:
