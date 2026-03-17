@@ -42,16 +42,19 @@ async def main() -> None:
 
     urls = [e["url_fichier"] for e in entries]
 
-    # Prepare timestamped results CSV for this run (in my-downloader directory)
+    # Prepare timestamped results CSVs for this run (in my-downloader/results directory)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    results_dir = Path(__file__).resolve().parents[1]  # .../my-downloader
+    results_dir = Path(__file__).resolve().parents[1] / "results"  # .../my-downloader/results
+    results_dir.mkdir(parents=True, exist_ok=True)
     results_path = results_dir / f"results_{timestamp}.csv"
-    with results_path.open("w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(
-            f,
-            fieldnames=["disaron_nom", "nom_fichier", "success", "url_fichier"],
-        )
-        writer.writeheader()
+    failures_path = results_dir / f"failures_{timestamp}.csv"
+    for path in (results_path, failures_path):
+        with path.open("w", encoding="utf-8", newline="") as f:
+            writer = csv.DictWriter(
+                f,
+                fieldnames=["disaron_nom", "nom_fichier", "success", "url_fichier"],
+            )
+            writer.writeheader()
 
     # Track failed URLs (after all retries)
     failed_urls: set[str] = set()
@@ -74,19 +77,26 @@ async def main() -> None:
 
     # After the crawl, write per-URL success/failure rows
     if entries:
-        with results_path.open("a", encoding="utf-8", newline="") as f:
-            writer = csv.DictWriter(
-                f,
+        with results_path.open("a", encoding="utf-8", newline="") as rf, failures_path.open(
+            "a", encoding="utf-8", newline=""
+        ) as ff:
+            results_writer = csv.DictWriter(
+                rf,
+                fieldnames=["disaron_nom", "nom_fichier", "success", "url_fichier"],
+            )
+            failures_writer = csv.DictWriter(
+                ff,
                 fieldnames=["disaron_nom", "nom_fichier", "success", "url_fichier"],
             )
             for entry in entries:
                 url = entry["url_fichier"]
                 success = 0 if url in failed_urls else 1
-                writer.writerow(
-                    {
-                        "disaron_nom": entry["disaron_nom"],
-                        "nom_fichier": entry["nom_fichier"],
-                        "success": success,
-                        "url_fichier": url,
-                    }
-                )
+                row = {
+                    "disaron_nom": entry["disaron_nom"],
+                    "nom_fichier": entry["nom_fichier"],
+                    "success": success,
+                    "url_fichier": url,
+                }
+                results_writer.writerow(row)
+                if not success:
+                    failures_writer.writerow(row)

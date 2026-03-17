@@ -7,3 +7,4 @@ __pycache__/
 *.py[cod]
 downloads/
 download_results.csv
+my-downloader/results/
