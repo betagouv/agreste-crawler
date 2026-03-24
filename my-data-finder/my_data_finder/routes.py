@@ -69,7 +69,19 @@ def append_failed_row(page_id: str | None) -> None:
         return
     output_path = _get_output_path()
     write_header = not output_path.exists() or output_path.stat().st_size == 0
-    fieldnames = ["disaron:nom", "error", "nb de fichiers", "noms des fichiers", "urls des fichiers"]
+    fieldnames = [
+        "disaron:nom",
+        "error",
+        "dc:title",
+        "disaron:Complement_titre",
+        "disaron:chapeau",
+        "disaron:Auteur",
+        "disaron:Date_premiere_publication",
+        "disaron:Numerotation",
+        "nb de fichiers",
+        "noms des fichiers",
+        "urls des fichiers",
+    ]
     with output_path.open("a", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         if write_header:
@@ -78,6 +90,12 @@ def append_failed_row(page_id: str | None) -> None:
             {
                 "disaron:nom": page_id,
                 "error": 1,
+                "dc:title": "",
+                "disaron:Complement_titre": "",
+                "disaron:chapeau": "",
+                "disaron:Auteur": "",
+                "disaron:Date_premiere_publication": "",
+                "disaron:Numerotation": "",
                 "nb de fichiers": "",
                 "noms des fichiers": "",
                 "urls des fichiers": "",
@@ -171,6 +189,46 @@ async def default_handler(context: BeautifulSoupCrawlingContext) -> None:
         )
 
     if page_id:
+        # Extract additional metadata fields from the detail page.
+        dc_title = ""
+        complement_titre = ""
+        chapeau = ""
+        auteurs: list[str] = []
+        date_premiere_publication = ""
+        numerotation = ""
+
+        title_el = context.soup.select_one("#mainform\\:j_idt78")
+        if title_el:
+            dc_title = title_el.get_text(strip=True)
+
+        complement_el = context.soup.select_one("#mainform\\:j_idt80")
+        if complement_el:
+            complement_titre = complement_el.get_text(strip=True)
+
+        chapeau_el = context.soup.select_one("#mainform\\:j_idt85")
+        if chapeau_el:
+            chapeau = chapeau_el.get_text(strip=True)
+
+        auteur_container = context.soup.select_one("#mainform\\:j_idt88")
+        if auteur_container:
+            auteurs = [
+                p.get_text(strip=True)
+                for p in auteur_container.find_all("p")
+                if p.get_text(strip=True)
+            ]
+
+        date_container = context.soup.select_one("#datePublication")
+        if date_container:
+            span_el = date_container.find("span")
+            if span_el:
+                date_premiere_publication = span_el.get_text(strip=True)
+
+        numerotation_el = context.soup.select_one("#NumerotationValeur")
+        if numerotation_el:
+            numerotation = numerotation_el.get_text(strip=True)
+            if numerotation.startswith("N°"):
+                numerotation = numerotation[2:].strip()
+
         # Find links inside the specific JSF container id=mainform:j_idt119
         file_links: list[str] = []
         container = context.soup.select_one("#mainform\\:j_idt119")
@@ -204,7 +262,19 @@ async def default_handler(context: BeautifulSoupCrawlingContext) -> None:
 
         output_path = _get_output_path()
         write_header = not output_path.exists() or output_path.stat().st_size == 0
-        fieldnames = ["disaron:nom", "error", "nb de fichiers", "noms des fichiers", "urls des fichiers"]
+        fieldnames = [
+            "disaron:nom",
+            "error",
+            "dc:title",
+            "disaron:Complement_titre",
+            "disaron:chapeau",
+            "disaron:Auteur",
+            "disaron:Date_premiere_publication",
+            "disaron:Numerotation",
+            "nb de fichiers",
+            "noms des fichiers",
+            "urls des fichiers",
+        ]
         with output_path.open("a", encoding="utf-8", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             if write_header:
@@ -212,6 +282,12 @@ async def default_handler(context: BeautifulSoupCrawlingContext) -> None:
             writer.writerow({
                 "disaron:nom": page_id,
                 "error": 1 if is_error else 0,
+                "dc:title": dc_title,
+                "disaron:Complement_titre": complement_titre,
+                "disaron:chapeau": chapeau,
+                "disaron:Auteur": json.dumps(auteurs, ensure_ascii=False),
+                "disaron:Date_premiere_publication": date_premiere_publication,
+                "disaron:Numerotation": numerotation,
                 "nb de fichiers": len(file_links),
                 "noms des fichiers": json.dumps(filenames, ensure_ascii=False),
                 "urls des fichiers": json.dumps(file_links, ensure_ascii=False),
