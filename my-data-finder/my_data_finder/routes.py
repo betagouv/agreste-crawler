@@ -1,9 +1,12 @@
 import csv
 import re
 from pathlib import Path
+from urllib.parse import urljoin
 
 from crawlee.crawlers import BeautifulSoupCrawlingContext
 from crawlee.router import Router
+
+DOWNLOAD_EXTENSIONS = {".pdf", ".xls", ".xlsx", ".xlsm", ".doc", ".docx", ".7z", ".zip"}
 
 router = Router[BeautifulSoupCrawlingContext]()
 
@@ -38,13 +41,27 @@ async def default_handler(context: BeautifulSoupCrawlingContext) -> None:
     context.log.info(f'Extracted page_id: {page_id}')
 
     if page_id:
+        # Find all downloadable file links inside #mainform:j_idt119
+        container = context.soup.select_one("#mainform\\:j_idt119")
+        file_links: list[str] = []
+        if container:
+            for a in container.find_all("a", href=True):
+                href: str = a["href"]
+                ext = Path(href.split("?")[0]).suffix.lower()
+                if ext in DOWNLOAD_EXTENSIONS:
+                    file_links.append(urljoin(context.request.url, href))
+
         output_path = _get_output_path()
         write_header = not output_path.exists() or output_path.stat().st_size == 0
         with output_path.open("a", encoding="utf-8", newline="") as f:
-            writer = csv.DictWriter(f, fieldnames=["disaron:nom"])
+            writer = csv.DictWriter(f, fieldnames=["disaron:nom", "file_url"])
             if write_header:
                 writer.writeheader()
-            writer.writerow({"disaron:nom": page_id})
+            if file_links:
+                for link in file_links:
+                    writer.writerow({"disaron:nom": page_id, "file_url": link})
+            else:
+                writer.writerow({"disaron:nom": page_id, "file_url": ""})
 
     # Do not follow any links — only the explicitly provided detail URLs are visited.
     # await context.enqueue_links()
