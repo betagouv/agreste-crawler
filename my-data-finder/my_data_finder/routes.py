@@ -13,6 +13,7 @@ router = Router[BeautifulSoupCrawlingContext]()
 
 _OUTPUT_DIR = Path(__file__).resolve().parents[1] / "output"
 _OUTPUT_PATH: Path | None = None
+_ERROR_PATH: Path | None = None
 _RUN_TIMESTAMP: str | None = None
 _DEBUG_ATTEMPTS: dict[str, int] = {}
 
@@ -26,6 +27,16 @@ def _get_output_path() -> Path:
         _OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
         _OUTPUT_PATH = _OUTPUT_DIR / f"{timestamp}_output.csv"
     return _OUTPUT_PATH
+
+
+def _get_error_path() -> Path:
+    """Return the error CSV path for this run, creating it on first call."""
+    global _ERROR_PATH
+    if _ERROR_PATH is None:
+        run_ts = _get_run_timestamp()
+        _OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+        _ERROR_PATH = _OUTPUT_DIR / f"{run_ts}_errors.csv"
+    return _ERROR_PATH
 
 
 def _get_run_timestamp() -> str:
@@ -48,6 +59,71 @@ def _get_debug_dir() -> Path:
 def _extract_page_id(url: str) -> str | None:
     match = re.search(r"/disaron/([^/]+)/detail/?", url)
     return match.group(1) if match else None
+
+
+def append_failed_row(page_id: str | None) -> None:
+    """
+    Append a failure row when max retries are exhausted.
+    Only disaron:nom is filled; other columns stay empty.
+    """
+    if not page_id:
+        return
+    output_path = _get_output_path()
+    write_header = not output_path.exists() or output_path.stat().st_size == 0
+    fieldnames = ["disaron:nom", "nb de fichiers", "noms des fichiers", "urls des fichiers"]
+    with output_path.open("a", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        if write_header:
+            writer.writeheader()
+        writer.writerow(
+            {
+                "disaron:nom": page_id,
+                "nb de fichiers": "",
+                "noms des fichiers": "",
+                "urls des fichiers": "",
+            }
+        )
+
+
+def append_error_row(
+    page_id: str | None,
+    *,
+    url: str,
+    error_message: str,
+    retry_count: int | None,
+) -> None:
+    """
+    Append a detailed error row for failed pages (after retries exhausted).
+    """
+    error_path = _get_error_path()
+    write_header = not error_path.exists() or error_path.stat().st_size == 0
+    debug_dir = _get_debug_dir()
+    final_try = (retry_count + 1) if isinstance(retry_count, int) else None
+    debug_html_path = (
+        str(debug_dir / f"{page_id or 'unknown'}__try{final_try}.html")
+        if final_try is not None
+        else ""
+    )
+    fieldnames = [
+        "disaron:nom",
+        "url",
+        "retry_count",
+        "error_message",
+        "debug_html_path",
+    ]
+    with error_path.open("a", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        if write_header:
+            writer.writeheader()
+        writer.writerow(
+            {
+                "disaron:nom": page_id or "",
+                "url": url,
+                "retry_count": retry_count if retry_count is not None else "",
+                "error_message": error_message,
+                "debug_html_path": debug_html_path,
+            }
+        )
 
 
 def _page_contains_hidden_id(context: BeautifulSoupCrawlingContext, expected_id: str) -> bool:

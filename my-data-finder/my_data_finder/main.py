@@ -1,10 +1,11 @@
 import csv
+import re
 from pathlib import Path
 
-from crawlee.crawlers import BeautifulSoupCrawler
+from crawlee.crawlers import BasicCrawlingContext, BeautifulSoupCrawler
 from crawlee.http_clients import ImpitHttpClient
 
-from .routes import router
+from .routes import append_error_row, append_failed_row, router
 
 
 async def main() -> None:
@@ -29,7 +30,26 @@ async def main() -> None:
         request_handler=router,
         max_requests_per_crawl=len(urls) if urls else 0,
         http_client=ImpitHttpClient(),
+        max_request_retries=3,
     )
+
+    @crawler.failed_request_handler
+    async def failed_handler(context: BasicCrawlingContext, error: Exception) -> None:
+        # Called once retries are exhausted.
+        page_id = None
+        if context.request and context.request.url:
+            match = re.search(r"/disaron/([^/]+)/detail/?", context.request.url)
+            page_id = match.group(1) if match else None
+        append_failed_row(page_id)
+        append_error_row(
+            page_id,
+            url=context.request.url if context.request else "",
+            error_message=str(error),
+            retry_count=getattr(context.request, "retry_count", None),
+        )
+        crawler.log.error(
+            f"Retries exhausted for {context.request.url if context.request else 'unknown'}: {error}"
+        )
 
     if urls:
         await crawler.run(urls)
