@@ -49,6 +49,22 @@ def _extract_page_id(url: str) -> str | None:
     return match.group(1) if match else None
 
 
+def _page_contains_hidden_id(context: BeautifulSoupCrawlingContext, expected_id: str) -> bool:
+    """
+    Sanity check: expected disaron ID must appear in a hidden <p style=\"display:none\">.
+    Otherwise, it means the site has returned an error, or loaded the wrong page (this happens).
+    """
+    hidden_p_tags = context.soup.find_all(
+        "p",
+        style=lambda s: isinstance(s, str) and "display:none" in s.replace(" ", "").lower(),
+    )
+    for p in hidden_p_tags:
+        text = p.get_text(strip=True)
+        if expected_id in text:
+            return True
+    return False
+
+
 @router.default_handler
 async def default_handler(context: BeautifulSoupCrawlingContext) -> None:
     """Default request handler."""
@@ -58,6 +74,12 @@ async def default_handler(context: BeautifulSoupCrawlingContext) -> None:
     # Try the loaded URL first, then fall back to the original request URL
     page_id = _extract_page_id(url) or _extract_page_id(context.request.url)
     context.log.info(f'Extracted page_id: {page_id}')
+
+    if page_id and not _page_contains_hidden_id(context, page_id):
+        # Raise to trigger Crawlee retry logic for this request.
+        raise ValueError(
+            f"Sanity check failed for {page_id}: hidden <p style='display:none'> does not contain the ID."
+        )
 
     # Dump raw HTML for debugging selector issues.
     debug_dir = _get_debug_dir()
