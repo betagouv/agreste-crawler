@@ -69,7 +69,7 @@ def append_failed_row(page_id: str | None) -> None:
         return
     output_path = _get_output_path()
     write_header = not output_path.exists() or output_path.stat().st_size == 0
-    fieldnames = ["disaron:nom", "nb de fichiers", "noms des fichiers", "urls des fichiers"]
+    fieldnames = ["disaron:nom", "error", "nb de fichiers", "noms des fichiers", "urls des fichiers"]
     with output_path.open("a", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         if write_header:
@@ -77,6 +77,7 @@ def append_failed_row(page_id: str | None) -> None:
         writer.writerow(
             {
                 "disaron:nom": page_id,
+                "error": 1,
                 "nb de fichiers": "",
                 "noms des fichiers": "",
                 "urls des fichiers": "",
@@ -195,13 +196,14 @@ async def default_handler(context: BeautifulSoupCrawlingContext) -> None:
 
         output_path = _get_output_path()
         write_header = not output_path.exists() or output_path.stat().st_size == 0
-        fieldnames = ["disaron:nom", "nb de fichiers", "noms des fichiers", "urls des fichiers"]
+        fieldnames = ["disaron:nom", "error", "nb de fichiers", "noms des fichiers", "urls des fichiers"]
         with output_path.open("a", encoding="utf-8", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             if write_header:
                 writer.writeheader()
             writer.writerow({
                 "disaron:nom": page_id,
+                "error": 0,
                 "nb de fichiers": len(file_links),
                 "noms des fichiers": json.dumps(filenames, ensure_ascii=False),
                 "urls des fichiers": json.dumps(file_links, ensure_ascii=False),
