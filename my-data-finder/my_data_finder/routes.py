@@ -22,8 +22,7 @@ def _get_output_path() -> Path:
     """Return the output path for this run, creating it on first call."""
     global _OUTPUT_PATH
     if _OUTPUT_PATH is None:
-        from datetime import datetime
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        timestamp = _get_run_timestamp()
         _OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
         _OUTPUT_PATH = _OUTPUT_DIR / f"{timestamp}_output.csv"
     return _OUTPUT_PATH
