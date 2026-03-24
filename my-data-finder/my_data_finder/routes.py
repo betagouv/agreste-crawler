@@ -249,12 +249,29 @@ async def default_handler(context: BeautifulSoupCrawlingContext) -> None:
                     file_links.append(urljoin(context.request.url, href))
 
         context.log.info(f"Accepted {len(file_links)} downloadable links on {page_id}")
-        is_error = len(file_links) == 0
+
+        missing_fields: list[str] = []
+        if not dc_title:
+            missing_fields.append("dc:title")
+        if not complement_titre:
+            missing_fields.append("disaron:Complement_titre")
+        if not chapeau:
+            missing_fields.append("disaron:chapeau")
+        if not auteurs:
+            missing_fields.append("disaron:Auteur")
+        if not date_premiere_publication:
+            missing_fields.append("disaron:Date_premiere_publication")
+        if not numerotation:
+            missing_fields.append("disaron:Numerotation")
+        if len(file_links) == 0:
+            missing_fields.append("urls des fichiers")
+
+        is_error = len(missing_fields) > 0
         if is_error:
             append_error_row(
                 page_id,
                 url=url,
-                error_message="No downloadable links found in #mainform:j_idt119",
+                error_message=f"Missing fields: {', '.join(missing_fields)}",
                 retry_count=retry_count if isinstance(retry_count, int) else None,
             )
 
