@@ -8,3 +8,4 @@ __pycache__/
 downloads/
 download_results.csv
 my-downloader/results/
+my-data-finder/output/
