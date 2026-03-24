@@ -191,6 +191,14 @@ async def default_handler(context: BeautifulSoupCrawlingContext) -> None:
                     file_links.append(urljoin(context.request.url, href))
 
         context.log.info(f"Accepted {len(file_links)} downloadable links on {page_id}")
+        is_error = len(file_links) == 0
+        if is_error:
+            append_error_row(
+                page_id,
+                url=url,
+                error_message="No downloadable links found in #mainform:j_idt119",
+                retry_count=retry_count if isinstance(retry_count, int) else None,
+            )
 
         filenames = [Path(link.split("?")[0]).name for link in file_links]
 
@@ -203,7 +211,7 @@ async def default_handler(context: BeautifulSoupCrawlingContext) -> None:
                 writer.writeheader()
             writer.writerow({
                 "disaron:nom": page_id,
-                "error": 0,
+                "error": 1 if is_error else 0,
                 "nb de fichiers": len(file_links),
                 "noms des fichiers": json.dumps(filenames, ensure_ascii=False),
                 "urls des fichiers": json.dumps(file_links, ensure_ascii=False),
