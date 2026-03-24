@@ -14,6 +14,7 @@ router = Router[BeautifulSoupCrawlingContext]()
 _OUTPUT_DIR = Path(__file__).resolve().parents[1] / "output"
 _OUTPUT_PATH: Path | None = None
 _RUN_TIMESTAMP: str | None = None
+_DEBUG_ATTEMPTS: dict[str, int] = {}
 
 
 def _get_output_path() -> Path:
@@ -75,34 +76,34 @@ async def default_handler(context: BeautifulSoupCrawlingContext) -> None:
     page_id = _extract_page_id(url) or _extract_page_id(context.request.url)
     context.log.info(f'Extracted page_id: {page_id}')
 
+    # Dump raw HTML for debugging selector issues.
+    debug_dir = _get_debug_dir()
+    debug_key = page_id or context.request.url or "unknown"
+    retry_count = getattr(context.request, "retry_count", None)
+    if isinstance(retry_count, int):
+        attempt_num = retry_count + 1
+    else:
+        attempt_num = _DEBUG_ATTEMPTS.get(debug_key, 0) + 1
+    _DEBUG_ATTEMPTS[debug_key] = attempt_num
+    debug_name = f"{page_id or 'unknown'}__try{attempt_num}.html"
+    (debug_dir / debug_name).write_text(str(context.soup), encoding="utf-8")
+
     if page_id and not _page_contains_hidden_id(context, page_id):
         # Raise to trigger Crawlee retry logic for this request.
         raise ValueError(
             f"Sanity check failed for {page_id}: hidden <p style='display:none'> does not contain the ID."
         )
 
-    # Dump raw HTML for debugging selector issues.
-    debug_dir = _get_debug_dir()
-    debug_name = f"{page_id or 'unknown'}.html"
-    (debug_dir / debug_name).write_text(str(context.soup), encoding="utf-8")
-
     if page_id:
-        # Find links inside elements that have both classes:
-        # .disaron-panel-color and .py-3
+        # Find links inside the specific JSF container id=mainform:j_idt119
         file_links: list[str] = []
-        containers = context.soup.select(".disaron-panel-color.py-3")
+        container = context.soup.select_one("#mainform\\:j_idt119")
 
-        if not containers:
-            context.log.warning(
-                f"No matching containers (.disaron-panel-color.py-3) on {page_id}"
-            )
+        if not container:
+            context.log.warning(f"No matching container (#mainform:j_idt119) on {page_id}")
         else:
-            anchors = []
-            for container in containers:
-                anchors.extend(container.find_all("a", href=True))
-            context.log.info(
-                f"Found {len(anchors)} anchors in filtered containers on {page_id}"
-            )
+            anchors = container.find_all("a", href=True)
+            context.log.info(f"Found {len(anchors)} anchors in #mainform:j_idt119 on {page_id}")
             for a in anchors:
                 href: str = a["href"]
                 ext = Path(href.split("?")[0]).suffix.lower()
