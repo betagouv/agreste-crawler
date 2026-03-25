@@ -1,3 +1,4 @@
+import argparse
 import csv
 import re
 from pathlib import Path
@@ -5,7 +6,7 @@ from pathlib import Path
 from crawlee.crawlers import BasicCrawlingContext, BeautifulSoupCrawler
 from crawlee.http_clients import ImpitHttpClient
 
-from .routes import append_error_row, append_failed_row, router
+from .routes import append_error_row, append_failed_row, configure_fields, router
 
 
 async def main() -> None:
@@ -14,6 +15,16 @@ async def main() -> None:
     Reads disaron:nom IDs from 2026-03-32_ids_without_files.csv and visits
     one detail page per ID. Does not follow any additional links.
     """
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--fields",
+        default="",
+        help="Comma-separated metadata fields to extract/validate. Empty means all.",
+    )
+    args = parser.parse_args()
+    requested_fields = [f.strip() for f in args.fields.split(",") if f.strip()] if args.fields else None
+    configure_fields(requested_fields)
+
     ids_path = Path(__file__).resolve().parents[1] / "2026-03-32_ids_without_files.csv"
 
     urls: list[str] = []

@@ -17,6 +17,58 @@ _ERROR_PATH: Path | None = None
 _RUN_TIMESTAMP: str | None = None
 _DEBUG_ATTEMPTS: dict[str, int] = {}
 
+ALL_OPTIONAL_FIELDS: tuple[str, ...] = (
+    "dc:title",
+    "disaron:Complement_titre",
+    "disaron:chapeau",
+    "disaron:Auteur",
+    "disaron:Date_premiere_publication",
+    "disaron:Numerotation",
+    "nb de fichiers",
+    "noms des fichiers",
+    "urls des fichiers",
+)
+
+# Which metadata fields should be extracted/validated.
+_REQUESTED_FIELDS: set[str] = set(ALL_OPTIONAL_FIELDS)
+
+
+def configure_fields(fields: list[str] | None) -> None:
+    """
+    Configure which metadata fields should be extracted/validated.
+    If fields is empty or None, all optional fields are enabled.
+    """
+    global _REQUESTED_FIELDS
+    if not fields:
+        _REQUESTED_FIELDS = set(ALL_OPTIONAL_FIELDS)
+        return
+    requested = {f.strip() for f in fields if f and f.strip()}
+    _REQUESTED_FIELDS = requested.intersection(ALL_OPTIONAL_FIELDS) or set(ALL_OPTIONAL_FIELDS)
+
+
+def _get_output_fieldnames() -> list[str]:
+    """
+    Build output CSV header based on configured fields.
+
+    Always includes:
+      - disaron:nom
+      - error
+    Then includes only requested optional fields (in a stable order).
+    """
+    base = ["disaron:nom", "error"]
+    ordered_optional = [
+        "dc:title",
+        "disaron:Complement_titre",
+        "disaron:chapeau",
+        "disaron:Auteur",
+        "disaron:Date_premiere_publication",
+        "disaron:Numerotation",
+        "nb de fichiers",
+        "noms des fichiers",
+        "urls des fichiers",
+    ]
+    return base + [f for f in ordered_optional if f in _REQUESTED_FIELDS]
+
 
 def _get_output_path() -> Path:
     """Return the output path for this run, creating it on first call."""
@@ -69,38 +121,31 @@ def append_failed_row(page_id: str | None) -> None:
         return
     output_path = _get_output_path()
     write_header = not output_path.exists() or output_path.stat().st_size == 0
-    fieldnames = [
-        "disaron:nom",
-        "error",
-        "dc:title",
-        "disaron:Complement_titre",
-        "disaron:chapeau",
-        "disaron:Auteur",
-        "disaron:Date_premiere_publication",
-        "disaron:Numerotation",
-        "nb de fichiers",
-        "noms des fichiers",
-        "urls des fichiers",
-    ]
+    fieldnames = _get_output_fieldnames()
     with output_path.open("a", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         if write_header:
             writer.writeheader()
-        writer.writerow(
-            {
-                "disaron:nom": page_id,
-                "error": 1,
-                "dc:title": "",
-                "disaron:Complement_titre": "",
-                "disaron:chapeau": "",
-                "disaron:Auteur": "",
-                "disaron:Date_premiere_publication": "",
-                "disaron:Numerotation": "",
-                "nb de fichiers": "",
-                "noms des fichiers": "",
-                "urls des fichiers": "",
-            }
-        )
+        row: dict[str, object] = {"disaron:nom": page_id, "error": 1}
+        if "dc:title" in fieldnames:
+            row["dc:title"] = ""
+        if "disaron:Complement_titre" in fieldnames:
+            row["disaron:Complement_titre"] = ""
+        if "disaron:chapeau" in fieldnames:
+            row["disaron:chapeau"] = ""
+        if "disaron:Auteur" in fieldnames:
+            row["disaron:Auteur"] = "[]"
+        if "disaron:Date_premiere_publication" in fieldnames:
+            row["disaron:Date_premiere_publication"] = ""
+        if "disaron:Numerotation" in fieldnames:
+            row["disaron:Numerotation"] = ""
+        if "nb de fichiers" in fieldnames:
+            row["nb de fichiers"] = ""
+        if "noms des fichiers" in fieldnames:
+            row["noms des fichiers"] = "[]"
+        if "urls des fichiers" in fieldnames:
+            row["urls des fichiers"] = "[]"
+        writer.writerow(row)
 
 
 def append_error_row(
@@ -197,37 +242,43 @@ async def default_handler(context: BeautifulSoupCrawlingContext) -> None:
         date_premiere_publication = ""
         numerotation = ""
 
-        title_el = context.soup.select_one("#mainform\\:j_idt78")
-        if title_el:
-            dc_title = title_el.get_text(strip=True)
+        if "dc:title" in _REQUESTED_FIELDS:
+            title_el = context.soup.select_one("#mainform\\:j_idt78")
+            if title_el:
+                dc_title = title_el.get_text(strip=True)
 
-        complement_el = context.soup.select_one("#mainform\\:j_idt80")
-        if complement_el:
-            complement_titre = complement_el.get_text(strip=True)
+        if "disaron:Complement_titre" in _REQUESTED_FIELDS:
+            complement_el = context.soup.select_one("#mainform\\:j_idt80")
+            if complement_el:
+                complement_titre = complement_el.get_text(strip=True)
 
-        chapeau_el = context.soup.select_one("#mainform\\:j_idt85")
-        if chapeau_el:
-            chapeau = chapeau_el.get_text(strip=True)
+        if "disaron:chapeau" in _REQUESTED_FIELDS:
+            chapeau_el = context.soup.select_one("#mainform\\:j_idt85")
+            if chapeau_el:
+                chapeau = chapeau_el.get_text(strip=True)
 
-        auteur_container = context.soup.select_one("#mainform\\:j_idt88")
-        if auteur_container:
-            auteurs = [
-                p.get_text(strip=True)
-                for p in auteur_container.find_all("p")
-                if p.get_text(strip=True)
-            ]
+        if "disaron:Auteur" in _REQUESTED_FIELDS:
+            auteur_container = context.soup.select_one("#mainform\\:j_idt88")
+            if auteur_container:
+                auteurs = [
+                    p.get_text(strip=True)
+                    for p in auteur_container.find_all("p")
+                    if p.get_text(strip=True)
+                ]
 
-        date_container = context.soup.select_one("#datePublication")
-        if date_container:
-            span_el = date_container.find("span")
-            if span_el:
-                date_premiere_publication = span_el.get_text(strip=True)
+        if "disaron:Date_premiere_publication" in _REQUESTED_FIELDS:
+            date_container = context.soup.select_one("#datePublication")
+            if date_container:
+                span_el = date_container.find("span")
+                if span_el:
+                    date_premiere_publication = span_el.get_text(strip=True)
 
-        numerotation_el = context.soup.select_one("#NumerotationValeur")
-        if numerotation_el:
-            numerotation = numerotation_el.get_text(strip=True)
-            if numerotation.startswith("N°"):
-                numerotation = numerotation[2:].strip()
+        if "disaron:Numerotation" in _REQUESTED_FIELDS:
+            numerotation_el = context.soup.select_one("#NumerotationValeur")
+            if numerotation_el:
+                numerotation = numerotation_el.get_text(strip=True)
+                if numerotation.startswith("N°"):
+                    numerotation = numerotation[2:].strip()
 
         # Find links inside the specific JSF container id=mainform:j_idt119
         file_links: list[str] = []
@@ -251,20 +302,35 @@ async def default_handler(context: BeautifulSoupCrawlingContext) -> None:
         context.log.info(f"Accepted {len(file_links)} downloadable links on {page_id}")
 
         missing_fields: list[str] = []
-        if not dc_title:
+        if "dc:title" in _REQUESTED_FIELDS and not dc_title:
             missing_fields.append("dc:title")
-        if not complement_titre:
+        if (
+            "disaron:Complement_titre" in _REQUESTED_FIELDS
+            and not complement_titre
+        ):
             missing_fields.append("disaron:Complement_titre")
-        if not chapeau:
+        if "disaron:chapeau" in _REQUESTED_FIELDS and not chapeau:
             missing_fields.append("disaron:chapeau")
-        if not auteurs:
+        if "disaron:Auteur" in _REQUESTED_FIELDS and not auteurs:
             missing_fields.append("disaron:Auteur")
-        if not date_premiere_publication:
+        if (
+            "disaron:Date_premiere_publication" in _REQUESTED_FIELDS
+            and not date_premiere_publication
+        ):
             missing_fields.append("disaron:Date_premiere_publication")
-        if not numerotation:
+        if "disaron:Numerotation" in _REQUESTED_FIELDS and not numerotation:
             missing_fields.append("disaron:Numerotation")
         if len(file_links) == 0:
-            missing_fields.append("urls des fichiers")
+            # Only treat missing downloadable links as an error if at least one file-related
+            # field was requested.
+            file_field_set = {"nb de fichiers", "noms des fichiers", "urls des fichiers"}
+            if _REQUESTED_FIELDS.intersection(file_field_set):
+                if "nb de fichiers" in _REQUESTED_FIELDS:
+                    missing_fields.append("nb de fichiers")
+                if "noms des fichiers" in _REQUESTED_FIELDS:
+                    missing_fields.append("noms des fichiers")
+                if "urls des fichiers" in _REQUESTED_FIELDS:
+                    missing_fields.append("urls des fichiers")
 
         is_error = len(missing_fields) > 0
         if is_error:
@@ -279,36 +345,33 @@ async def default_handler(context: BeautifulSoupCrawlingContext) -> None:
 
         output_path = _get_output_path()
         write_header = not output_path.exists() or output_path.stat().st_size == 0
-        fieldnames = [
-            "disaron:nom",
-            "error",
-            "dc:title",
-            "disaron:Complement_titre",
-            "disaron:chapeau",
-            "disaron:Auteur",
-            "disaron:Date_premiere_publication",
-            "disaron:Numerotation",
-            "nb de fichiers",
-            "noms des fichiers",
-            "urls des fichiers",
-        ]
+        fieldnames = _get_output_fieldnames()
+
+        row: dict[str, object] = {"disaron:nom": page_id, "error": 1 if is_error else 0}
+        if "dc:title" in fieldnames:
+            row["dc:title"] = dc_title
+        if "disaron:Complement_titre" in fieldnames:
+            row["disaron:Complement_titre"] = complement_titre
+        if "disaron:chapeau" in fieldnames:
+            row["disaron:chapeau"] = chapeau
+        if "disaron:Auteur" in fieldnames:
+            row["disaron:Auteur"] = json.dumps(auteurs, ensure_ascii=False)
+        if "disaron:Date_premiere_publication" in fieldnames:
+            row["disaron:Date_premiere_publication"] = date_premiere_publication
+        if "disaron:Numerotation" in fieldnames:
+            row["disaron:Numerotation"] = numerotation
+        if "nb de fichiers" in fieldnames:
+            row["nb de fichiers"] = len(file_links)
+        if "noms des fichiers" in fieldnames:
+            row["noms des fichiers"] = json.dumps(filenames, ensure_ascii=False)
+        if "urls des fichiers" in fieldnames:
+            row["urls des fichiers"] = json.dumps(file_links, ensure_ascii=False)
+
         with output_path.open("a", encoding="utf-8", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             if write_header:
                 writer.writeheader()
-            writer.writerow({
-                "disaron:nom": page_id,
-                "error": 1 if is_error else 0,
-                "dc:title": dc_title,
-                "disaron:Complement_titre": complement_titre,
-                "disaron:chapeau": chapeau,
-                "disaron:Auteur": json.dumps(auteurs, ensure_ascii=False),
-                "disaron:Date_premiere_publication": date_premiere_publication,
-                "disaron:Numerotation": numerotation,
-                "nb de fichiers": len(file_links),
-                "noms des fichiers": json.dumps(filenames, ensure_ascii=False),
-                "urls des fichiers": json.dumps(file_links, ensure_ascii=False),
-            })
+            writer.writerow(row)
 
     # Do not follow any links — only the explicitly provided detail URLs are visited.
     # await context.enqueue_links()
