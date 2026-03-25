@@ -3,6 +3,7 @@ import csv
 import re
 from pathlib import Path
 
+from crawlee import ConcurrencySettings
 from crawlee.crawlers import BasicCrawlingContext, PlaywrightCrawler
 
 from .routes import append_error_row, append_failed_row, configure_fields, router
@@ -20,6 +21,11 @@ async def main() -> None:
         default="",
         help="Comma-separated metadata fields to extract/validate. Empty means all.",
     )
+    parser.add_argument(
+        "--no-concurrency",
+        action="store_true",
+        help="Process requests one-at-a-time (max_concurrency=1).",
+    )
     args = parser.parse_args()
     requested_fields = [f.strip() for f in args.fields.split(",") if f.strip()] if args.fields else None
     configure_fields(requested_fields)
@@ -36,10 +42,21 @@ async def main() -> None:
                     f"https://agreste.agriculture.gouv.fr/agreste-web/disaron/{nom}/detail/"
                 )
 
+    concurrency_settings = None
+    if args.no_concurrency:
+        # PlaywrightCrawler is built on Crawlee's AutoscaledPool; constraining max concurrency
+        # is the simplest way to avoid hammering the target site.
+        concurrency_settings = ConcurrencySettings(
+            min_concurrency=1,
+            max_concurrency=1,
+            desired_concurrency=1,
+        )
+
     crawler = PlaywrightCrawler(
         request_handler=router,
         max_requests_per_crawl=len(urls) if urls else 0,
         max_request_retries=3,
+        concurrency_settings=concurrency_settings,
         # The target site currently presents an invalid/untrusted TLS certificate.
         # This prevents Playwright's `net::ERR_CERT_AUTHORITY_INVALID` from failing navigation.
         browser_new_context_options={"ignore_https_errors": True},
