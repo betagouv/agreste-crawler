@@ -4,12 +4,13 @@ import re
 from pathlib import Path
 from urllib.parse import urljoin
 
-from crawlee.crawlers import BeautifulSoupCrawlingContext
+from bs4 import BeautifulSoup
+from crawlee.crawlers import BasicCrawlingContext
 from crawlee.router import Router
 
 DOWNLOAD_EXTENSIONS = {".pdf", ".xls", ".xlsx", ".xlsm", ".doc", ".docx", ".7z", ".zip"}
 
-router = Router[BeautifulSoupCrawlingContext]()
+router = Router[BasicCrawlingContext]()
 
 _OUTPUT_DIR = Path(__file__).resolve().parents[1] / "output"
 _OUTPUT_PATH: Path | None = None
@@ -201,12 +202,12 @@ def append_error_row(
         )
 
 
-def _page_contains_hidden_id(context: BeautifulSoupCrawlingContext, expected_id: str) -> bool:
+def _page_contains_hidden_id(soup: BeautifulSoup, expected_id: str) -> bool:
     """
     Sanity check: expected disaron ID must appear in a hidden <p style=\"display:none\">.
     Otherwise, it means the site has returned an error, or loaded the wrong page (this happens).
     """
-    hidden_p_tags = context.soup.find_all(
+    hidden_p_tags = soup.find_all(
         "p",
         style=lambda s: isinstance(s, str) and "display:none" in s.replace(" ", "").lower(),
     )
@@ -218,7 +219,7 @@ def _page_contains_hidden_id(context: BeautifulSoupCrawlingContext, expected_id:
 
 
 @router.default_handler
-async def default_handler(context: BeautifulSoupCrawlingContext) -> None:
+async def default_handler(context: BasicCrawlingContext) -> None:
     """Default request handler."""
     url = context.request.loaded_url or context.request.url
     context.log.info(f'Processing {url} ...')
@@ -226,6 +227,36 @@ async def default_handler(context: BeautifulSoupCrawlingContext) -> None:
     # Try the loaded URL first, then fall back to the original request URL
     page_id = _extract_page_id(url) or _extract_page_id(context.request.url)
     context.log.info(f'Extracted page_id: {page_id}')
+
+    # PlaywrightCrawler needs JS interactions to make some fields appear.
+    # If `context.page` exists, click the control inside #mainform:j_idt177 and
+    # parse the rendered HTML into a local BeautifulSoup instance.
+    soup = getattr(context, "soup", None)
+    if hasattr(context, "page"):
+        # Always click the control inside #mainform:j_idt177 once.
+        link_a = context.page.locator("#mainform\\:j_idt177 a")
+        if (await link_a.count()) > 0:
+            await link_a.first.click()
+        else:
+            link_btn = context.page.locator("#mainform\\:j_idt177 button")
+            await link_btn.first.click()
+
+        # Wait for one of the requested tables to appear (if we know what to wait for)
+        wait_selectors: list[str] = []
+        if "themes" in _REQUESTED_FIELDS:
+            wait_selectors.append("#mainform\\:j_idt218 tr")
+        if "disaron:annees_reference" in _REQUESTED_FIELDS:
+            wait_selectors.append("#mainform\\:j_idt231 tr")
+        if "disaron:niveau_geographique" in _REQUESTED_FIELDS:
+            wait_selectors.append("#mainform\\:j_idt244 tr")
+        if wait_selectors:
+            await context.page.wait_for_selector(wait_selectors[0], timeout=15000)
+
+        html = await context.page.content()
+        soup = BeautifulSoup(html, "html.parser")
+
+    if soup is None:
+        raise RuntimeError("No parsed HTML available for extraction (missing soup).")
 
     # Dump raw HTML for debugging selector issues.
     debug_dir = _get_debug_dir()
@@ -237,9 +268,9 @@ async def default_handler(context: BeautifulSoupCrawlingContext) -> None:
         attempt_num = _DEBUG_ATTEMPTS.get(debug_key, 0) + 1
     _DEBUG_ATTEMPTS[debug_key] = attempt_num
     debug_name = f"{page_id or 'unknown'}__try{attempt_num}.html"
-    (debug_dir / debug_name).write_text(str(context.soup), encoding="utf-8")
+    (debug_dir / debug_name).write_text(str(soup), encoding="utf-8")
 
-    if page_id and not _page_contains_hidden_id(context, page_id):
+    if page_id and not _page_contains_hidden_id(soup, page_id):
         # Raise to trigger Crawlee retry logic for this request.
         raise ValueError(
             f"Sanity check failed for {page_id}: hidden <p style='display:none'> does not contain the ID."
@@ -258,22 +289,22 @@ async def default_handler(context: BeautifulSoupCrawlingContext) -> None:
         niveau_geographique: list[str] = []
 
         if "dc:title" in _REQUESTED_FIELDS:
-            title_el = context.soup.select_one("#mainform\\:j_idt78")
+            title_el = soup.select_one("#mainform\\:j_idt78")
             if title_el:
                 dc_title = title_el.get_text(strip=True)
 
         if "disaron:Complement_titre" in _REQUESTED_FIELDS:
-            complement_el = context.soup.select_one("#mainform\\:j_idt80")
+            complement_el = soup.select_one("#mainform\\:j_idt80")
             if complement_el:
                 complement_titre = complement_el.get_text(strip=True)
 
         if "disaron:chapeau" in _REQUESTED_FIELDS:
-            chapeau_el = context.soup.select_one("#mainform\\:j_idt85")
+            chapeau_el = soup.select_one("#mainform\\:j_idt85")
             if chapeau_el:
                 chapeau = chapeau_el.get_text(strip=True)
 
         if "disaron:Auteur" in _REQUESTED_FIELDS:
-            auteur_container = context.soup.select_one("#mainform\\:j_idt88")
+            auteur_container = soup.select_one("#mainform\\:j_idt88")
             if auteur_container:
                 auteurs = [
                     p.get_text(strip=True)
@@ -282,14 +313,14 @@ async def default_handler(context: BeautifulSoupCrawlingContext) -> None:
                 ]
 
         if "disaron:Date_premiere_publication" in _REQUESTED_FIELDS:
-            date_container = context.soup.select_one("#datePublication")
+            date_container = soup.select_one("#datePublication")
             if date_container:
                 span_el = date_container.find("span")
                 if span_el:
                     date_premiere_publication = span_el.get_text(strip=True)
 
         if "disaron:Numerotation" in _REQUESTED_FIELDS:
-            numerotation_el = context.soup.select_one("#NumerotationValeur")
+            numerotation_el = soup.select_one("#NumerotationValeur")
             if numerotation_el:
                 numerotation = numerotation_el.get_text(strip=True)
                 if numerotation.startswith("N°"):
@@ -297,7 +328,7 @@ async def default_handler(context: BeautifulSoupCrawlingContext) -> None:
 
         # Extract list fields (one value per <tr>) from JSF tables.
         if "themes" in _REQUESTED_FIELDS:
-            themes_container = context.soup.select_one("#mainform\\:j_idt218")
+            themes_container = soup.select_one("#mainform\\:j_idt218")
             if themes_container:
                 for tr in themes_container.find_all("tr"):
                     text = tr.get_text(" ", strip=True)
@@ -305,7 +336,7 @@ async def default_handler(context: BeautifulSoupCrawlingContext) -> None:
                         themes.append(text)
 
         if "disaron:annees_reference" in _REQUESTED_FIELDS:
-            an_container = context.soup.select_one("#mainform\\:j_idt231")
+            an_container = soup.select_one("#mainform\\:j_idt231")
             if an_container:
                 for tr in an_container.find_all("tr"):
                     text = tr.get_text(" ", strip=True)
@@ -313,7 +344,7 @@ async def default_handler(context: BeautifulSoupCrawlingContext) -> None:
                         annees_reference.append(text)
 
         if "disaron:niveau_geographique" in _REQUESTED_FIELDS:
-            geo_container = context.soup.select_one("#mainform\\:j_idt244")
+            geo_container = soup.select_one("#mainform\\:j_idt244")
             if geo_container:
                 for tr in geo_container.find_all("tr"):
                     text = tr.get_text(" ", strip=True)
@@ -322,7 +353,7 @@ async def default_handler(context: BeautifulSoupCrawlingContext) -> None:
 
         # Find links inside the specific JSF container id=mainform:j_idt119
         file_links: list[str] = []
-        container = context.soup.select_one("#mainform\\:j_idt119")
+        container = soup.select_one("#mainform\\:j_idt119")
 
         if not container:
             context.log.warning(f"No matching container (#mainform:j_idt119) on {page_id}")

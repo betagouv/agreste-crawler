@@ -3,8 +3,7 @@ import csv
 import re
 from pathlib import Path
 
-from crawlee.crawlers import BasicCrawlingContext, BeautifulSoupCrawler
-from crawlee.http_clients import ImpitHttpClient
+from crawlee.crawlers import BasicCrawlingContext, PlaywrightCrawler
 
 from .routes import append_error_row, append_failed_row, configure_fields, router
 
@@ -37,11 +36,13 @@ async def main() -> None:
                     f"https://agreste.agriculture.gouv.fr/agreste-web/disaron/{nom}/detail/"
                 )
 
-    crawler = BeautifulSoupCrawler(
+    crawler = PlaywrightCrawler(
         request_handler=router,
         max_requests_per_crawl=len(urls) if urls else 0,
-        http_client=ImpitHttpClient(),
         max_request_retries=3,
+        # The target site currently presents an invalid/untrusted TLS certificate.
+        # This prevents Playwright's `net::ERR_CERT_AUTHORITY_INVALID` from failing navigation.
+        browser_new_context_options={"ignore_https_errors": True},
     )
 
     @crawler.failed_request_handler
