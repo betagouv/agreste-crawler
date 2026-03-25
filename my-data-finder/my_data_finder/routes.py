@@ -24,6 +24,9 @@ ALL_OPTIONAL_FIELDS: tuple[str, ...] = (
     "disaron:Auteur",
     "disaron:Date_premiere_publication",
     "disaron:Numerotation",
+    "themes",
+    "disaron:annees_reference",
+    "disaron:niveau_geographique",
     "nb de fichiers",
     "noms des fichiers",
     "urls des fichiers",
@@ -63,6 +66,9 @@ def _get_output_fieldnames() -> list[str]:
         "disaron:Auteur",
         "disaron:Date_premiere_publication",
         "disaron:Numerotation",
+        "themes",
+        "disaron:annees_reference",
+        "disaron:niveau_geographique",
         "nb de fichiers",
         "noms des fichiers",
         "urls des fichiers",
@@ -139,6 +145,12 @@ def append_failed_row(page_id: str | None) -> None:
             row["disaron:Date_premiere_publication"] = ""
         if "disaron:Numerotation" in fieldnames:
             row["disaron:Numerotation"] = ""
+        if "themes" in fieldnames:
+            row["themes"] = "[]"
+        if "disaron:annees_reference" in fieldnames:
+            row["disaron:annees_reference"] = "[]"
+        if "disaron:niveau_geographique" in fieldnames:
+            row["disaron:niveau_geographique"] = "[]"
         if "nb de fichiers" in fieldnames:
             row["nb de fichiers"] = ""
         if "noms des fichiers" in fieldnames:
@@ -241,6 +253,9 @@ async def default_handler(context: BeautifulSoupCrawlingContext) -> None:
         auteurs: list[str] = []
         date_premiere_publication = ""
         numerotation = ""
+        themes: list[str] = []
+        annees_reference: list[str] = []
+        niveau_geographique: list[str] = []
 
         if "dc:title" in _REQUESTED_FIELDS:
             title_el = context.soup.select_one("#mainform\\:j_idt78")
@@ -279,6 +294,31 @@ async def default_handler(context: BeautifulSoupCrawlingContext) -> None:
                 numerotation = numerotation_el.get_text(strip=True)
                 if numerotation.startswith("N°"):
                     numerotation = numerotation[2:].strip()
+
+        # Extract list fields (one value per <tr>) from JSF tables.
+        if "themes" in _REQUESTED_FIELDS:
+            themes_container = context.soup.select_one("#mainform\\:j_idt218")
+            if themes_container:
+                for tr in themes_container.find_all("tr"):
+                    text = tr.get_text(" ", strip=True)
+                    if text:
+                        themes.append(text)
+
+        if "disaron:annees_reference" in _REQUESTED_FIELDS:
+            an_container = context.soup.select_one("#mainform\\:j_idt231")
+            if an_container:
+                for tr in an_container.find_all("tr"):
+                    text = tr.get_text(" ", strip=True)
+                    if text:
+                        annees_reference.append(text)
+
+        if "disaron:niveau_geographique" in _REQUESTED_FIELDS:
+            geo_container = context.soup.select_one("#mainform\\:j_idt244")
+            if geo_container:
+                for tr in geo_container.find_all("tr"):
+                    text = tr.get_text(" ", strip=True)
+                    if text:
+                        niveau_geographique.append(text)
 
         # Find links inside the specific JSF container id=mainform:j_idt119
         file_links: list[str] = []
@@ -320,6 +360,15 @@ async def default_handler(context: BeautifulSoupCrawlingContext) -> None:
             missing_fields.append("disaron:Date_premiere_publication")
         if "disaron:Numerotation" in _REQUESTED_FIELDS and not numerotation:
             missing_fields.append("disaron:Numerotation")
+        if "themes" in _REQUESTED_FIELDS and not themes:
+            missing_fields.append("themes")
+        if "disaron:annees_reference" in _REQUESTED_FIELDS and not annees_reference:
+            missing_fields.append("disaron:annees_reference")
+        if (
+            "disaron:niveau_geographique" in _REQUESTED_FIELDS
+            and not niveau_geographique
+        ):
+            missing_fields.append("disaron:niveau_geographique")
         if len(file_links) == 0:
             # Only treat missing downloadable links as an error if at least one file-related
             # field was requested.
@@ -360,6 +409,16 @@ async def default_handler(context: BeautifulSoupCrawlingContext) -> None:
             row["disaron:Date_premiere_publication"] = date_premiere_publication
         if "disaron:Numerotation" in fieldnames:
             row["disaron:Numerotation"] = numerotation
+        if "themes" in fieldnames:
+            row["themes"] = json.dumps(themes, ensure_ascii=False)
+        if "disaron:annees_reference" in fieldnames:
+            row["disaron:annees_reference"] = json.dumps(
+                annees_reference, ensure_ascii=False
+            )
+        if "disaron:niveau_geographique" in fieldnames:
+            row["disaron:niveau_geographique"] = json.dumps(
+                niveau_geographique, ensure_ascii=False
+            )
         if "nb de fichiers" in fieldnames:
             row["nb de fichiers"] = len(file_links)
         if "noms des fichiers" in fieldnames:
