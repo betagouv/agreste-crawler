@@ -67,6 +67,35 @@ def _read_rows_from_data_file(data_file: str) -> list[dict[str, str]]:
     return rows_out
 
 
+def _read_documents_by_disaron_nom(documents_file: str) -> dict[str, list[str]]:
+    csv_path = Path(documents_file)
+    if not csv_path.exists():
+        raise ValueError(f"Documents file not found: {csv_path}")
+
+    mapping: dict[str, list[str]] = {}
+    with csv_path.open(encoding="utf-8", newline="") as f:
+        reader = csv.DictReader(f)
+        if not reader.fieldnames:
+            raise ValueError("Documents CSV must contain headers.")
+        has_disaron_nom = "disaron_nom" in reader.fieldnames
+        has_disaron_colon_nom = "disaron:nom" in reader.fieldnames
+        if not has_disaron_nom and not has_disaron_colon_nom:
+            raise ValueError("Documents CSV must contain 'disaron_nom' or 'disaron:nom' column.")
+        if "nom_fichier" not in reader.fieldnames:
+            raise ValueError("Documents CSV must contain a 'nom_fichier' column.")
+
+        for row in reader:
+            disaron_nom = (
+                (row.get("disaron_nom") or row.get("disaron:nom") or "").strip()
+            )
+            nom_fichier = (row.get("nom_fichier") or "").strip()
+            if not disaron_nom or not nom_fichier:
+                continue
+            mapping.setdefault(disaron_nom, []).append(nom_fichier)
+
+    return mapping
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -85,6 +114,12 @@ def main() -> int:
         type=str,
         default="",
         help="CSV file path. Uses the first non-empty value from 'dc:title' as page title.",
+    )
+    parser.add_argument(
+        "--documents-file",
+        type=str,
+        default="",
+        help="CSV file path with document rows (must include disaron_nom/disaron:nom and nom_fichier).",
     )
     parser.add_argument(
         "--publish",
@@ -106,6 +141,13 @@ def main() -> int:
             parser.error("--title is required unless --data-file is specified.")
         rows = [{"title": title, "disaron_nom": "", "complement_titre": "", "chapeau": ""}]
 
+    documents_by_nom: dict[str, list[str]] = {}
+    if args.documents_file:
+        try:
+            documents_by_nom = _read_documents_by_disaron_nom(args.documents_file)
+        except ValueError as exc:
+            parser.error(str(exc))
+
     parent_page = Page.objects.get(id=args.parent_id).specific
     if not isinstance(parent_page, BlogIndexPage):
         print(
@@ -119,6 +161,12 @@ def main() -> int:
         disaron_nom = row["disaron_nom"]
         complement_titre = row["complement_titre"]
         chapeau = row["chapeau"]
+        noms_fichiers = documents_by_nom.get(disaron_nom, [])
+        tile_description = ""
+        if noms_fichiers:
+            tile_description = "<ul>" + "".join(
+                f"<li>{escape(nom_fichier)}</li>" for nom_fichier in noms_fichiers
+            ) + "</ul>"
         slug = (args.slug or "").strip() or _generate_unique_slug(parent_page, title)
         if BlogEntryPage.objects.child_of(parent_page).filter(slug=slug).exists():
             print(
@@ -162,6 +210,7 @@ def main() -> int:
                                         {
                                             "title": "Télécharger la publication",
                                             "heading_tag": "h3",
+                                            "description": tile_description,
                                         },
                                     )
                                 ],
