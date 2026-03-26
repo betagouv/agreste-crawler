@@ -17,8 +17,11 @@ from django_env_setup import setup_django
 
 setup_django(__file__)
 
+from django.core.files import File  # noqa: E402
 from django.utils import timezone  # noqa: E402
 from django.utils.text import slugify  # noqa: E402
+from wagtail.documents import get_document_model  # noqa: E402
+from wagtail.models import Collection  # noqa: E402
 from wagtail.models import Page  # noqa: E402
 
 from blog.models import BlogEntryPage, BlogIndexPage  # noqa: E402
@@ -102,6 +105,30 @@ def _tile_title_for_filename(filename: str) -> str:
     return "Télécharger les données"
 
 
+def _prefixed_document_filename(disaron_nom: str, nom_fichier: str) -> str:
+    return f"{disaron_nom}_{nom_fichier}"
+
+
+def _get_or_create_document(disaron_nom: str, nom_fichier: str, documents_dir: Path):
+    stored_filename = _prefixed_document_filename(disaron_nom, nom_fichier)
+    source_path = documents_dir / stored_filename
+    if not source_path.exists():
+        raise ValueError(f"Document file not found in --documents-dir: {source_path}")
+    if not source_path.is_file():
+        raise ValueError(f"Document path is not a file: {source_path}")
+
+    document_model = get_document_model()
+    existing_document = document_model.objects.filter(title=stored_filename).first()
+    if existing_document:
+        return existing_document
+
+    root_collection = Collection.get_first_root_node()
+    with source_path.open("rb") as f:
+        document = document_model(title=stored_filename, collection=root_collection)
+        document.file.save(stored_filename, File(f), save=True)
+    return document
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -128,6 +155,12 @@ def main() -> int:
         help="CSV file path with document rows (must include disaron_nom/disaron:nom and nom_fichier).",
     )
     parser.add_argument(
+        "--documents-dir",
+        type=str,
+        default="",
+        help="Directory where files named by nom_fichier are read and uploaded to Wagtail Documents.",
+    )
+    parser.add_argument(
         "--publish",
         action="store_true",
         help="Publish immediately (otherwise the page stays in draft)",
@@ -148,11 +181,19 @@ def main() -> int:
         rows = [{"title": title, "disaron_nom": "", "complement_titre": "", "chapeau": ""}]
 
     documents_by_nom: dict[str, list[str]] = {}
+    documents_dir_path: Path | None = None
     if args.documents_file:
         try:
             documents_by_nom = _read_documents_by_disaron_nom(args.documents_file)
         except ValueError as exc:
             parser.error(str(exc))
+        if not args.documents_dir:
+            parser.error("--documents-dir is required when --documents-file is specified.")
+        documents_dir_path = Path(args.documents_dir)
+        if not documents_dir_path.exists():
+            parser.error(f"Documents directory not found: {documents_dir_path}")
+        if not documents_dir_path.is_dir():
+            parser.error(f"--documents-dir is not a directory: {documents_dir_path}")
 
     parent_page = Page.objects.get(id=args.parent_id).specific
     if not isinstance(parent_page, BlogIndexPage):
@@ -168,8 +209,22 @@ def main() -> int:
         complement_titre = row["complement_titre"]
         chapeau = row["chapeau"]
         noms_fichiers = documents_by_nom.get(disaron_nom, [])
-        right_column_content: list[tuple[str, dict[str, str]]] = []
+        right_column_content: list[tuple[str, dict[str, object]]] = []
         for nom_fichier in noms_fichiers:
+            tile_link: dict[str, object] = {
+                "link_type": "document",
+                "external_url": "",
+                "page": None,
+                "document": None,
+                "anchor": "",
+            }
+            if documents_dir_path is not None:
+                try:
+                    document = _get_or_create_document(disaron_nom, nom_fichier, documents_dir_path)
+                except ValueError as exc:
+                    print(f"Error: {exc}", file=sys.stderr)
+                    return 1
+                tile_link["document"] = document
             right_column_content.append(
                 (
                     "tile",
@@ -177,6 +232,8 @@ def main() -> int:
                         "title": _tile_title_for_filename(nom_fichier),
                         "heading_tag": "h3",
                         "description": f"<p>{escape(nom_fichier)}</p>",
+                        "link": tile_link,
+                        "top_detail_badges_tags": [],
                     },
                 )
             )
