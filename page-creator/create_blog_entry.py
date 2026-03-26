@@ -8,31 +8,13 @@ Usage:
 """
 
 import argparse
-import importlib.util
-import os
+import csv
 import sys
 from pathlib import Path
 
-# Add sibling sites-faciles project root on PYTHONPATH.
-_SITES_FACILES_ROOT = Path(__file__).resolve().parents[2] / "sites-faciles"
-if str(_SITES_FACILES_ROOT) not in sys.path:
-    sys.path.insert(0, str(_SITES_FACILES_ROOT))
+from django_env_setup import setup_django
 
-# If Django is missing in the current environment, re-run with sites-faciles venv.
-if importlib.util.find_spec("django") is None:
-    _SITES_FACILES_PYTHON = _SITES_FACILES_ROOT / ".venv" / "bin" / "python"
-    current_python = Path(sys.executable)
-    if _SITES_FACILES_PYTHON.exists() and current_python != _SITES_FACILES_PYTHON:
-        os.execv(str(_SITES_FACILES_PYTHON), [str(_SITES_FACILES_PYTHON), __file__, *sys.argv[1:]])
-    raise ModuleNotFoundError(
-        "Django is not available. Install dependencies in agreste-crawler "
-        "or create ../sites-faciles/.venv."
-    )
-
-import django
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
-django.setup()
+setup_django(__file__)
 
 from django.utils import timezone  # noqa: E402
 from django.utils.text import slugify  # noqa: E402
@@ -51,13 +33,33 @@ def _generate_unique_slug(parent_page: BlogIndexPage, title: str) -> str:
     return slug
 
 
+def _read_titles_from_data_file(data_file: str) -> list[str]:
+    csv_path = Path(data_file)
+    if not csv_path.exists():
+        raise ValueError(f"Data file not found: {csv_path}")
+
+    titles: list[str] = []
+    with csv_path.open(encoding="utf-8", newline="") as f:
+        reader = csv.DictReader(f)
+        if not reader.fieldnames or "dc:title" not in reader.fieldnames:
+            raise ValueError("CSV must contain a 'dc:title' column.")
+        for row in reader:
+            title = (row.get("dc:title") or "").strip()
+            if title:
+                titles.append(title)
+
+    if not titles:
+        raise ValueError("CSV does not contain any non-empty value in 'dc:title'.")
+    return titles
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("--parent-id", type=int, required=True, help="ID of the BlogIndexPage parent")
-    parser.add_argument("--title", type=str, required=True, help="Page title")
+    parser.add_argument("--title", type=str, default="", help="Page title")
     parser.add_argument(
         "--slug",
         type=str,
@@ -65,11 +67,30 @@ def main() -> int:
         help="URL slug (unique under the blog index). If omitted, generated from title.",
     )
     parser.add_argument(
+        "--data-file",
+        type=str,
+        default="",
+        help="CSV file path. Uses the first non-empty value from 'dc:title' as page title.",
+    )
+    parser.add_argument(
         "--publish",
         action="store_true",
         help="Publish immediately (otherwise the page stays in draft)",
     )
     args = parser.parse_args()
+
+    if args.data_file:
+        if args.title or args.slug:
+            parser.error("--data-file cannot be used with --title or --slug.")
+        try:
+            titles = _read_titles_from_data_file(args.data_file)
+        except ValueError as exc:
+            parser.error(str(exc))
+    else:
+        title = (args.title or "").strip()
+        if not title:
+            parser.error("--title is required unless --data-file is specified.")
+        titles = [title]
 
     parent_page = Page.objects.get(id=args.parent_id).specific
     if not isinstance(parent_page, BlogIndexPage):
@@ -79,24 +100,31 @@ def main() -> int:
         )
         return 1
 
-    slug = (args.slug or "").strip() or _generate_unique_slug(parent_page, args.title)
-    if BlogEntryPage.objects.child_of(parent_page).filter(slug=slug).exists():
-        print(f"Error: A blog entry with slug '{slug}' already exists under this index.", file=sys.stderr)
-        return 1
+    for i, title in enumerate(titles, start=1):
+        slug = (args.slug or "").strip() or _generate_unique_slug(parent_page, title)
+        if BlogEntryPage.objects.child_of(parent_page).filter(slug=slug).exists():
+            print(
+                f"Error: A blog entry with slug '{slug}' already exists under this index.",
+                file=sys.stderr,
+            )
+            return 1
 
-    page = BlogEntryPage(
-        title=args.title,
-        slug=slug,
-        date=timezone.now(),
-        show_in_menus=True,
-    )
-    parent_page.add_child(instance=page)
+        page = BlogEntryPage(
+            title=title,
+            slug=slug,
+            date=timezone.now(),
+            show_in_menus=True,
+        )
+        parent_page.add_child(instance=page)
 
-    if args.publish:
-        page.save_revision().publish()
-        print(f"Published BlogEntryPage id={page.id} - {page.url}")
-    else:
-        print(f"Created draft BlogEntryPage id={page.id} (slug={slug}). Publish it from the Wagtail admin.")
+        if args.publish:
+            page.save_revision().publish()
+            print(f"[{i}/{len(titles)}] Published BlogEntryPage id={page.id} - {page.url}")
+        else:
+            print(
+                f"[{i}/{len(titles)}] Created draft BlogEntryPage id={page.id} (slug={slug}). "
+                "Publish it from the Wagtail admin."
+            )
 
     return 0
 
