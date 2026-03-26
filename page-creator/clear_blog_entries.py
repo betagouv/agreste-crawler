@@ -4,7 +4,8 @@ Delete all direct child pages under a given parent page.
 
 Usage:
     uv run python page-creator/clear_blog_entries.py --parent-id 30
-    uv run python page-creator/clear_blog_entries.py --parent-id 30 --no-confirmation
+    uv run python page-creator/clear_blog_entries.py \
+        --parent-id 30 --no-confirmation
     uv run python page-creator/clear_blog_entries.py --parent-id 30 --dry-run
 """
 
@@ -14,6 +15,7 @@ from django_env_setup import setup_django
 
 setup_django(__file__)
 
+from django.db import transaction  # noqa: E402
 from wagtail.models import Page  # noqa: E402
 
 
@@ -43,39 +45,60 @@ def main() -> int:
     parent_page = Page.objects.get(id=args.parent_id).specific
     children = list(parent_page.get_children().specific())
 
+    def _run_fix_tree() -> None:
+        # Always repair/check tree metadata, even when nothing is deleted.
+        Page.fix_tree(destructive=False)
+        print("Ran Page.fix_tree(destructive=False).")
+
     if not children:
         print(f"No child pages found under parent id={args.parent_id}.")
+        _run_fix_tree()
         return 0
 
     total = len(children)
     if not args.no_confirmation:
         answer = input(
-            f"About to delete {total} child page(s) under parent id={args.parent_id}. "
+            f"About to delete {total} child page(s) "
+            f"under parent id={args.parent_id}. "
             "Type 'yes' to confirm: "
         ).strip()
         if answer.lower() != "yes":
             print("Deletion cancelled.")
+            _run_fix_tree()
             return 0
 
-    for i, child in enumerate(children, start=1):
-        title = child.title
-        child_id = child.id
-        if args.dry_run:
-            print(f"DRY RUN : not deleting page id={child_id}")
-            continue
-        child.delete()
-        print(
-            f"[{i}/{total}] Deleted child page id={child_id} "
-            f"title={title!r}"
-        )
+    if args.dry_run:
+        for child in children:
+            print(f"DRY RUN : not deleting page id={child.id}")
+    else:
+        # Keep the whole operation atomic so we don't leave
+        # a half-deleted subtree.
+        with transaction.atomic():
+            for i, child in enumerate(children, start=1):
+                title = child.title
+                child_id = child.id
+                child.delete()
+                print(
+                    f"[{i}/{total}] Deleted child page id={child_id} "
+                    f"title={title!r}"
+                )
+
+            # Recompute tree metadata after bulk child deletions
+            # to avoid subsequent
+            # add_child() failures caused by stale numchild/path state.
+            _run_fix_tree()
 
     if args.dry_run:
         print(
             f"DRY RUN complete: {total} child page(s) would be deleted "
             f"under parent id={args.parent_id}."
         )
+        _run_fix_tree()
     else:
-        print(f"Deleted {total} child page(s) under parent id={args.parent_id}.")
+        print(
+            f"Deleted {total} child page(s) "
+            f"under parent id={args.parent_id}."
+        )
     return 0
 
 
