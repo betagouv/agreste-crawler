@@ -10,6 +10,7 @@ Usage:
 import argparse
 import csv
 import sys
+from html import escape
 from pathlib import Path
 
 from django_env_setup import setup_django
@@ -122,11 +123,50 @@ def main() -> int:
             )
             return 1
 
-        body: list[tuple[str, str]] = []
+        left_column_content: list[tuple[str, str]] = []
         if complement_titre:
-            body.append(("paragraph", complement_titre))
+            left_column_content.append(("text", f"<h4>{escape(complement_titre)}</h4>"))
         if chapeau:
-            body.append(("paragraph", chapeau))
+            left_column_content.append(("text", escape(chapeau)))
+
+        body = [
+            (
+                "multicolumns",
+                {
+                    "bg_image": None,
+                    "bg_color_class": "",
+                    "title": "",
+                    "heading_tag": "h2",
+                    "top_margin": 5,
+                    "bottom_margin": 5,
+                    "vertical_align": "",
+                    "columns": [
+                        (
+                            "column",
+                            {
+                                "width": "8",
+                                "content": left_column_content,
+                            },
+                        ),
+                        (
+                            "column",
+                            {
+                                "width": "4",
+                                "content": [
+                                    (
+                                        "tile",
+                                        {
+                                            "title": "Télécharger la publication",
+                                            "heading_tag": "h3",
+                                        },
+                                    )
+                                ],
+                            },
+                        ),
+                    ],
+                },
+            )
+        ]
         page = BlogEntryPage(
             title=title,
             slug=slug,
