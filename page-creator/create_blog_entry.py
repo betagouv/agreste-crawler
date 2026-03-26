@@ -35,9 +35,20 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
 
 from django.utils import timezone  # noqa: E402
+from django.utils.text import slugify  # noqa: E402
 from wagtail.models import Page  # noqa: E402
 
 from blog.models import BlogEntryPage, BlogIndexPage  # noqa: E402
+
+
+def _generate_unique_slug(parent_page: BlogIndexPage, title: str) -> str:
+    base_slug = slugify(title) or "blog-entry"
+    slug = base_slug
+    suffix = 2
+    while BlogEntryPage.objects.child_of(parent_page).filter(slug=slug).exists():
+        slug = f"{base_slug}-{suffix}"
+        suffix += 1
+    return slug
 
 
 def main() -> int:
@@ -47,7 +58,12 @@ def main() -> int:
     )
     parser.add_argument("--parent-id", type=int, required=True, help="ID of the BlogIndexPage parent")
     parser.add_argument("--title", type=str, required=True, help="Page title")
-    parser.add_argument("--slug", type=str, required=True, help="URL slug (unique under the blog index)")
+    parser.add_argument(
+        "--slug",
+        type=str,
+        default="",
+        help="URL slug (unique under the blog index). If omitted, generated from title.",
+    )
     parser.add_argument(
         "--publish",
         action="store_true",
@@ -63,13 +79,14 @@ def main() -> int:
         )
         return 1
 
-    if BlogEntryPage.objects.child_of(parent_page).filter(slug=args.slug).exists():
-        print(f"Error: A blog entry with slug '{args.slug}' already exists under this index.", file=sys.stderr)
+    slug = (args.slug or "").strip() or _generate_unique_slug(parent_page, args.title)
+    if BlogEntryPage.objects.child_of(parent_page).filter(slug=slug).exists():
+        print(f"Error: A blog entry with slug '{slug}' already exists under this index.", file=sys.stderr)
         return 1
 
     page = BlogEntryPage(
         title=args.title,
-        slug=args.slug,
+        slug=slug,
         date=timezone.now(),
         show_in_menus=True,
     )
@@ -79,7 +96,7 @@ def main() -> int:
         page.save_revision().publish()
         print(f"Published BlogEntryPage id={page.id} - {page.url}")
     else:
-        print(f"Created draft BlogEntryPage id={page.id} (slug={args.slug}). Publish it from the Wagtail admin.")
+        print(f"Created draft BlogEntryPage id={page.id} (slug={slug}). Publish it from the Wagtail admin.")
 
     return 0
 
