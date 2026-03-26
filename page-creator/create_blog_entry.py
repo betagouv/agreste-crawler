@@ -33,24 +33,34 @@ def _generate_unique_slug(parent_page: BlogIndexPage, title: str) -> str:
     return slug
 
 
-def _read_titles_from_data_file(data_file: str) -> list[str]:
+def _read_rows_from_data_file(data_file: str) -> list[dict[str, str]]:
     csv_path = Path(data_file)
     if not csv_path.exists():
         raise ValueError(f"Data file not found: {csv_path}")
 
-    titles: list[str] = []
+    rows_out: list[dict[str, str]] = []
     with csv_path.open(encoding="utf-8", newline="") as f:
         reader = csv.DictReader(f)
         if not reader.fieldnames or "dc:title" not in reader.fieldnames:
             raise ValueError("CSV must contain a 'dc:title' column.")
+        if "disaron:Complement_titre" not in reader.fieldnames:
+            raise ValueError("CSV must contain a 'disaron:Complement_titre' column.")
+        if "disaron:chapeau" not in reader.fieldnames:
+            raise ValueError("CSV must contain a 'disaron:chapeau' column.")
         for row in reader:
             title = (row.get("dc:title") or "").strip()
             if title:
-                titles.append(title)
+                rows_out.append(
+                    {
+                        "title": title,
+                        "complement_titre": (row.get("disaron:Complement_titre") or "").strip(),
+                        "chapeau": (row.get("disaron:chapeau") or "").strip(),
+                    }
+                )
 
-    if not titles:
+    if not rows_out:
         raise ValueError("CSV does not contain any non-empty value in 'dc:title'.")
-    return titles
+    return rows_out
 
 
 def main() -> int:
@@ -83,14 +93,14 @@ def main() -> int:
         if args.title or args.slug:
             parser.error("--data-file cannot be used with --title or --slug.")
         try:
-            titles = _read_titles_from_data_file(args.data_file)
+            rows = _read_rows_from_data_file(args.data_file)
         except ValueError as exc:
             parser.error(str(exc))
     else:
         title = (args.title or "").strip()
         if not title:
             parser.error("--title is required unless --data-file is specified.")
-        titles = [title]
+        rows = [{"title": title, "complement_titre": "", "chapeau": ""}]
 
     parent_page = Page.objects.get(id=args.parent_id).specific
     if not isinstance(parent_page, BlogIndexPage):
@@ -100,7 +110,10 @@ def main() -> int:
         )
         return 1
 
-    for i, title in enumerate(titles, start=1):
+    for i, row in enumerate(rows, start=1):
+        title = row["title"]
+        complement_titre = row["complement_titre"]
+        chapeau = row["chapeau"]
         slug = (args.slug or "").strip() or _generate_unique_slug(parent_page, title)
         if BlogEntryPage.objects.child_of(parent_page).filter(slug=slug).exists():
             print(
@@ -109,9 +122,15 @@ def main() -> int:
             )
             return 1
 
+        body: list[tuple[str, str]] = []
+        if complement_titre:
+            body.append(("paragraph", complement_titre))
+        if chapeau:
+            body.append(("paragraph", chapeau))
         page = BlogEntryPage(
             title=title,
             slug=slug,
+            body=body,
             date=timezone.now(),
             show_in_menus=True,
         )
@@ -119,10 +138,10 @@ def main() -> int:
 
         if args.publish:
             page.save_revision().publish()
-            print(f"[{i}/{len(titles)}] Published BlogEntryPage id={page.id} - {page.url}")
+            print(f"[{i}/{len(rows)}] Published BlogEntryPage id={page.id} - {page.url}")
         else:
             print(
-                f"[{i}/{len(titles)}] Created draft BlogEntryPage id={page.id} (slug={slug}). "
+                f"[{i}/{len(rows)}] Created draft BlogEntryPage id={page.id} (slug={slug}). "
                 "Publish it from the Wagtail admin."
             )
 
