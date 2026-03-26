@@ -96,6 +96,12 @@ def _read_documents_by_disaron_nom(documents_file: str) -> dict[str, list[str]]:
     return mapping
 
 
+def _tile_title_for_filename(filename: str) -> str:
+    if Path(filename).suffix.lower() == ".pdf":
+        return "Télécharger la publication"
+    return "Télécharger les données"
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description=__doc__,
@@ -162,11 +168,18 @@ def main() -> int:
         complement_titre = row["complement_titre"]
         chapeau = row["chapeau"]
         noms_fichiers = documents_by_nom.get(disaron_nom, [])
-        tile_description = ""
-        if noms_fichiers:
-            tile_description = "<ul>" + "".join(
-                f"<li>{escape(nom_fichier)}</li>" for nom_fichier in noms_fichiers
-            ) + "</ul>"
+        right_column_content: list[tuple[str, dict[str, str]]] = []
+        for nom_fichier in noms_fichiers:
+            right_column_content.append(
+                (
+                    "tile",
+                    {
+                        "title": _tile_title_for_filename(nom_fichier),
+                        "heading_tag": "h3",
+                        "description": f"<p>{escape(nom_fichier)}</p>",
+                    },
+                )
+            )
         slug = (args.slug or "").strip() or _generate_unique_slug(parent_page, title)
         if BlogEntryPage.objects.child_of(parent_page).filter(slug=slug).exists():
             print(
@@ -204,16 +217,7 @@ def main() -> int:
                             "column",
                             {
                                 "width": "4",
-                                "content": [
-                                    (
-                                        "tile",
-                                        {
-                                            "title": "Télécharger la publication",
-                                            "heading_tag": "h3",
-                                            "description": tile_description,
-                                        },
-                                    )
-                                ],
+                                "content": right_column_content,
                             },
                         ),
                     ],
