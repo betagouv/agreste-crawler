@@ -44,6 +44,8 @@ def _read_rows_from_data_file(data_file: str) -> list[dict[str, str]]:
         reader = csv.DictReader(f)
         if not reader.fieldnames or "dc:title" not in reader.fieldnames:
             raise ValueError("CSV must contain a 'dc:title' column.")
+        if "disaron:nom" not in reader.fieldnames:
+            raise ValueError("CSV must contain a 'disaron:nom' column.")
         if "disaron:Complement_titre" not in reader.fieldnames:
             raise ValueError("CSV must contain a 'disaron:Complement_titre' column.")
         if "disaron:chapeau" not in reader.fieldnames:
@@ -54,6 +56,7 @@ def _read_rows_from_data_file(data_file: str) -> list[dict[str, str]]:
                 rows_out.append(
                     {
                         "title": title,
+                        "disaron_nom": (row.get("disaron:nom") or "").strip(),
                         "complement_titre": (row.get("disaron:Complement_titre") or "").strip(),
                         "chapeau": (row.get("disaron:chapeau") or "").strip(),
                     }
@@ -101,7 +104,7 @@ def main() -> int:
         title = (args.title or "").strip()
         if not title:
             parser.error("--title is required unless --data-file is specified.")
-        rows = [{"title": title, "complement_titre": "", "chapeau": ""}]
+        rows = [{"title": title, "disaron_nom": "", "complement_titre": "", "chapeau": ""}]
 
     parent_page = Page.objects.get(id=args.parent_id).specific
     if not isinstance(parent_page, BlogIndexPage):
@@ -113,6 +116,7 @@ def main() -> int:
 
     for i, row in enumerate(rows, start=1):
         title = row["title"]
+        disaron_nom = row["disaron_nom"]
         complement_titre = row["complement_titre"]
         chapeau = row["chapeau"]
         slug = (args.slug or "").strip() or _generate_unique_slug(parent_page, title)
@@ -167,6 +171,8 @@ def main() -> int:
                 },
             )
         ]
+        if disaron_nom:
+            body.append(("paragraph", escape(disaron_nom)))
         page = BlogEntryPage(
             title=title,
             slug=slug,
