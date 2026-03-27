@@ -3,8 +3,24 @@
 Create a BlogEntryPage as a child of a BlogIndexPage.
 
 Usage:
-    uv run python page-creator/create_blog_entry.py --parent-id 19 --title "My post" --slug "my-post"
-    uv run python page-creator/create_blog_entry.py --parent-id 19 --title "My post" --slug "my-post" --publish
+    uv run python page-creator/create_blog_entry.py --parent-id 30 --title "My post" --slug "my-post"
+    uv run python page-creator/create_blog_entry.py --parent-id 30 --title "My post" --slug "my-post" --publish
+    uv run python page-creator/create_blog_entry.py --parent-id 30 --title "My post"
+
+    # Create one page per row from CSV (uses dc:title, disaron:Complement_titre, disaron:chapeau, disaron:nom)
+    uv run python page-creator/create_blog_entry.py --parent-id 30 --data-file page-creator/data/infos-rapides.csv
+
+    # Same as above, but publish each page
+    uv run python page-creator/create_blog_entry.py --parent-id 30 --data-file page-creator/data/infos-rapides.csv --publish
+
+    # Add downloadable-document Tiles by matching disaron:nom in documents-file
+    uv run python page-creator/create_blog_entry.py --parent-id 30 \
+        --data-file page-creator/data/infos-rapides.csv \
+        --documents-file files_to_download_20260317_123722.csv \
+        --documents-dir my-downloader/downloads
+
+    # Use .env.scalingo instead of local .env values (when available)
+    uv run python page-creator/create_blog_entry.py --scalingo-env --parent-id 30 --title "My post"
 """
 
 import argparse

@@ -7,6 +7,12 @@ Usage:
     uv run python page-creator/clear_blog_entries.py \
         --parent-id 30 --no-confirmation
     uv run python page-creator/clear_blog_entries.py --parent-id 30 --dry-run
+    uv run python page-creator/clear_blog_entries.py \
+        --parent-id 30 --dry-run --no-confirmation
+    uv run python page-creator/clear_blog_entries.py \
+        --scalingo-env --parent-id 30 --dry-run
+    uv run python page-creator/clear_blog_entries.py \
+        --scalingo-env --parent-id 30 --no-confirmation
 """
 
 import argparse
