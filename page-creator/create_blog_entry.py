@@ -135,6 +135,11 @@ def main() -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("--parent-id", type=int, required=True, help="ID of the BlogIndexPage parent")
+    parser.add_argument(
+        "--scalingo-env",
+        action="store_true",
+        help="Load .env.scalingo for Django settings/environment.",
+    )
     parser.add_argument("--title", type=str, default="", help="Page title")
     parser.add_argument(
         "--slug",

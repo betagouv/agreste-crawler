@@ -31,6 +31,11 @@ def main() -> int:
         help="ID of the parent page",
     )
     parser.add_argument(
+        "--scalingo-env",
+        action="store_true",
+        help="Load .env.scalingo for Django settings/environment.",
+    )
+    parser.add_argument(
         "--no-confirmation",
         action="store_true",
         help="Skip confirmation prompt and delete immediately.",
