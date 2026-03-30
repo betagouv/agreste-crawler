@@ -310,6 +310,8 @@ def main() -> int:
             body=body,
             date=timezone.now(),
             show_in_menus=True,
+            # Be explicit: page should start as draft unless --publish is requested.
+            live=False,
         )
         parent_page.add_child(instance=page)
 
@@ -317,9 +319,21 @@ def main() -> int:
             page.save_revision().publish()
             print(f"[{i}/{len(rows)}] Published BlogEntryPage id={page.id} - {page.url}")
         else:
+            # Ensure an unpublished draft state even if project-level defaults/signals
+            # set newly created pages live.
+            if page.live:
+                page.unpublish()
+            page.save_revision()
             print(
                 f"[{i}/{len(rows)}] Created draft BlogEntryPage id={page.id} (slug={slug}). "
                 "Publish it from the Wagtail admin."
+            )
+        page.refresh_from_db(fields=["live"])
+        expected_live = bool(args.publish)
+        if page.live != expected_live:
+            raise RuntimeError(
+                f"Unexpected live state for page id={page.id}: "
+                f"expected live={expected_live}, got live={page.live}."
             )
 
     return 0
