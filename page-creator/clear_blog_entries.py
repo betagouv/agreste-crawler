@@ -10,9 +10,10 @@ Usage:
     uv run python page-creator/clear_blog_entries.py \
         --parent-id 30 --dry-run --no-confirmation
     uv run python page-creator/clear_blog_entries.py \
-        --scalingo-env --parent-id 30 --dry-run
+        --scalingo-env-file /path/to/.env.scalingo --parent-id 30 --dry-run
     uv run python page-creator/clear_blog_entries.py \
-        --scalingo-env --parent-id 30 --no-confirmation
+        --scalingo-env-file /path/to/.env.scalingo \
+        --parent-id 30 --no-confirmation
 """
 
 import argparse
@@ -37,9 +38,10 @@ def main() -> int:
         help="ID of the parent page",
     )
     parser.add_argument(
-        "--scalingo-env",
-        action="store_true",
-        help="Load .env.scalingo for Django settings/environment.",
+        "--scalingo-env-file",
+        type=str,
+        default="",
+        help="Load environment values from this env file before Django setup.",
     )
     parser.add_argument(
         "--no-confirmation",

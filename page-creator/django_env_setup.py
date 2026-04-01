@@ -4,14 +4,31 @@ import sys
 from pathlib import Path
 
 
+def _get_scalingo_env_file_arg() -> str | None:
+    for i, arg in enumerate(sys.argv):
+        if arg == "--scalingo-env-file":
+            if i + 1 >= len(sys.argv):
+                raise ValueError("--scalingo-env-file requires a file path argument.")
+            return sys.argv[i + 1]
+        if arg.startswith("--scalingo-env-file="):
+            value = arg.split("=", 1)[1]
+            if not value:
+                raise ValueError("--scalingo-env-file requires a non-empty file path.")
+            return value
+    return None
+
+
 def _load_requested_env_file(sites_faciles_root: Path) -> None:
-    if "--scalingo-env" not in sys.argv:
+    env_file_arg = _get_scalingo_env_file_arg()
+    if not env_file_arg:
         return
 
-    env_path = sites_faciles_root / ".env.scalingo"
+    env_path = Path(env_file_arg).expanduser()
+    if not env_path.is_absolute():
+        env_path = (Path.cwd() / env_path).resolve()
     if not env_path.exists():
         raise FileNotFoundError(
-            f"--scalingo-env was provided but file not found: {env_path}"
+            f"--scalingo-env-file was provided but file not found: {env_path}"
         )
 
     from dotenv import load_dotenv

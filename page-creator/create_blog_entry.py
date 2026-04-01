@@ -19,8 +19,9 @@ Usage:
         --documents-file files_to_download_20260317_123722.csv \
         --documents-dir my-downloader/downloads
 
-    # Use .env.scalingo instead of local .env values (when available)
-    uv run python page-creator/create_blog_entry.py --scalingo-env --parent-id 30 --title "My post"
+    # Load environment values from a specific env file
+    uv run python page-creator/create_blog_entry.py \
+        --scalingo-env-file /path/to/.env.scalingo --parent-id 30 --title "My post"
 """
 
 import argparse
@@ -152,9 +153,10 @@ def main() -> int:
     )
     parser.add_argument("--parent-id", type=int, required=True, help="ID of the BlogIndexPage parent")
     parser.add_argument(
-        "--scalingo-env",
-        action="store_true",
-        help="Load .env.scalingo for Django settings/environment.",
+        "--scalingo-env-file",
+        type=str,
+        default="",
+        help="Load environment values from this env file before Django setup.",
     )
     parser.add_argument("--title", type=str, default="", help="Page title")
     parser.add_argument(
