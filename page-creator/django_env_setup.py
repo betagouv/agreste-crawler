@@ -4,6 +4,41 @@ import sys
 from pathlib import Path
 
 
+def _get_wagtail_project_root_arg() -> str | None:
+    for i, arg in enumerate(sys.argv):
+        if arg == "--wagtail-project-root":
+            if i + 1 >= len(sys.argv):
+                raise ValueError(
+                    "--wagtail-project-root requires a directory path argument."
+                )
+            return sys.argv[i + 1]
+        if arg.startswith("--wagtail-project-root="):
+            value = arg.split("=", 1)[1]
+            if not value:
+                raise ValueError(
+                    "--wagtail-project-root requires a non-empty directory path."
+                )
+            return value
+    return None
+
+
+def _resolve_django_project_root(current_file: str) -> Path:
+    project_root_arg = _get_wagtail_project_root_arg()
+    if not project_root_arg:
+        raise ValueError(
+            "--wagtail-project-root is required and must point to the Django project root."
+        )
+    project_root = Path(project_root_arg).expanduser()
+    if not project_root.is_absolute():
+        project_root = (Path.cwd() / project_root).resolve()
+    if (project_root / "config" / "settings.py").exists():
+        return project_root
+    raise FileNotFoundError(
+        "Could not locate Django project root at: "
+        f"{project_root}"
+    )
+
+
 def _get_scalingo_env_file_arg() -> str | None:
     for i, arg in enumerate(sys.argv):
         if arg == "--scalingo-env-file":
@@ -18,7 +53,7 @@ def _get_scalingo_env_file_arg() -> str | None:
     return None
 
 
-def _load_requested_env_file(sites_faciles_root: Path) -> None:
+def _load_requested_env_file(project_root: Path) -> None:
     env_file_arg = _get_scalingo_env_file_arg()
     if not env_file_arg:
         return
@@ -39,30 +74,27 @@ def _load_requested_env_file(sites_faciles_root: Path) -> None:
 
 
 def setup_django(current_file: str) -> None:
-    # Add sibling sites-faciles project root on PYTHONPATH.
-    sites_faciles_root = (
-        Path(current_file).resolve().parents[2] / "sites-faciles"
-    )
-    if str(sites_faciles_root) not in sys.path:
-        sys.path.insert(0, str(sites_faciles_root))
+    project_root = _resolve_django_project_root(current_file)
+    if str(project_root) not in sys.path:
+        sys.path.insert(0, str(project_root))
 
-    _load_requested_env_file(sites_faciles_root)
+    _load_requested_env_file(project_root)
 
-    # If Django is missing, re-run with sites-faciles venv.
+    # If Django is missing, re-run with the target project venv.
     if importlib.util.find_spec("django") is None:
-        sites_faciles_python = sites_faciles_root / ".venv" / "bin" / "python"
+        project_python = project_root / ".venv" / "bin" / "python"
         current_python = Path(sys.executable)
         if (
-            sites_faciles_python.exists()
-            and current_python != sites_faciles_python
+            project_python.exists()
+            and current_python != project_python
         ):
             os.execv(
-                str(sites_faciles_python),
-                [str(sites_faciles_python), current_file, *sys.argv[1:]],
+                str(project_python),
+                [str(project_python), current_file, *sys.argv[1:]],
             )
         raise ModuleNotFoundError(
             "Django is not available. Install dependencies in agreste-crawler "
-            "or create ../sites-faciles/.venv."
+            "or create <wagtail-project-root>/.venv."
         )
 
     import django

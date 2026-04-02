@@ -3,15 +3,19 @@
 Delete all direct child pages under a given parent page.
 
 Usage:
-    uv run python page-creator/clear_blog_entries.py --parent-id 30
     uv run python page-creator/clear_blog_entries.py \
-        --parent-id 30 --no-confirmation
-    uv run python page-creator/clear_blog_entries.py --parent-id 30 --dry-run
+        --wagtail-project-root ../agreste --parent-id 30
     uv run python page-creator/clear_blog_entries.py \
-        --parent-id 30 --dry-run --no-confirmation
+        --wagtail-project-root ../agreste --parent-id 30 --no-confirmation
     uv run python page-creator/clear_blog_entries.py \
+        --wagtail-project-root ../agreste --parent-id 30 --dry-run
+    uv run python page-creator/clear_blog_entries.py \
+        --wagtail-project-root ../agreste --parent-id 30 --dry-run --no-confirmation
+    uv run python page-creator/clear_blog_entries.py \
+        --wagtail-project-root ../agreste \
         --scalingo-env-file /path/to/.env.scalingo --parent-id 30 --dry-run
     uv run python page-creator/clear_blog_entries.py \
+        --wagtail-project-root ../agreste \
         --scalingo-env-file /path/to/.env.scalingo \
         --parent-id 30 --no-confirmation
 """
@@ -36,6 +40,15 @@ def main() -> int:
         type=int,
         required=True,
         help="ID of the parent page",
+    )
+    parser.add_argument(
+        "--wagtail-project-root",
+        type=str,
+        default="",
+        help=(
+            "Root directory of the Wagtail/Django project "
+            "(contains config/settings.py)."
+        ),
     )
     parser.add_argument(
         "--scalingo-env-file",

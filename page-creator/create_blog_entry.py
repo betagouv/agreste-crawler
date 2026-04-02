@@ -3,24 +3,31 @@
 Create a BlogEntryPage as a child of a BlogIndexPage.
 
 Usage:
-    uv run python page-creator/create_blog_entry.py --parent-id 30 --title "My post" --slug "my-post"
-    uv run python page-creator/create_blog_entry.py --parent-id 30 --title "My post" --slug "my-post" --publish
-    uv run python page-creator/create_blog_entry.py --parent-id 30 --title "My post"
+    uv run python page-creator/create_blog_entry.py \
+        --wagtail-project-root ../agreste --parent-id 30 --title "My post" --slug "my-post"
+    uv run python page-creator/create_blog_entry.py \
+        --wagtail-project-root ../agreste --parent-id 30 --title "My post" --slug "my-post" --publish
+    uv run python page-creator/create_blog_entry.py \
+        --wagtail-project-root ../agreste --parent-id 30 --title "My post"
 
     # Create one page per row from CSV (uses dc:title, disaron:Complement_titre, disaron:chapeau, disaron:nom)
-    uv run python page-creator/create_blog_entry.py --parent-id 30 --data-file page-creator/data/infos-rapides.csv
+    uv run python page-creator/create_blog_entry.py \
+        --wagtail-project-root ../agreste --parent-id 30 --data-file page-creator/data/infos-rapides.csv
 
     # Same as above, but publish each page
-    uv run python page-creator/create_blog_entry.py --parent-id 30 --data-file page-creator/data/infos-rapides.csv --publish
+    uv run python page-creator/create_blog_entry.py \
+        --wagtail-project-root ../agreste --parent-id 30 --data-file page-creator/data/infos-rapides.csv --publish
 
     # Add downloadable-document Tiles by matching disaron:nom in documents-file
     uv run python page-creator/create_blog_entry.py --parent-id 30 \
+        --wagtail-project-root ../agreste \
         --data-file page-creator/data/infos-rapides.csv \
         --documents-file files_to_download_20260317_123722.csv \
         --documents-dir my-downloader/downloads
 
     # Load environment values from a specific env file
     uv run python page-creator/create_blog_entry.py \
+        --wagtail-project-root ../agreste \
         --scalingo-env-file /path/to/.env.scalingo --parent-id 30 --title "My post"
 """
 
@@ -34,11 +41,10 @@ from django_env_setup import setup_django
 
 setup_django(__file__)
 
-from django.core.files import File  # noqa: E402
+from django.core.files.base import File  # noqa: E402
 from django.utils import timezone  # noqa: E402
 from django.utils.text import slugify  # noqa: E402
-from wagtail.documents import get_document_model  # noqa: E402
-from wagtail.models import Collection  # noqa: E402
+from wagtail.documents.models import Document  # noqa: E402
 from wagtail.models import Page  # noqa: E402
 
 from blog.models import BlogEntryPage, BlogIndexPage  # noqa: E402
@@ -134,16 +140,22 @@ def _get_or_create_document(disaron_nom: str, nom_fichier: str, documents_dir: P
     if not source_path.is_file():
         raise ValueError(f"Document path is not a file: {source_path}")
 
-    document_model = get_document_model()
-    existing_document = document_model.objects.filter(title=stored_filename).first()
-    if existing_document:
-        return existing_document
+    return _create_wagtail_document(source_path, stored_filename)
 
-    root_collection = Collection.get_first_root_node()
-    with source_path.open("rb") as f:
-        document = document_model(title=stored_filename, collection=root_collection)
-        document.file.save(stored_filename, File(f), save=True)
-    return document
+
+def _create_wagtail_document(file_path: Path, title: str) -> Document:
+    """
+    Programmatically create a Wagtail Document, following the same pattern as
+    the provided snippet: Document(title=..., file=File(...)); doc.save().
+    """
+    with file_path.open("rb") as f:
+        doc_file = File(f, name=file_path.name)
+        doc = Document(
+            title=title,
+            file=doc_file,
+        )
+        doc.save()
+    return doc
 
 
 def main() -> int:
@@ -152,6 +164,12 @@ def main() -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("--parent-id", type=int, required=True, help="ID of the BlogIndexPage parent")
+    parser.add_argument(
+        "--wagtail-project-root",
+        type=str,
+        default="",
+        help="Root directory of the Wagtail/Django project (contains config/settings.py).",
+    )
     parser.add_argument(
         "--scalingo-env-file",
         type=str,
