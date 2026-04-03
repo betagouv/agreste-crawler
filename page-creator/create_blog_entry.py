@@ -132,8 +132,38 @@ def _prefixed_document_filename(disaron_nom: str, nom_fichier: str) -> str:
     return f"{disaron_nom}_{nom_fichier}"
 
 
-def _get_or_create_document(disaron_nom: str, nom_fichier: str, documents_dir: Path):
+def _find_existing_document(stored_filename: str) -> Document | None:
+    # Notes :
+    # - document.file : FieldFile object
+    # - document.file.name : 'documents/IraLeg25167_2025_167inforapChou-fleur_yNt3kd8.pdf'. Corresponds to the dir in which the file is saved.
+    # - document.filename (computed field): 'IraLeg25167_2025_167inforapChou-fleur_yNt3kd8.pdf'
+    relative_path = f"documents/{stored_filename}"
+    print(f"[DEBUG] Looking up existing document by file={relative_path!r}")
+    existing = (
+        Document.objects.filter(file=relative_path).order_by("id").first()
+    )
+    if existing is None:
+        print(f"[DEBUG] No existing document found for file={relative_path!r}")
+    else:
+        print(
+            f"[DEBUG] Reusing existing document id={existing.id} "
+            f"file={relative_path!r}"
+        )
+    return existing
+
+
+def _get_or_create_document(
+    disaron_nom: str,
+    nom_fichier: str,
+    documents_dir: Path,
+    force_file_uploads: bool = False,
+):
     stored_filename = _prefixed_document_filename(disaron_nom, nom_fichier)
+    if not force_file_uploads:
+        existing = _find_existing_document(stored_filename)
+        if existing is not None:
+            return existing
+
     source_path = documents_dir / stored_filename
     if not source_path.exists():
         raise ValueError(f"Document file not found in --documents-dir: {source_path}")
@@ -206,6 +236,14 @@ def main() -> int:
         action="store_true",
         help="Publish immediately (otherwise the page stays in draft)",
     )
+    parser.add_argument(
+        "--force-file-uploads",
+        action="store_true",
+        help=(
+            "Always upload a new Wagtail document for each file, even if one "
+            "already exists."
+        ),
+    )
     args = parser.parse_args()
 
     if args.data_file:
@@ -261,7 +299,12 @@ def main() -> int:
             }
             if documents_dir_path is not None:
                 try:
-                    document = _get_or_create_document(disaron_nom, nom_fichier, documents_dir_path)
+                    document = _get_or_create_document(
+                        disaron_nom,
+                        nom_fichier,
+                        documents_dir_path,
+                        force_file_uploads=args.force_file_uploads,
+                    )
                 except ValueError as exc:
                     print(f"Error: {exc}", file=sys.stderr)
                     return 1
