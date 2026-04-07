@@ -132,23 +132,27 @@ def _prefixed_document_filename(disaron_nom: str, nom_fichier: str) -> str:
     return f"{disaron_nom}_{nom_fichier}"
 
 
-def _find_existing_document(stored_filename: str) -> Document | None:
+def _find_existing_document(
+    stored_filename: str, debug: bool = False
+) -> Document | None:
     # Notes :
     # - document.file : FieldFile object
     # - document.file.name : 'documents/IraLeg25167_2025_167inforapChou-fleur_yNt3kd8.pdf'. Corresponds to the dir in which the file is saved.
     # - document.filename (computed field): 'IraLeg25167_2025_167inforapChou-fleur_yNt3kd8.pdf'
     relative_path = f"documents/{stored_filename}"
-    print(f"[DEBUG] Looking up existing document by file={relative_path!r}")
+    if debug:
+        print(f"[DEBUG] Looking up existing document by file={relative_path!r}")
     existing = (
         Document.objects.filter(file=relative_path).order_by("id").first()
     )
-    if existing is None:
-        print(f"[DEBUG] No existing document found for file={relative_path!r}")
-    else:
-        print(
-            f"[DEBUG] Reusing existing document id={existing.id} "
-            f"file={relative_path!r}"
-        )
+    if debug:
+        if existing is None:
+            print(f"[DEBUG] No existing document found for file={relative_path!r}")
+        else:
+            print(
+                f"[DEBUG] Reusing existing document id={existing.id} "
+                f"file={relative_path!r}"
+            )
     return existing
 
 
@@ -157,10 +161,11 @@ def _get_or_create_document(
     nom_fichier: str,
     documents_dir: Path,
     force_file_uploads: bool = False,
+    debug: bool = False,
 ):
     stored_filename = _prefixed_document_filename(disaron_nom, nom_fichier)
     if not force_file_uploads:
-        existing = _find_existing_document(stored_filename)
+        existing = _find_existing_document(stored_filename, debug=debug)
         if existing is not None:
             return existing
 
@@ -244,6 +249,11 @@ def main() -> int:
             "already exists."
         ),
     )
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="Show debug logs for document lookup/reuse.",
+    )
     args = parser.parse_args()
 
     if args.data_file:
@@ -304,6 +314,7 @@ def main() -> int:
                         nom_fichier,
                         documents_dir_path,
                         force_file_uploads=args.force_file_uploads,
+                        debug=args.debug,
                     )
                 except ValueError as exc:
                     print(f"Error: {exc}", file=sys.stderr)
