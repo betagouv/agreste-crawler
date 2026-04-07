@@ -254,6 +254,11 @@ def main() -> int:
         action="store_true",
         help="Show debug logs for document lookup/reuse.",
     )
+    parser.add_argument(
+        "--no-confirmation",
+        action="store_true",
+        help="Skip confirmation prompt before creating pages.",
+    )
     args = parser.parse_args()
 
     if args.data_file:
@@ -291,6 +296,16 @@ def main() -> int:
             file=sys.stderr,
         )
         return 1
+
+    total_pages = len(rows)
+    if not args.no_confirmation:
+        answer = input(
+            f"About to create {total_pages} page(s) under parent id={args.parent_id}. "
+            "Type 'yes' to confirm: "
+        ).strip()
+        if answer.lower() != "yes":
+            print("Creation cancelled.")
+            return 0
 
     for i, row in enumerate(rows, start=1):
         title = row["title"]
