@@ -17,9 +17,9 @@ async def main() -> None:
     per URL to results_<timestamp>.csv.
     """
     # main.py is under .../agreste-crawler/my-downloader/my_downloader/
-    # Project root (agreste-crawler) is two levels up from the package dir.
-    project_root = Path(__file__).resolve().parents[2]
-    urls_path = project_root / "files_to_download.csv"
+    # Downloader root is one level up from the package dir.
+    downloader_root = Path(__file__).resolve().parents[1]
+    urls_path = downloader_root / "files_to_download.csv"
 
     entries: list[dict[str, str]] = []
 
