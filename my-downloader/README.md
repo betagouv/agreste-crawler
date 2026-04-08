@@ -54,3 +54,23 @@ After a run you will typically see files like:
 - `my-downloader/results/results_20260317_123722.csv`
 - `my-downloader/results/failures_20260317_123722.csv`
 
+## Prefix downloaded filenames
+
+`my-downloader/disaron_prefixer.py` renames files in `my-downloader/downloads/` to:
+
+- `<disaron_nom>_<original_filename>`
+
+It reads mappings from the CSV passed via `--file-list` (or defaults to
+`my-downloader/files_to_download.csv`).
+
+Columns read from `--file-list`:
+
+- `disaron_nom`
+- `nom_fichier`
+
+Usage examples:
+
+```sh
+uv run python my-downloader/disaron_prefixer.py --dry-run
+uv run python my-downloader/disaron_prefixer.py --file-list my-downloader/files_to_download_infos_rapides_completees.csv
+```
