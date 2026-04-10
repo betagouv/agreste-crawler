@@ -8,6 +8,7 @@ Usage:
 """
 
 import argparse
+import re
 
 from django_setup import setup_django
 
@@ -17,6 +18,21 @@ from django.utils import timezone  # noqa: E402
 from wagtail.models import Page  # noqa: E402
 
 from blog.models import BlogEntryPage, BlogIndexPage  # noqa: E402
+
+DISARON_NOM_RE = re.compile(r"\b[A-Z][a-z]{2}[A-Z][a-z]{2}\d+\b")
+
+
+def find_disaron_nom(page: BlogEntryPage) -> str | None:
+    """
+    Extract a disaron-like identifier from page body content.
+
+    Expected format: XxxXxx followed by digits (e.g., IraLeg25167).
+    """
+    body_text = str(page.body)
+    match = DISARON_NOM_RE.search(body_text)
+    if match is None:
+        return None
+    return match.group(0)
 
 
 def main() -> int:
@@ -64,32 +80,35 @@ def main() -> int:
     pages = BlogEntryPage.objects.child_of(parent_page).order_by("id")
     page_count = pages.count()
 
-    if args.dry_run:
-        print(
-            f"[DRY RUN] Would update {page_count} "
-            f"BlogEntryPage object(s) to date={now}."
-        )
-        return 0
-
+    mode_prefix = "[DRY RUN] " if args.dry_run else ""
     answer = input(
-        f"About to update {page_count} BlogEntryPage object(s) to date={now}. "
+        f"{mode_prefix}About to update {page_count} "
+        f"BlogEntryPage object(s) to date={now}. "
         "Type 'yes' to confirm: "
     ).strip()
     if answer.lower() != "yes":
-        print("Update cancelled.")
+        print(f"{mode_prefix}Update cancelled.")
         return 0
 
     updated = 0
     for page in pages:
-        page.date = now
-        page.save(update_fields=["date"])
-        updated += 1
+        disaron_nom = find_disaron_nom(page)
         print(
-            f"[{updated}/{page_count}] Updated BlogEntryPage "
-            f"id={page.id} title={page.title!r}"
+            f"[{updated + 1}/{page_count}] "
+            f"BlogEntryPage id={page.id} disaron_nom={disaron_nom!r}"
+        )
+        page.date = now
+        if not args.dry_run:
+            page.save(update_fields=["date"])
+        updated += 1
+        action = "Would update" if args.dry_run else "Updated"
+        print(
+            f"[{updated}/{page_count}] {action} "
+            f"id={page.id} disaron_nom={disaron_nom!r} title={page.title!r}"
         )
 
-    print(f"Updated {updated} BlogEntryPage object(s) to date={now}.")
+    summary_action = "Would update" if args.dry_run else "Updated"
+    print(f"{summary_action} {updated} BlogEntryPage object(s) to date={now}.")
     return 0
 
 
