@@ -3,18 +3,18 @@
 Delete all direct child pages under a given parent page.
 
 Usage:
-    uv run python page-creator/clear_blog_entries.py \
+    uv run python -m page_creator.clear_blog_entries \
         --wagtail-project-root ../agreste --parent-id 30
-    uv run python page-creator/clear_blog_entries.py \
+    uv run python -m page_creator.clear_blog_entries \
         --wagtail-project-root ../agreste --parent-id 30 --no-confirmation
-    uv run python page-creator/clear_blog_entries.py \
+    uv run python -m page_creator.clear_blog_entries \
         --wagtail-project-root ../agreste --parent-id 30 --dry-run
-    uv run python page-creator/clear_blog_entries.py \
+    uv run python -m page_creator.clear_blog_entries \
         --wagtail-project-root ../agreste --parent-id 30 --dry-run --no-confirmation
-    uv run python page-creator/clear_blog_entries.py \
+    uv run python -m page_creator.clear_blog_entries \
         --wagtail-project-root ../agreste \
         --scalingo-env-file /path/to/.env.scalingo --parent-id 30 --dry-run
-    uv run python page-creator/clear_blog_entries.py \
+    uv run python -m page_creator.clear_blog_entries \
         --wagtail-project-root ../agreste \
         --scalingo-env-file /path/to/.env.scalingo \
         --parent-id 30 --no-confirmation
@@ -22,7 +22,7 @@ Usage:
 
 import argparse
 
-from django_env_setup import setup_django
+from django_setup import setup_django
 
 setup_django(__file__)
 
@@ -130,3 +130,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

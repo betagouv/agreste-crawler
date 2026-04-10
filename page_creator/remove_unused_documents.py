@@ -6,17 +6,17 @@ Only documents that do not appear in the reference index (no StreamField,
 rich text, FK, or other indexed link from any model) are removed.
 
 Usage:
-    uv run python page-creator/remove_unused_documents.py \\
+    uv run python -m page_creator.remove_unused_documents \
         --wagtail-project-root ../agreste --dry-run
-    uv run python page-creator/remove_unused_documents.py \\
+    uv run python -m page_creator.remove_unused_documents \
         --wagtail-project-root ../agreste
-    uv run python page-creator/remove_unused_documents.py \\
+    uv run python -m page_creator.remove_unused_documents \
         --wagtail-project-root ../agreste --no-confirmation
 """
 
 import argparse
 
-from django_env_setup import setup_django
+from django_setup import setup_django
 
 setup_django(__file__)
 
@@ -121,3 +121,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

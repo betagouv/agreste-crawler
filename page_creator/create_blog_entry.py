@@ -3,30 +3,30 @@
 Create a BlogEntryPage as a child of a BlogIndexPage.
 
 Usage:
-    uv run python page-creator/create_blog_entry.py \
+    uv run python -m page_creator.create_blog_entry \
         --wagtail-project-root ../agreste --parent-id 30 --title "My post" --slug "my-post"
-    uv run python page-creator/create_blog_entry.py \
+    uv run python -m page_creator.create_blog_entry \
         --wagtail-project-root ../agreste --parent-id 30 --title "My post" --slug "my-post" --publish
-    uv run python page-creator/create_blog_entry.py \
+    uv run python -m page_creator.create_blog_entry \
         --wagtail-project-root ../agreste --parent-id 30 --title "My post"
 
     # Create one page per row from CSV (uses dc:title, disaron:Complement_titre, disaron:chapeau, disaron:nom)
-    uv run python page-creator/create_blog_entry.py \
-        --wagtail-project-root ../agreste --parent-id 30 --data-file page-creator/data/infos-rapides.csv
+    uv run python -m page_creator.create_blog_entry \
+        --wagtail-project-root ../agreste --parent-id 30 --data-file page_creator/data/infos-rapides.csv
 
     # Same as above, but publish each page
-    uv run python page-creator/create_blog_entry.py \
-        --wagtail-project-root ../agreste --parent-id 30 --data-file page-creator/data/infos-rapides.csv --publish
+    uv run python -m page_creator.create_blog_entry \
+        --wagtail-project-root ../agreste --parent-id 30 --data-file page_creator/data/infos-rapides.csv --publish
 
     # Add downloadable-document Tiles by matching disaron:nom in documents-file
-    uv run python page-creator/create_blog_entry.py --parent-id 30 \
+    uv run python -m page_creator.create_blog_entry --parent-id 30 \
         --wagtail-project-root ../agreste \
-        --data-file page-creator/data/infos-rapides.csv \
+        --data-file page_creator/data/infos-rapides.csv \
         --documents-file files_to_download_20260317_123722.csv \
         --documents-dir my-downloader/downloads
 
     # Load environment values from a specific env file
-    uv run python page-creator/create_blog_entry.py \
+    uv run python -m page_creator.create_blog_entry \
         --wagtail-project-root ../agreste \
         --scalingo-env-file /path/to/.env.scalingo --parent-id 30 --title "My post"
 """
@@ -37,7 +37,7 @@ import sys
 from html import escape
 from pathlib import Path
 
-from django_env_setup import setup_django
+from django_setup import setup_django
 
 setup_django(__file__)
 
@@ -430,3 +430,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

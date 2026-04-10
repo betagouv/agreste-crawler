@@ -12,8 +12,8 @@ Writes an output CSV with columns:
 "disaron:noms" is a JSON array of distinct disaron:nom values for each author.
 
 Usage examples:
-  uv run python author-lister.py --input-csv infos-rapides.csv --output-csv authors.csv
-  uv run python author-lister.py --input-csv page-creator/data/infos-rapides.csv --output-csv page-creator/data/authors.csv
+  uv run python -m metadata_editor.author_lister --input-csv infos-rapides.csv --output-csv authors.csv
+  uv run python -m metadata_editor.author_lister --input-csv page_creator/data/infos-rapides.csv --output-csv page_creator/data/authors.csv
 """
 
 import argparse
@@ -122,3 +122,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
