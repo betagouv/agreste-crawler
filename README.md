@@ -12,11 +12,15 @@ uv sync
 
 ## Main Commands
 
-All module-style script commands below should be run with the repository root
-on `PYTHONPATH`:
+### Just Recipes
+
+You can run the main scripts via `just` with snake_case recipe names:
 
 ```bash
-PYTHONPATH=. uv run python -m ...
+just clear_blog_entries --wagtail-project-root ../agreste --parent-id 30 --dry-run
+just create_blog_entry --wagtail-project-root ../agreste --parent-id 30 --title "My post"
+just author_lister --input-csv infos-rapides.csv --output-csv authors.csv
+just update_blog_entry_dates --wagtail-project-root ../agreste
 ```
 
 ### My Downloader
@@ -38,19 +42,19 @@ cd "my-downloader" && uv run -m my_downloader
 Create one page from a title:
 
 ```bash
-PYTHONPATH=. uv run python -m page_creator.create_blog_entry --wagtail-project-root ../agreste --parent-id 30 --title "My post"
+just create_blog_entry --wagtail-project-root ../agreste --parent-id 30 --title "My post"
 ```
 
 Create one page per CSV row:
 
 ```bash
-PYTHONPATH=. uv run python -m page_creator.create_blog_entry --wagtail-project-root ../agreste --parent-id 30 --data-file page_creator/data/infos-rapides.csv
+just create_blog_entry --wagtail-project-root ../agreste --parent-id 30 --data-file page_creator/data/infos-rapides.csv
 ```
 
 Create pages and upload associated documents from a second CSV + local files:
 
 ```bash
-PYTHONPATH=. uv run python -m page_creator.create_blog_entry \
+just create_blog_entry \
   --wagtail-project-root ../agreste \
   --parent-id 30 \
   --data-file page_creator/data/infos-rapides.csv \
@@ -61,7 +65,7 @@ PYTHONPATH=. uv run python -m page_creator.create_blog_entry \
 Use `.env.scalingo` environment values:
 
 ```bash
-PYTHONPATH=. uv run python -m page_creator.create_blog_entry --wagtail-project-root ../agreste --scalingo-env-file /path/to/.env.scalingo --parent-id 30 --title "My post"
+just create_blog_entry --wagtail-project-root ../agreste --scalingo-env-file /path/to/.env.scalingo --parent-id 30 --title "My post"
 ```
 
 ### Clear Blog Entries
@@ -69,25 +73,25 @@ PYTHONPATH=. uv run python -m page_creator.create_blog_entry --wagtail-project-r
 Delete direct children under a parent page:
 
 ```bash
-PYTHONPATH=. uv run python -m page_creator.clear_blog_entries --wagtail-project-root ../agreste --parent-id 30
+just clear_blog_entries --wagtail-project-root ../agreste --parent-id 30
 ```
 
 Dry run:
 
 ```bash
-PYTHONPATH=. uv run python -m page_creator.clear_blog_entries --wagtail-project-root ../agreste --parent-id 30 --dry-run
+just clear_blog_entries --wagtail-project-root ../agreste --parent-id 30 --dry-run
 ```
 
 Skip confirmation:
 
 ```bash
-PYTHONPATH=. uv run python -m page_creator.clear_blog_entries --wagtail-project-root ../agreste --parent-id 30 --no-confirmation
+just clear_blog_entries --wagtail-project-root ../agreste --parent-id 30 --no-confirmation
 ```
 
 Use `.env.scalingo`:
 
 ```bash
-PYTHONPATH=. uv run python -m page_creator.clear_blog_entries --wagtail-project-root ../agreste --scalingo-env-file /path/to/.env.scalingo --parent-id 30 --dry-run
+just clear_blog_entries --wagtail-project-root ../agreste --scalingo-env-file /path/to/.env.scalingo --parent-id 30 --dry-run
 ```
 
 ### Author Lister
@@ -95,7 +99,15 @@ PYTHONPATH=. uv run python -m page_creator.clear_blog_entries --wagtail-project-
 Build an author index from DISARON data:
 
 ```bash
-PYTHONPATH=. uv run python -m metadata_editor.author_lister --input-csv infos-rapides.csv --output-csv authors.csv
+just author_lister --input-csv infos-rapides.csv --output-csv authors.csv
+```
+
+### Update Blog Entry Dates
+
+Set all `BlogEntryPage.date` values to now:
+
+```bash
+just update_blog_entry_dates --wagtail-project-root ../agreste
 ```
 
 ## Notes
