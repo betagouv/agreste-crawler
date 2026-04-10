@@ -31,6 +31,7 @@ from blog.models import BlogEntryPage, BlogIndexPage  # noqa: E402
 
 PROPER_DISARON_RE = re.compile(r"\bIra[A-Z][a-z]{2}\d+\b")
 BAD_DISARON_RE = re.compile(r"\bira([a-z]{3})(\d+)\b", re.IGNORECASE)
+BAD_DISARON_AVII_RE = re.compile(r"\biraavii(\d+)\b", re.IGNORECASE)
 
 
 def _walk_strings(value: Any) -> list[str]:
@@ -87,7 +88,22 @@ def _extract_bad_disarons_from_stream_data(stream_data: list[Any]) -> list[str]:
     return found
 
 
+def _extract_bad_avii_disarons_from_stream_data(stream_data: list[Any]) -> list[str]:
+    found: list[str] = []
+    for text in _walk_strings(stream_data):
+        for match in BAD_DISARON_AVII_RE.finditer(text):
+            token = match.group(0)
+            if token not in found:
+                found.append(token)
+    return found
+
+
 def _to_fixed_disaron(bad_disaron: str) -> str:
+    avii_match = BAD_DISARON_AVII_RE.fullmatch(bad_disaron)
+    if avii_match is not None:
+        number = avii_match.group(1)
+        return f"IraAvi{number}"
+
     match = BAD_DISARON_RE.fullmatch(bad_disaron)
     if match is None:
         return bad_disaron
@@ -182,6 +198,10 @@ def main() -> int:
             stream_data = _get_stream_data(page.body)
             bad_disarons = _extract_bad_disarons_from_stream_data(stream_data)
             if not bad_disarons:
+                bad_disarons = _extract_bad_avii_disarons_from_stream_data(
+                    stream_data
+                )
+            if not bad_disarons:
                 failures_count += 1
                 writer.writerow(
                     {
@@ -190,7 +210,7 @@ def main() -> int:
                         "fixed_disaron_nom": "",
                     "error": (
                         "no properly formed disaron_nom and "
-                        "no bad iraxxx+digits found"
+                        "no bad iraxxx+digits/iraavii+digits found"
                     ),
                     }
                 )
