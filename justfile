@@ -13,6 +13,6 @@ remove_unused_documents *args:
 author_lister *args:
     PYTHONPATH=. uv run python -m metadata_editor.author_lister "$@"
 
-update_blog_entry_dates *args:
-    PYTHONPATH=. uv run python -m metadata_editor.update_blog_entry_dates "$@"
+set_publication_date *args:
+    PYTHONPATH=. uv run python -m metadata_editor.set_publication_date "$@"
 

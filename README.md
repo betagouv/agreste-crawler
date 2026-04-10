@@ -20,7 +20,7 @@ You can run the main scripts via `just` with snake_case recipe names:
 just clear_blog_entries --wagtail-project-root ../agreste --parent-id 30 --dry-run
 just create_blog_entry --wagtail-project-root ../agreste --parent-id 30 --title "My post"
 just author_lister --input-csv infos-rapides.csv --output-csv authors.csv
-just update_blog_entry_dates --wagtail-project-root ../agreste
+just set_publication_date --wagtail-project-root ../agreste --parent-id 30
 ```
 
 ### My Downloader
@@ -107,7 +107,7 @@ just author_lister --input-csv infos-rapides.csv --output-csv authors.csv
 Set all `BlogEntryPage.date` values to now:
 
 ```bash
-just update_blog_entry_dates --wagtail-project-root ../agreste
+just set_publication_date --wagtail-project-root ../agreste --parent-id 30
 ```
 
 ## Notes
