@@ -21,6 +21,7 @@ just clear_blog_entries --wagtail-project-root ../agreste --parent-id 30 --dry-r
 just create_blog_entry --wagtail-project-root ../agreste --parent-id 30 --title "My post"
 just author_lister --input-csv infos-rapides.csv --output-csv authors.csv
 just set_publication_date --wagtail-project-root ../agreste --parent-id 30 --data-file infos-rapides.csv
+just disaron_fixer --wagtail-project-root ../agreste --parent-id 30
 ```
 
 ### My Downloader
@@ -108,6 +109,15 @@ Set `BlogEntryPage.date` from CSV `disaron:Date_premiere_publication` values:
 
 ```bash
 just set_publication_date --wagtail-project-root ../agreste --parent-id 30 --data-file infos-rapides.csv
+```
+
+### Disaron Fixer
+
+Find malformed `iraxxxNNN` identifiers in BlogEntryPage body content, prompt
+before each replacement, and save fixed values as `IraXxxNNN`:
+
+```bash
+just disaron_fixer --wagtail-project-root ../agreste --parent-id 30
 ```
 
 ## Notes
