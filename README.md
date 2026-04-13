@@ -111,6 +111,14 @@ Set `BlogEntryPage.date` from CSV `disaron:Date_premiere_publication` values:
 just set_publication_date --wagtail-project-root ../agreste --parent-id 30 --data-file infos-rapides.csv
 ```
 
+### Set Collection
+
+Set `BlogEntryPage` collection from CSV `collection` values:
+
+```bash
+just set_collection --wagtail-project-root ../agreste --parent-id 30 --data-file infos-rapides.csv
+```
+
 ### Disaron Fixer
 
 Find malformed `iraxxxNNN` identifiers in BlogEntryPage body content, prompt

@@ -16,6 +16,9 @@ author_lister *args:
 set_publication_date *args:
     PYTHONPATH=. uv run python -m metadata_editor.set_publication_date "$@"
 
+set_collection *args:
+    PYTHONPATH=. uv run python -m metadata_editor.set_collection "$@"
+
 disaron_fixer *args:
     PYTHONPATH=. uv run python -m metadata_editor.disaron_fixer "$@"
 
