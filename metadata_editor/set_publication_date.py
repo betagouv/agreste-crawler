@@ -24,14 +24,19 @@ from wagtail.models import Page  # noqa: E402
 
 from blog.models import BlogEntryPage, BlogIndexPage  # noqa: E402
 
-DISARON_NOM_RE = re.compile(r"\b[A-Z][a-z]{2}[A-Z][a-z]{2}\d+\b")
+DISARON_NOM_RE = re.compile(
+    r"\b[A-Z][a-z]{2}[A-Z][a-z]{2}\d+(?:bis|ter)?\b",
+    re.IGNORECASE,
+)
 
 
 def find_disaron_nom(page: BlogEntryPage) -> str | None:
     """
     Extract a disaron-like identifier from page body content.
 
-    Expected format: XxxXxx followed by digits (e.g., IraLeg25167).
+    Expected formats include:
+    - XxxXxx followed by digits (e.g., IraLeg25167)
+    - XxxXxx followed by digits and 'bis'/'ter' (rare edge cases)
     """
     body_text = str(page.body)
     match = DISARON_NOM_RE.search(body_text)
