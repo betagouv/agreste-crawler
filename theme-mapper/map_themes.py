@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 """
-Map old Nuxeo theme codes to new theme names and labels.
+Map old Nuxeo theme codes to new theme names and theme codes.
 
 Reads an input CSV with 'disaron:nom' and 'disaron:theme' columns,
 maps each theme code through themes-old-new.csv, and writes an output CSV
-with columns: disaron_nom, disaron:theme, themes, themes_labels.
+with columns: disaron_nom, disaron:theme, themes_labels, themes_codes.
 
 Unmapped codes are written incrementally to a failures CSV file.
 
@@ -24,24 +24,37 @@ DEFAULT_MAPPING_CSV = "theme-mapper/themes-old-new.csv"
 
 def load_theme_mapping(mapping_csv: str) -> dict[str, tuple[str, str]]:
     """
-    Build a lookup: old_theme_code -> (theme, theme_label).
+    Build a lookup: old_theme_code -> (theme_label, theme_code).
 
     Each row in the mapping file may contain several pipe-separated codes in
-    its old_theme column; all of them map to the same new theme.
-    Rows with an empty old_theme (section headers) are skipped.
+    its old_theme_code column; all of them map to the same new theme.
+    Rows with an empty old_theme_code (section headers) are skipped.
+
+    When theme_label or theme_code are empty, falls back to the per-code
+    old_theme_label and old_theme_code values respectively.
     """
     mapping: dict[str, tuple[str, str]] = {}
     with Path(mapping_csv).open("r", encoding="utf-8", newline="") as f:
         for row in csv.DictReader(f):
-            old_theme = (row.get("old_theme") or "").strip()
-            theme = (row.get("theme") or "").strip()
-            theme_label = (row.get("theme_label") or "").strip()
-            if not old_theme or not theme:
+            old_theme_code = (row.get("old_theme_code") or "").strip()
+            if not old_theme_code:
                 continue
-            for code in old_theme.split("|"):
-                code = code.strip()
-                if code:
-                    mapping[code] = (theme, theme_label)
+            old_theme_label = (row.get("old_theme_label") or "").strip()
+            theme_label = (row.get("theme_label") or "").strip()
+            theme_code = (row.get("theme_code") or "").strip()
+
+            old_codes = [c.strip() for c in old_theme_code.split("|")]
+            old_labels = [l.strip() for l in old_theme_label.split("|")]
+
+            for i, code in enumerate(old_codes):
+                if not code:
+                    continue
+                fallback_label = old_labels[i] if i < len(old_labels) else code
+                fallback_code = code
+                mapping[code] = (
+                    theme_label or fallback_label,
+                    theme_code or fallback_code,
+                )
     return mapping
 
 
@@ -89,13 +102,13 @@ def main() -> int:
         reader = csv.DictReader(in_f)
         writer = csv.DictWriter(
             out_f,
-            fieldnames=["disaron_nom", "disaron:theme", "themes", "themes_labels"],
+            fieldnames=["disaron_nom", "disaron:theme", "themes_labels", "themes_codes"],
         )
         writer.writeheader()
 
         failures_writer = csv.DictWriter(
             fail_f,
-            fieldnames=["disaron:nom", "old_theme", "error"],
+            fieldnames=["disaron:nom", "old_theme_code", "error"],
         )
         failures_writer.writeheader()
 
@@ -104,8 +117,8 @@ def main() -> int:
             raw_themes = (row.get("disaron:theme") or "").strip()
             old_codes = [c.strip() for c in raw_themes.split("|") if c.strip()]
 
-            themes: list[str] = []
             labels: list[str] = []
+            codes: list[str] = []
             seen: set[str] = set()
             for code in old_codes:
                 result = mapping.get(code)
@@ -113,25 +126,25 @@ def main() -> int:
                     failures_writer.writerow(
                         {
                             "disaron:nom": disaron_nom,
-                            "old_theme": code,
+                            "old_theme_code": code,
                             "error": "unmapped theme code",
                         }
                     )
                     fail_f.flush()
                     failures_count += 1
                     continue
-                theme, theme_label = result
-                if theme not in seen:
-                    seen.add(theme)
-                    themes.append(theme)
+                theme_label, theme_code = result
+                if theme_label not in seen:
+                    seen.add(theme_label)
                     labels.append(theme_label)
+                    codes.append(theme_code)
 
             writer.writerow(
                 {
                     "disaron_nom": disaron_nom,
                     "disaron:theme": raw_themes,
-                    "themes": "|".join(themes),
                     "themes_labels": "|".join(labels),
+                    "themes_codes": "|".join(codes),
                 }
             )
             written += 1
