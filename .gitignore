@@ -11,3 +11,4 @@ my-downloader/results/
 my-data-finder/output/
 .env*
 metadata_editor/output/
+theme-mapper/output/
