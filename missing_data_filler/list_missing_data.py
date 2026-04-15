@@ -66,8 +66,9 @@ def main() -> int:
         output_path.open("w", encoding="utf-8", newline="") as out_f,
     ):
         reader = csv.DictReader(in_f)
+        flag_fields = [f for f in REQUIRED_FIELDS if f != "disaron:nom"]
         writer = csv.DictWriter(
-            out_f, fieldnames=["disaron:nom", "missing_fields"]
+            out_f, fieldnames=["disaron:nom", "missing_fields"] + flag_fields
         )
         writer.writeheader()
 
@@ -80,12 +81,14 @@ def main() -> int:
             ]
             if missing:
                 flagged += 1
-                writer.writerow(
-                    {
-                        "disaron:nom": (row.get("disaron:nom") or "").strip(),
-                        "missing_fields": "|".join(missing),
-                    }
-                )
+                missing_set = set(missing)
+                out_row: dict = {
+                    "disaron:nom": (row.get("disaron:nom") or "").strip(),
+                    "missing_fields": "|".join(missing),
+                }
+                for field in flag_fields:
+                    out_row[field] = 1 if field in missing_set else 0
+                writer.writerow(out_row)
 
     print(f"Checked {total} row(s): {flagged} with missing fields.")
     print(f"Output written to {output_path}.")
