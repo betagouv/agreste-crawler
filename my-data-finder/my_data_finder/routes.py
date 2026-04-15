@@ -30,6 +30,7 @@ ALL_OPTIONAL_FIELDS: tuple[str, ...] = (
     "disaron:niveau_geographique",
     "collection",
     "sous-collection",
+    "categorie",
     "nb de fichiers",
     "noms des fichiers",
     "urls des fichiers",
@@ -74,6 +75,7 @@ def _get_output_fieldnames() -> list[str]:
         "disaron:niveau_geographique",
         "collection",
         "sous-collection",
+        "categorie",
         "nb de fichiers",
         "noms des fichiers",
         "urls des fichiers",
@@ -160,6 +162,8 @@ def append_failed_row(page_id: str | None) -> None:
             row["collection"] = ""
         if "sous-collection" in fieldnames:
             row["sous-collection"] = ""
+        if "categorie" in fieldnames:
+            row["categorie"] = ""
         if "nb de fichiers" in fieldnames:
             row["nb de fichiers"] = ""
         if "noms des fichiers" in fieldnames:
@@ -297,6 +301,7 @@ async def default_handler(context: BasicCrawlingContext) -> None:
         niveau_geographique: list[str] = []
         collection = ""
         sous_collection = ""
+        categorie = ""
 
         if "dc:title" in _REQUESTED_FIELDS:
             title_el = soup.select_one("#mainform\\:j_idt78")
@@ -376,6 +381,11 @@ async def default_handler(context: BasicCrawlingContext) -> None:
                 if len(paragraphs) >= 2:
                     sous_collection = paragraphs[1]
 
+        if "categorie" in _REQUESTED_FIELDS:
+            categorie_el = soup.select_one("#disaronCategorie")
+            if categorie_el:
+                categorie = categorie_el.get_text(strip=True)
+
         # Find links inside the specific JSF container id=mainform:j_idt119
         file_links: list[str] = []
         container = soup.select_one("#mainform\\:j_idt119")
@@ -427,6 +437,8 @@ async def default_handler(context: BasicCrawlingContext) -> None:
             missing_fields.append("disaron:niveau_geographique")
         if "collection" in _REQUESTED_FIELDS and not collection:
             missing_fields.append("collection")
+        if "categorie" in _REQUESTED_FIELDS and not categorie:
+            missing_fields.append("categorie")
         if len(file_links) == 0:
             # Only treat missing downloadable links as an error if at least one file-related
             # field was requested.
@@ -481,6 +493,8 @@ async def default_handler(context: BasicCrawlingContext) -> None:
             row["collection"] = collection
         if "sous-collection" in fieldnames:
             row["sous-collection"] = sous_collection
+        if "categorie" in fieldnames:
+            row["categorie"] = categorie
         if "nb de fichiers" in fieldnames:
             row["nb de fichiers"] = len(file_links)
         if "noms des fichiers" in fieldnames:

@@ -61,6 +61,7 @@ uv run python -m my_data_finder --no-concurrency
 | `disaron:niveau_geographique` | Geographic level (JSON list) |
 | `collection` | Collection name |
 | `sous-collection` | Sub-collection name (optional) |
+| `categorie` | Category |
 | `nb de fichiers` | Number of downloadable files |
 | `noms des fichiers` | File names (JSON list) |
 | `urls des fichiers` | File URLs (JSON list) |
