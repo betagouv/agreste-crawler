@@ -28,6 +28,8 @@ ALL_OPTIONAL_FIELDS: tuple[str, ...] = (
     "themes",
     "disaron:annees_reference",
     "disaron:niveau_geographique",
+    "collection",
+    "sous-collection",
     "nb de fichiers",
     "noms des fichiers",
     "urls des fichiers",
@@ -70,6 +72,8 @@ def _get_output_fieldnames() -> list[str]:
         "themes",
         "disaron:annees_reference",
         "disaron:niveau_geographique",
+        "collection",
+        "sous-collection",
         "nb de fichiers",
         "noms des fichiers",
         "urls des fichiers",
@@ -152,6 +156,10 @@ def append_failed_row(page_id: str | None) -> None:
             row["disaron:annees_reference"] = "[]"
         if "disaron:niveau_geographique" in fieldnames:
             row["disaron:niveau_geographique"] = "[]"
+        if "collection" in fieldnames:
+            row["collection"] = ""
+        if "sous-collection" in fieldnames:
+            row["sous-collection"] = ""
         if "nb de fichiers" in fieldnames:
             row["nb de fichiers"] = ""
         if "noms des fichiers" in fieldnames:
@@ -287,6 +295,8 @@ async def default_handler(context: BasicCrawlingContext) -> None:
         themes: list[str] = []
         annees_reference: list[str] = []
         niveau_geographique: list[str] = []
+        collection = ""
+        sous_collection = ""
 
         if "dc:title" in _REQUESTED_FIELDS:
             title_el = soup.select_one("#mainform\\:j_idt78")
@@ -351,6 +361,21 @@ async def default_handler(context: BasicCrawlingContext) -> None:
                     if text:
                         niveau_geographique.append(text)
 
+        collection = ""
+        sous_collection = ""
+        if "collection" in _REQUESTED_FIELDS or "sous-collection" in _REQUESTED_FIELDS:
+            coll_container = soup.select_one("#mainform\\:j_idt109")
+            if coll_container:
+                paragraphs = [
+                    p.get_text(strip=True)
+                    for p in coll_container.find_all("p")
+                    if p.get_text(strip=True)
+                ]
+                if len(paragraphs) >= 1:
+                    collection = paragraphs[0]
+                if len(paragraphs) >= 2:
+                    sous_collection = paragraphs[1]
+
         # Find links inside the specific JSF container id=mainform:j_idt119
         file_links: list[str] = []
         container = soup.select_one("#mainform\\:j_idt119")
@@ -400,6 +425,8 @@ async def default_handler(context: BasicCrawlingContext) -> None:
             and not niveau_geographique
         ):
             missing_fields.append("disaron:niveau_geographique")
+        if "collection" in _REQUESTED_FIELDS and not collection:
+            missing_fields.append("collection")
         if len(file_links) == 0:
             # Only treat missing downloadable links as an error if at least one file-related
             # field was requested.
@@ -450,6 +477,10 @@ async def default_handler(context: BasicCrawlingContext) -> None:
             row["disaron:niveau_geographique"] = json.dumps(
                 niveau_geographique, ensure_ascii=False
             )
+        if "collection" in fieldnames:
+            row["collection"] = collection
+        if "sous-collection" in fieldnames:
+            row["sous-collection"] = sous_collection
         if "nb de fichiers" in fieldnames:
             row["nb de fichiers"] = len(file_links)
         if "noms des fichiers" in fieldnames:
