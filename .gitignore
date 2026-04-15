@@ -12,3 +12,4 @@ my-data-finder/output/
 .env*
 metadata_editor/output/
 theme-mapper/output/
+missing_data_filler/output/
