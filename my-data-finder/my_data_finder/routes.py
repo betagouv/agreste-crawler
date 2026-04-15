@@ -437,6 +437,8 @@ async def default_handler(context: BasicCrawlingContext) -> None:
             missing_fields.append("disaron:niveau_geographique")
         if "collection" in _REQUESTED_FIELDS and not collection:
             missing_fields.append("collection")
+        if "sous-collection" in _REQUESTED_FIELDS and not sous_collection:
+            missing_fields.append("sous-collection")
         if "categorie" in _REQUESTED_FIELDS and not categorie:
             missing_fields.append("categorie")
         if len(file_links) == 0:
