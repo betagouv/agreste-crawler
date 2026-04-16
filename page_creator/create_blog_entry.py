@@ -380,9 +380,9 @@ def main() -> int:
 
         left_column_content: list[tuple[str, str]] = []
         if complement_titre:
-            left_column_content.append(("text", f"<h2>{escape(complement_titre)}</h2>"))
+            left_column_content.append(("text", f'<h2 div="complement-titre">{escape(complement_titre)}</h2>'))
         if chapeau:
-            left_column_content.append(("text", escape(chapeau)))
+            left_column_content.append(("text", f'<div id="chapeau">{escape(chapeau)}</div>'))
 
         body = [
             (
