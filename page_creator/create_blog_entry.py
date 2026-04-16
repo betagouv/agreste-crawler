@@ -380,7 +380,7 @@ def main() -> int:
 
         left_column_content: list[tuple[str, str]] = []
         if complement_titre:
-            left_column_content.append(("text", f"<h4>{escape(complement_titre)}</h4>"))
+            left_column_content.append(("text", f"<h2>{escape(complement_titre)}</h2>"))
         if chapeau:
             left_column_content.append(("text", escape(chapeau)))
 
