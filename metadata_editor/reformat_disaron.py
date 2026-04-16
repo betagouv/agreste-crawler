@@ -51,6 +51,7 @@ def _get_stream_data(body_value: Any) -> list[Any]:
 
 
 RICH_TEXT_BLOCK_TYPES = {"richtext", "paragraph", "text"}
+HTML_BLOCK_TYPES = {"html"}
 
 
 def _reformat_blocks(stream_data: list[Any]) -> tuple[list[Any], int, str]:
@@ -93,6 +94,26 @@ def _reformat_blocks(stream_data: list[Any]) -> tuple[list[Any], int, str]:
         out.append(block)
 
     return out, replacements, first_disaron
+
+
+def _extract_disaron_from_existing_html(stream_data: list[Any]) -> str:
+    """
+    If the page was already reformatted, the disaron is expected to live in an
+    HTML block containing id=\"disaron-nom\".
+    """
+    for block in stream_data:
+        if (
+            isinstance(block, dict)
+            and block.get("type") in HTML_BLOCK_TYPES
+            and isinstance(block.get("value"), str)
+        ):
+            value: str = block["value"]
+            if not DISARON_DIV_RE.search(value):
+                continue
+            match = DISARON_NOM_RE.search(value)
+            if match:
+                return match.group(0)
+    return ""
 
 
 def main() -> int:
@@ -142,6 +163,7 @@ def main() -> int:
     )
     timestamp = timezone.localtime().strftime("%Y-%m-%d_%H-%M-%S")
     success_file = f"metadata_editor/output/{timestamp}_reformat_disaron_success.csv"
+    noop_file = f"metadata_editor/output/{timestamp}_reformat_disaron_noop.csv"
     pages = resolve_pages(args.parent_id)
     page_count = pages.count()
 
@@ -162,10 +184,13 @@ def main() -> int:
 
     success_path = Path(success_file)
     success_path.parent.mkdir(parents=True, exist_ok=True)
+    noop_path = Path(noop_file)
+    noop_path.parent.mkdir(parents=True, exist_ok=True)
 
     with (
         failures_path.open("w", encoding="utf-8", newline="") as failures_f,
         success_path.open("w", encoding="utf-8", newline="") as success_f,
+        noop_path.open("w", encoding="utf-8", newline="") as noop_f,
     ):
         writer = csv.DictWriter(
             failures_f, fieldnames=["pageId", "disaron_nom", "error"]
@@ -175,6 +200,10 @@ def main() -> int:
             success_f, fieldnames=["pageId", "disaron_nom", "replacements"]
         )
         success_writer.writeheader()
+        noop_writer = csv.DictWriter(
+            noop_f, fieldnames=["pageId", "disaron_nom"]
+        )
+        noop_writer.writeheader()
 
         def _fail(page: BlogEntryPage, disaron_nom: str, error: str) -> None:
             nonlocal failures_count
@@ -201,8 +230,20 @@ def main() -> int:
                 continue
 
             if replacements == 0:
+                already = _extract_disaron_from_existing_html(stream_data)
+                if already:
+                    no_change += 1
+                    noop_writer.writerow(
+                        {
+                            "pageId": str(page.id),
+                            "disaron_nom": already,
+                        }
+                    )
+                    noop_f.flush()
+                    continue
+
                 no_change += 1
-                _fail(page, "", "no DISARON match in rich text blocks")
+                _fail(page, "", "no DISARON match in rich text or html blocks")
                 continue
 
             page.body = new_stream
@@ -237,6 +278,7 @@ def main() -> int:
 
     print(f"Wrote {failures_count} failure row(s) to {failures_file}.")
     print(f"Wrote {updated} success row(s) to {success_file}.")
+    print(f"Wrote {no_change} noop row(s) to {noop_file}.")
     summary_action = "Would update" if args.dry_run else "Updated"
     print(
         f"{summary_action} {updated} page(s); "
