@@ -16,7 +16,7 @@ For each BlogEntryPage under --parent-id:
           <div id="chapeau"> ... </div>
 
 Usage:
-    just add_ids_and_filename \
+    just add_ids_to_pages \
         --wagtail-project-root ../agreste \
         --parent-id 30
 """
