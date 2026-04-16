@@ -34,6 +34,7 @@ from metadata_editor.set_metadata import (  # noqa: E402
     resolve_failures_file,
     resolve_pages,
 )
+from django.utils import timezone  # noqa: E402
 
 DISARON_DIV_RE = re.compile(r'id\s*=\s*["\']disaron-nom["\']', re.IGNORECASE)
 
@@ -132,6 +133,8 @@ def main() -> int:
     failures_file = resolve_failures_file(
         args.failures_file, "reformat_disaron_failures"
     )
+    timestamp = timezone.localtime().strftime("%Y-%m-%d_%H-%M-%S")
+    success_file = f"metadata_editor/output/{timestamp}_reformat_disaron_success.csv"
     pages = resolve_pages(args.parent_id)
     page_count = pages.count()
 
@@ -150,11 +153,21 @@ def main() -> int:
     failures_path = Path(failures_file)
     failures_path.parent.mkdir(parents=True, exist_ok=True)
 
-    with failures_path.open("w", encoding="utf-8", newline="") as failures_f:
+    success_path = Path(success_file)
+    success_path.parent.mkdir(parents=True, exist_ok=True)
+
+    with (
+        failures_path.open("w", encoding="utf-8", newline="") as failures_f,
+        success_path.open("w", encoding="utf-8", newline="") as success_f,
+    ):
         writer = csv.DictWriter(
             failures_f, fieldnames=["pageId", "disaron_nom", "error"]
         )
         writer.writeheader()
+        success_writer = csv.DictWriter(
+            success_f, fieldnames=["pageId", "disaron_nom", "replacements"]
+        )
+        success_writer.writeheader()
 
         def _fail(page: BlogEntryPage, error: str) -> None:
             nonlocal failures_count
@@ -200,6 +213,16 @@ def main() -> int:
                     continue
 
             updated += 1
+            disaron_match = DISARON_NOM_RE.search(str(page.body))
+            disaron_nom = disaron_match.group(0) if disaron_match else ""
+            success_writer.writerow(
+                {
+                    "pageId": str(page.id),
+                    "disaron_nom": disaron_nom,
+                    "replacements": str(replacements),
+                }
+            )
+            success_f.flush()
             action = "Would update" if args.dry_run else "Updated"
             print(
                 f"[{updated + no_change}/{page_count}] {action} "
@@ -208,6 +231,7 @@ def main() -> int:
             )
 
     print(f"Wrote {failures_count} failure row(s) to {failures_file}.")
+    print(f"Wrote {updated} success row(s) to {success_file}.")
     summary_action = "Would update" if args.dry_run else "Updated"
     print(
         f"{summary_action} {updated} page(s); "
