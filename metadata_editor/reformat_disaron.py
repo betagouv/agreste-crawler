@@ -272,7 +272,7 @@ def main() -> int:
             action = "Would update" if args.dry_run else "Updated"
             print(
                 f"[{updated + no_change}/{page_count}] {action} "
-                f"id={page.id} title={page.title!r} "
+                f"id={page.id} disaron={found_disaron} title={page.title!r} "
                 f"replacements={replacements}"
             )
 
