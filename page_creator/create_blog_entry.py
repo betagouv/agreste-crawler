@@ -358,13 +358,16 @@ def main() -> int:
                     print(f"Error: {exc}", file=sys.stderr)
                     return 1
                 tile_link["document"] = document
+                description_filename = document.filename
+            else:
+                description_filename = nom_fichier
             right_column_content.append(
                 (
                     "tile",
                     {
                         "title": _tile_title_for_filename(nom_fichier),
                         "heading_tag": "h3",
-                        "description": f"<p>{escape(nom_fichier)}</p>",
+                        "description": f"<p>{escape(description_filename)}</p>",
                         "link": tile_link,
                         "top_detail_badges_tags": [],
                     },
