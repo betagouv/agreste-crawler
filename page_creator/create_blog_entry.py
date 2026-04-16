@@ -415,7 +415,9 @@ def main() -> int:
             )
         ]
         if disaron_nom:
-            body.append(("paragraph", escape(disaron_nom)))
+            body.append(
+                ("html", f'<div id="disaron-nom">{escape(disaron_nom)}</div>')
+            )
         page = BlogEntryPage(
             title=title,
             slug=slug,
