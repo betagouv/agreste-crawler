@@ -49,6 +49,8 @@ from wagtail.models import Page  # noqa: E402
 
 from blog.models import BlogEntryPage, BlogIndexPage  # noqa: E402
 
+DOCUMENTS_COLLECTION_NAME = "Publications"
+
 
 def _generate_unique_slug(parent_page: BlogIndexPage, title: str) -> str:
     base_slug = slugify(title) or "blog-entry"
@@ -132,8 +134,21 @@ def _prefixed_document_filename(disaron_nom: str, nom_fichier: str) -> str:
     return f"{disaron_nom}_{nom_fichier}"
 
 
+def _get_publications_collection():
+    """Return the 'Publications' Wagtail Collection, or crash if not found."""
+    from wagtail.models import Collection
+
+    collection = Collection.objects.filter(name=DOCUMENTS_COLLECTION_NAME).first()
+    if collection is None:
+        raise RuntimeError(
+            f"Wagtail Collection {DOCUMENTS_COLLECTION_NAME!r} not found. "
+            "Create it in the Wagtail admin before running this script."
+        )
+    return collection
+
+
 def _find_existing_document(
-    stored_filename: str, debug: bool = False
+    stored_filename: str, collection, debug: bool = False
 ) -> Document | None:
     # Notes :
     # - document.file : FieldFile object
@@ -141,9 +156,11 @@ def _find_existing_document(
     # - document.filename (computed field): 'IraLeg25167_2025_167inforapChou-fleur_yNt3kd8.pdf'
     relative_path = f"documents/{stored_filename}"
     if debug:
-        print(f"[DEBUG] Looking up existing document by file={relative_path!r}")
+        print(f"[DEBUG] Looking up existing document by file={relative_path!r} collection={collection.name!r}")
     existing = (
-        Document.objects.filter(file=relative_path).order_by("id").first()
+        Document.objects.filter(file=relative_path, collection=collection)
+        .order_by("id")
+        .first()
     )
     if debug:
         if existing is None:
@@ -160,12 +177,13 @@ def _get_or_create_document(
     disaron_nom: str,
     nom_fichier: str,
     documents_dir: Path,
+    collection,
     force_file_uploads: bool = False,
     debug: bool = False,
 ):
     stored_filename = _prefixed_document_filename(disaron_nom, nom_fichier)
     if not force_file_uploads:
-        existing = _find_existing_document(stored_filename, debug=debug)
+        existing = _find_existing_document(stored_filename, collection, debug=debug)
         if existing is not None:
             return existing
 
@@ -175,19 +193,21 @@ def _get_or_create_document(
     if not source_path.is_file():
         raise ValueError(f"Document path is not a file: {source_path}")
 
-    return _create_wagtail_document(source_path, stored_filename)
+    return _create_wagtail_document(source_path, stored_filename, collection)
 
 
-def _create_wagtail_document(file_path: Path, title: str) -> Document:
+def _create_wagtail_document(file_path: Path, title: str, collection) -> Document:
     """
-    Programmatically create a Wagtail Document, following the same pattern as
-    the provided snippet: Document(title=..., file=File(...)); doc.save().
+    Programmatically create a Wagtail Document in the given Collection,
+    following the same pattern as the provided snippet:
+    Document(title=..., file=File(...), collection=...); doc.save().
     """
     with file_path.open("rb") as f:
         doc_file = File(f, name=file_path.name)
         doc = Document(
             title=title,
             file=doc_file,
+            collection=collection,
         )
         doc.save()
     return doc
@@ -274,6 +294,8 @@ def main() -> int:
             parser.error("--title is required unless --data-file is specified.")
         rows = [{"title": title, "disaron_nom": "", "complement_titre": "", "chapeau": ""}]
 
+    publications_collection = _get_publications_collection()
+
     documents_by_nom: dict[str, list[str]] = {}
     documents_dir_path: Path | None = None
     if args.documents_file:
@@ -328,6 +350,7 @@ def main() -> int:
                         disaron_nom,
                         nom_fichier,
                         documents_dir_path,
+                        publications_collection,
                         force_file_uploads=args.force_file_uploads,
                         debug=args.debug,
                     )
