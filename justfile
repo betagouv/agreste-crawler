@@ -22,6 +22,9 @@ set_collection *args:
 reformat_disaron *args:
     PYTHONPATH=. uv run python -m metadata_editor.reformat_disaron "$@"
 
+add_ids_and_filename *args:
+    PYTHONPATH=. uv run python -m metadata_editor.add_ids_and_filename "$@"
+
 disaron_fixer *args:
     PYTHONPATH=. uv run python -m metadata_editor.disaron_fixer "$@"
 
