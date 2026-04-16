@@ -50,42 +50,49 @@ def _get_stream_data(body_value: Any) -> list[Any]:
     )
 
 
-def _wrap_disaron_in_text(text: str) -> tuple[str, int]:
-    if DISARON_DIV_RE.search(text):
-        return text, 0
-    return DISARON_NOM_RE.subn(r'<div id="disaron-nom">\g<0></div>', text)
+RICH_TEXT_BLOCK_TYPES = {"richtext", "paragraph", "text"}
 
 
-def _transform_value(value: Any) -> tuple[Any, int]:
-    if isinstance(value, str):
-        return _wrap_disaron_in_text(value)
-    if isinstance(value, list):
-        total = 0
-        out: list[Any] = []
-        for item in value:
-            item_out, n = _transform_value(item)
-            total += n
-            out.append(item_out)
-        return out, total
-    if isinstance(value, dict):
-        total = 0
-        out: dict[str, Any] = {}
-        for key, item in value.items():
-            item_out, n = _transform_value(item)
-            total += n
-            out[key] = item_out
-        return out, total
-    return value, 0
+def _reformat_blocks(stream_data: list[Any]) -> tuple[list[Any], int, str]:
+    """
+    Find rich-text blocks containing a DISARON token, remove them, and insert an
+    HTML block containing <div id="disaron-nom">TOKEN</div>.
 
-
-def _transform_stream_data(stream_data: list[Any]) -> tuple[list[Any], int]:
-    total = 0
+    Returns: (new_stream_data, replacement_count, first_disaron_nom_found)
+    """
     out: list[Any] = []
+    replacements = 0
+    first_disaron = ""
+
     for block in stream_data:
-        block_out, n = _transform_value(block)
-        total += n
-        out.append(block_out)
-    return out, total
+        if (
+            isinstance(block, dict)
+            and block.get("type") in RICH_TEXT_BLOCK_TYPES
+            and isinstance(block.get("value"), str)
+        ):
+            value: str = block["value"]
+            if DISARON_DIV_RE.search(value):
+                out.append(block)
+                continue
+            match = DISARON_NOM_RE.search(value)
+            if match:
+                disaron_nom = match.group(0)
+                if not first_disaron:
+                    first_disaron = disaron_nom
+
+                new_block: dict[str, Any] = {
+                    "type": "html",
+                    "value": f'<div id="disaron-nom">{disaron_nom}</div>',
+                }
+                if "id" in block:
+                    new_block["id"] = block["id"]
+                out.append(new_block)
+                replacements += 1
+                continue
+
+        out.append(block)
+
+    return out, replacements, first_disaron
 
 
 def main() -> int:
@@ -169,13 +176,13 @@ def main() -> int:
         )
         success_writer.writeheader()
 
-        def _fail(page: BlogEntryPage, error: str) -> None:
+        def _fail(page: BlogEntryPage, disaron_nom: str, error: str) -> None:
             nonlocal failures_count
             failures_count += 1
             writer.writerow(
                 {
                     "pageId": str(page.id),
-                    "disaron_nom": "",
+                    "disaron_nom": disaron_nom,
                     "error": error,
                 }
             )
@@ -188,14 +195,14 @@ def main() -> int:
         for page in pages:
             try:
                 stream_data = _get_stream_data(page.body)
-                new_stream, replacements = _transform_stream_data(stream_data)
+                new_stream, replacements, found_disaron = _reformat_blocks(stream_data)
             except Exception as exc:
-                _fail(page, f"body transform failed: {exc}")
+                _fail(page, "", f"body transform failed: {exc}")
                 continue
 
             if replacements == 0:
                 no_change += 1
-                _fail(page, "no DISARON match in body")
+                _fail(page, "", "no DISARON match in rich text blocks")
                 continue
 
             page.body = new_stream
@@ -203,22 +210,20 @@ def main() -> int:
                 try:
                     page.full_clean()
                 except Exception as exc:
-                    _fail(page, f"validation failed: {exc}")
+                    _fail(page, found_disaron, f"validation failed: {exc}")
                     continue
             else:
                 try:
                     page.save(update_fields=["body"])
                 except Exception as exc:
-                    _fail(page, f"save failed: {exc}")
+                    _fail(page, found_disaron, f"save failed: {exc}")
                     continue
 
             updated += 1
-            disaron_match = DISARON_NOM_RE.search(str(page.body))
-            disaron_nom = disaron_match.group(0) if disaron_match else ""
             success_writer.writerow(
                 {
                     "pageId": str(page.id),
-                    "disaron_nom": disaron_nom,
+                    "disaron_nom": found_disaron,
                     "replacements": str(replacements),
                 }
             )
