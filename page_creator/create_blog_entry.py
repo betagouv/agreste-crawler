@@ -34,6 +34,7 @@ Usage:
 import argparse
 import csv
 import sys
+from datetime import datetime
 from html import escape
 from pathlib import Path
 
@@ -52,6 +53,25 @@ from blog.models import BlogEntryPage, BlogIndexPage  # noqa: E402
 DOCUMENTS_COLLECTION_NAME = "Publications"
 
 
+def _parse_publication_date(raw_value: str) -> datetime:
+    value = raw_value.strip()
+    parse_formats = (
+        "%Y/%m/%d %H:%M",
+        "%Y/%m/%d",
+        "%Y-%m-%d %H:%M",
+        "%Y-%m-%d",
+    )
+    for fmt in parse_formats:
+        try:
+            naive_dt = datetime.strptime(value, fmt)
+            return timezone.make_aware(naive_dt, timezone.get_current_timezone())
+        except ValueError:
+            continue
+    raise ValueError(
+        f"Unsupported disaron:Date_premiere_publication value: {raw_value!r}"
+    )
+
+
 def _generate_unique_slug(parent_page: BlogIndexPage, title: str) -> str:
     base_slug = slugify(title) or "blog-entry"
     slug = base_slug
@@ -62,7 +82,7 @@ def _generate_unique_slug(parent_page: BlogIndexPage, title: str) -> str:
     return slug
 
 
-def _read_rows_from_data_file(data_file: str) -> list[dict[str, str]]:
+def _read_rows_from_data_file(data_file: str) -> list[dict[str, object]]:
     csv_path = Path(data_file)
     if not csv_path.exists():
         raise ValueError(f"Data file not found: {csv_path}")
@@ -78,15 +98,29 @@ def _read_rows_from_data_file(data_file: str) -> list[dict[str, str]]:
             raise ValueError("CSV must contain a 'disaron:Complement_titre' column.")
         if "disaron:chapeau" not in reader.fieldnames:
             raise ValueError("CSV must contain a 'disaron:chapeau' column.")
-        for row in reader:
+        if "disaron:Date_premiere_publication" not in reader.fieldnames:
+            raise ValueError(
+                "CSV must contain a 'disaron:Date_premiere_publication' column."
+            )
+        for i, row in enumerate(reader, start=2):
             title = (row.get("dc:title") or "").strip()
             if title:
+                raw_date = (row.get("disaron:Date_premiere_publication") or "").strip()
+                if not raw_date:
+                    raise ValueError(
+                        f"Missing disaron:Date_premiere_publication at CSV line {i}."
+                    )
+                try:
+                    publication_date = _parse_publication_date(raw_date)
+                except ValueError as exc:
+                    raise ValueError(f"Invalid date at CSV line {i}: {exc}") from exc
                 rows_out.append(
                     {
                         "title": title,
                         "disaron_nom": (row.get("disaron:nom") or "").strip(),
                         "complement_titre": (row.get("disaron:Complement_titre") or "").strip(),
                         "chapeau": (row.get("disaron:chapeau") or "").strip(),
+                        "publication_date": publication_date,
                     }
                 )
 
@@ -292,7 +326,15 @@ def main() -> int:
         title = (args.title or "").strip()
         if not title:
             parser.error("--title is required unless --data-file is specified.")
-        rows = [{"title": title, "disaron_nom": "", "complement_titre": "", "chapeau": ""}]
+        rows = [
+            {
+                "title": title,
+                "disaron_nom": "",
+                "complement_titre": "",
+                "chapeau": "",
+                "publication_date": timezone.now(),
+            }
+        ]
 
     publications_collection = _get_publications_collection()
 
@@ -334,6 +376,7 @@ def main() -> int:
         disaron_nom = row["disaron_nom"]
         complement_titre = row["complement_titre"]
         chapeau = row["chapeau"]
+        publication_date = row["publication_date"]
         noms_fichiers = documents_by_nom.get(disaron_nom, [])
         right_column_content: list[tuple[str, dict[str, object]]] = []
         for nom_fichier in noms_fichiers:
@@ -425,7 +468,7 @@ def main() -> int:
             title=title,
             slug=slug,
             body=body,
-            date=timezone.now(),
+            date=publication_date,
             show_in_menus=True,
             # Be explicit: page should start as draft unless --publish is requested.
             live=False,
