@@ -35,6 +35,7 @@ setup_django(__file__)
 from blog.models import BlogEntryPage  # noqa: E402
 
 from metadata_editor.set_metadata import (  # noqa: E402
+    DISARON_NOM_RE,
     resolve_failures_file,
     resolve_pages,
 )
@@ -411,8 +412,6 @@ def main() -> int:
                 if _is_already_formatted(stream_data):
                     noop_count += 1
                     # Best-effort disaron_nom extraction from body
-                    from metadata_editor.set_metadata import DISARON_NOM_RE  # type: ignore
-
                     match = DISARON_NOM_RE.search(str(page.body))
                     disaron_nom = match.group(0) if match else ""
                     noop_writer.writerow(
