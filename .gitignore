@@ -6,7 +6,6 @@ uv.lock
 __pycache__/
 *.py[cod]
 downloads/
-download_results.csv
 my-downloader/results/
 my-data-finder/output/
 .env*

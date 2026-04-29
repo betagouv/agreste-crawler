@@ -8,7 +8,7 @@ from crawlee.crawlers import BeautifulSoupCrawler, BasicCrawlingContext
 from crawlee.http_clients import ImpitHttpClient
 from crawlee._types import ConcurrencySettings
 
-from .routes import router
+from .routes import append_failure_row_for_url, configure_run_output, router
 
 
 def _parse_list_cell(raw: str) -> list[str]:
@@ -112,22 +112,44 @@ async def main() -> None:
 
     urls = [e["url_fichier"] for e in entries]
 
-    # Prepare timestamped results CSVs for this run (in my-downloader/results directory)
+    # Prepare timestamped results CSVs for this run
+    # (in my-downloader/results directory).
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    results_dir = Path(__file__).resolve().parents[1] / "results"  # .../my-downloader/results
+    results_dir = Path(__file__).resolve().parents[1] / "results"
     results_dir.mkdir(parents=True, exist_ok=True)
     results_path = results_dir / f"results_{timestamp}.csv"
     failures_path = results_dir / f"failures_{timestamp}.csv"
-    for path in (results_path, failures_path):
-        with path.open("w", encoding="utf-8", newline="") as f:
-            writer = csv.DictWriter(
-                f,
-                fieldnames=["disaron_nom", "nom_fichier", "success", "url_fichier"],
-            )
-            writer.writeheader()
+    with results_path.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(
+            f,
+            fieldnames=[
+                "disaron_nom",
+                "nom_fichier",
+                "success",
+                "url_fichier",
+                "url",
+            ],
+        )
+        writer.writeheader()
+    with failures_path.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(
+            f,
+            fieldnames=[
+                "disaron_nom",
+                "nom_fichier",
+                "success",
+                "url_fichier",
+                "url",
+            ],
+        )
+        writer.writeheader()
 
-    # Track failed URLs (after all retries)
-    failed_urls: set[str] = set()
+    # Configure streaming output writes during crawl.
+    configure_run_output(
+        results_path=results_path,
+        failures_path=failures_path,
+        entries=entries,
+    )
 
     crawler = BeautifulSoupCrawler(
         request_handler=router,
@@ -142,36 +164,13 @@ async def main() -> None:
     )
 
     @crawler.failed_request_handler
-    async def failed_handler(ctx: BasicCrawlingContext, error: Exception) -> None:
+    async def failed_handler(
+        ctx: BasicCrawlingContext, error: Exception
+    ) -> None:
         """Called after all retries are exhausted for a request."""
         crawler.log.error(f"Failed after retries: {ctx.request.url} ({error})")
-        failed_urls.add(ctx.request.url)
+        append_failure_row_for_url(ctx.request.url)
 
     if urls:
         await crawler.run(urls)
 
-    # After the crawl, write per-URL success/failure rows
-    if entries:
-        with results_path.open("a", encoding="utf-8", newline="") as rf, failures_path.open(
-            "a", encoding="utf-8", newline=""
-        ) as ff:
-            results_writer = csv.DictWriter(
-                rf,
-                fieldnames=["disaron_nom", "nom_fichier", "success", "url_fichier"],
-            )
-            failures_writer = csv.DictWriter(
-                ff,
-                fieldnames=["disaron_nom", "nom_fichier", "success", "url_fichier"],
-            )
-            for entry in entries:
-                url = entry["url_fichier"]
-                success = 0 if url in failed_urls else 1
-                row = {
-                    "disaron_nom": entry["disaron_nom"],
-                    "nom_fichier": entry["nom_fichier"],
-                    "success": success,
-                    "url_fichier": url,
-                }
-                results_writer.writerow(row)
-                if not success:
-                    failures_writer.writerow(row)
