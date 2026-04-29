@@ -19,7 +19,10 @@ Usage:
 """
 
 import argparse
+import ast
 import csv
+from datetime import datetime
+import json
 import sys
 from pathlib import Path
 
@@ -34,26 +37,67 @@ def load_filename_to_disaron(csv_path: Path) -> dict[str, str]:
     with csv_path.open(encoding="utf-8", newline="") as f:
         reader = csv.DictReader(f)
         fieldnames = set(reader.fieldnames or [])
-        required = {"nom_fichier", "disaron_nom"}
-        missing = required - fieldnames
-        if missing:
-            raise ValueError(
-                "Missing required column(s) in --file-list: "
-                f"{', '.join(sorted(missing))}"
-            )
 
-        for row in reader:
-            nom_fichier = (row.get("nom_fichier") or "").strip()
-            disaron_nom = (row.get("disaron_nom") or "").strip()
-            if not nom_fichier or not disaron_nom:
-                continue
-            if nom_fichier in mapping and mapping[nom_fichier] != disaron_nom:
-                print(
-                    f"[WARN] Duplicate filename '{nom_fichier}' found under "
-                    f"'{mapping[nom_fichier]}' and '{disaron_nom}'; using '{disaron_nom}'.",
-                    file=sys.stderr,
-                )
-            mapping[nom_fichier] = disaron_nom
+        # Format A: one file per line
+        if {"nom_fichier", "disaron_nom"}.issubset(fieldnames):
+            for row in reader:
+                nom_fichier = (row.get("nom_fichier") or "").strip()
+                disaron_nom = (row.get("disaron_nom") or "").strip()
+                if not nom_fichier or not disaron_nom:
+                    continue
+                if nom_fichier in mapping and mapping[nom_fichier] != disaron_nom:
+                    print(
+                        f"[WARN] Duplicate filename '{nom_fichier}' found under "
+                        f"'{mapping[nom_fichier]}' and '{disaron_nom}'; using '{disaron_nom}'.",
+                        file=sys.stderr,
+                    )
+                mapping[nom_fichier] = disaron_nom
+            return mapping
+
+        # Format B: one disaron per line
+        if {"disaron:nom", "nb de fichiers", "noms des fichiers"}.issubset(
+            fieldnames
+        ):
+            for row in reader:
+                disaron_nom = (row.get("disaron:nom") or "").strip()
+                raw_names = (row.get("noms des fichiers") or "").strip()
+                if not disaron_nom or not raw_names:
+                    continue
+
+                names: list[str] = []
+                try:
+                    parsed = json.loads(raw_names)
+                    if isinstance(parsed, list):
+                        names = [str(x).strip() for x in parsed if str(x).strip()]
+                except Exception:
+                    pass
+                if not names:
+                    try:
+                        parsed = ast.literal_eval(raw_names)
+                        if isinstance(parsed, list):
+                            names = [
+                                str(x).strip() for x in parsed if str(x).strip()
+                            ]
+                    except Exception:
+                        pass
+                if not names:
+                    names = [raw_names]
+
+                for nom_fichier in names:
+                    if nom_fichier in mapping and mapping[nom_fichier] != disaron_nom:
+                        print(
+                            f"[WARN] Duplicate filename '{nom_fichier}' found under "
+                            f"'{mapping[nom_fichier]}' and '{disaron_nom}'; using '{disaron_nom}'.",
+                            file=sys.stderr,
+                        )
+                    mapping[nom_fichier] = disaron_nom
+            return mapping
+
+        raise ValueError(
+            "Unsupported --file-list format. Expected either columns "
+            "'disaron_nom, nom_fichier' or "
+            "'disaron:nom, nb de fichiers, noms des fichiers'."
+        )
     return mapping
 
 
@@ -61,7 +105,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description=(
             "Prefix files in my-downloader/downloads with disaron_nom from a CSV "
-            "(reads columns: disaron_nom, nom_fichier)."
+            "(reads either columns: disaron_nom, nom_fichier OR "
+            "disaron:nom, nb de fichiers, noms des fichiers)."
         )
     )
     parser.add_argument(
@@ -69,14 +114,25 @@ def main() -> None:
         type=str,
         default="",
         help=(
-            "CSV containing file mappings. Must include columns 'disaron_nom' "
-            "and 'nom_fichier'. Defaults to my-downloader/files_to_download.csv."
+            "CSV containing file mappings. Supported formats: "
+            "(1) disaron_nom, nom_fichier or "
+            "(2) disaron:nom, nb de fichiers, noms des fichiers. "
+            "Defaults to my-downloader/files_to_download.csv."
         ),
     )
     parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Print what would be renamed without actually renaming.",
+    )
+    parser.add_argument(
+        "--downloads-dir",
+        type=str,
+        default="",
+        help=(
+            "Directory containing downloaded files to prefix. "
+            "Defaults to my-downloader/downloads."
+        ),
     )
     args = parser.parse_args()
 
@@ -87,7 +143,12 @@ def main() -> None:
         csv_path = root / "files_to_download.csv"
     if not csv_path.is_absolute():
         csv_path = (Path.cwd() / csv_path).resolve()
-    downloads_dir = root / "downloads"
+    if args.downloads_dir:
+        downloads_dir = Path(args.downloads_dir).expanduser()
+        if not downloads_dir.is_absolute():
+            downloads_dir = (Path.cwd() / downloads_dir).resolve()
+    else:
+        downloads_dir = root / "downloads"
 
     if not csv_path.exists():
         print(f"[ERROR] CSV not found: {csv_path}", file=sys.stderr)
@@ -155,9 +216,20 @@ def main() -> None:
         f"{len(unknown_files)} unknown."
     )
     if unknown_files:
+        results_dir = root / "results"
+        results_dir.mkdir(parents=True, exist_ok=True)
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        failures_path = results_dir / f"{timestamp}_prefixer_failures.csv"
+        with failures_path.open("w", encoding="utf-8", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=["nom_fichier"])
+            writer.writeheader()
+            for name in unknown_files:
+                writer.writerow({"nom_fichier": name})
+
         print("Unknown files (no mapping found):")
         for name in unknown_files:
             print(f"  - {name}")
+        print(f"Wrote {len(unknown_files)} failure row(s) to {failures_path}")
 
 
 if __name__ == "__main__":
