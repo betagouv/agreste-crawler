@@ -1,34 +1,64 @@
 #!/usr/bin/env python
 """
-Create a BlogEntryPage as a child of a BlogIndexPage.
+Create `BlogEntryPage` entries under a `BlogIndexPage`.
 
-Usage:
+Flags with examples:
+    --parent-id 30
+            Parent page id (`BlogIndexPage`) (required).
+    --wagtail-project-root ../agreste
+            Path to Django/Wagtail project root.
+    --scalingo-env-file /path/to/.env.scalingo
+            Env file loaded before Django setup.
+    --title "My post"
+            Page title (single-page mode).
+    --slug "my-post"
+            Page slug (optional in single-page mode).
+    --data-file page_creator/data/infos-rapides.csv
+            CSV used for batch page creation.
+    --documents-file files_to_download_20260317_123722.csv
+            CSV mapping disaron to unprefixed document filenames.
+    --documents-dir my-downloader/downloads
+            Directory containing files prefixed as `<disaron_nom>_<nom_fichier>`.
+    --publish
+            Publish pages immediately (boolean flag).
+    --force-file-uploads
+            Always upload new Wagtail docs (boolean flag).
+    --debug
+            Print debug logs (boolean flag).
+    --no-confirmation
+            Skip confirmation prompt (boolean flag).
+
+Expected CSV columns:
+
+1) `--data-file` CSV (required columns):
+- `dc:title`
+- `disaron:nom`
+- `disaron:Complement_titre`
+- `disaron:chapeau`
+- `disaron:Date_premiere_publication`
+
+Date values accepted in `disaron:Date_premiere_publication`:
+- `YYYY/MM/DD HH:MM`
+- `YYYY/MM/DD`
+- `YYYY-MM-DD HH:MM`
+- `YYYY-MM-DD`
+
+2) `--documents-file` CSV (required columns):
+- `nom_fichier`
+- one of: `disaron_nom` or `disaron:nom`
+
+Prefixing rule for documents:
+- In `--documents-file`, `nom_fichier` should be the unprefixed filename.
+- In `--documents-dir`, actual files should be prefixed as `<disaron_nom>_<nom_fichier>`.
+
+Minimal examples:
+    # Single-page mode
     uv run python -m page_creator.create_blog_entry \
         --wagtail-project-root ../agreste --parent-id 30 --title "My post" --slug "my-post"
-    uv run python -m page_creator.create_blog_entry \
-        --wagtail-project-root ../agreste --parent-id 30 --title "My post" --slug "my-post" --publish
-    uv run python -m page_creator.create_blog_entry \
-        --wagtail-project-root ../agreste --parent-id 30 --title "My post"
 
-    # Create one page per row from CSV (uses dc:title, disaron:Complement_titre, disaron:chapeau, disaron:nom)
+    # Batch mode from CSV
     uv run python -m page_creator.create_blog_entry \
         --wagtail-project-root ../agreste --parent-id 30 --data-file page_creator/data/infos-rapides.csv
-
-    # Same as above, but publish each page
-    uv run python -m page_creator.create_blog_entry \
-        --wagtail-project-root ../agreste --parent-id 30 --data-file page_creator/data/infos-rapides.csv --publish
-
-    # Add downloadable-document Tiles by matching disaron:nom in documents-file
-    uv run python -m page_creator.create_blog_entry --parent-id 30 \
-        --wagtail-project-root ../agreste \
-        --data-file page_creator/data/infos-rapides.csv \
-        --documents-file files_to_download_20260317_123722.csv \
-        --documents-dir my-downloader/downloads
-
-    # Load environment values from a specific env file
-    uv run python -m page_creator.create_blog_entry \
-        --wagtail-project-root ../agreste \
-        --scalingo-env-file /path/to/.env.scalingo --parent-id 30 --title "My post"
 """
 
 import argparse
