@@ -2,20 +2,28 @@
 """
 Prefix downloaded files with their disaron code.
 
-For each file in my-downloader/downloads/, look up the corresponding
-disaron_nom from a file list CSV and rename the file to:
+For each file in a downloads directory (default: my-downloader/downloads),
+look up the corresponding disaron code from a CSV and rename the file to:
     <disaron_nom>_<original_filename>
 if it has not already been prefixed.
 
-The --file-list CSV must contain, at minimum, these columns:
+Supported --file-list CSV formats:
+1) One file per line:
     - disaron_nom
     - nom_fichier
+2) One disaron per line with multiple filenames:
+    - disaron:nom
+    - nb de fichiers
+    - noms des fichiers
+   where "noms des fichiers" can be a JSON/Python-style list string.
 
 Usage:
     uv run python my-downloader/disaron_prefixer.py
     uv run python my-downloader/disaron_prefixer.py --dry-run
     uv run python my-downloader/disaron_prefixer.py \
         --file-list my-downloader/files_to_download_infos_rapides_completees.csv
+    uv run python my-downloader/disaron_prefixer.py \
+        --downloads-dir my-downloader/non_infos_rapides_1_1234_files
 """
 
 import argparse
