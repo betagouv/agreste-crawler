@@ -199,28 +199,30 @@ def _read_documents_by_disaron_nom(documents_file: str) -> dict[str, list[str]]:
                 if not disaron_nom or not raw_names:
                     continue
 
-                names: list[str] = []
+                parsed_list: list[object] | None = None
                 try:
                     parsed = json.loads(raw_names)
                     if isinstance(parsed, list):
-                        names = [str(x).strip() for x in parsed if str(x).strip()]
+                        parsed_list = parsed
                 except Exception:
                     pass
 
-                if not names:
+                if parsed_list is None:
                     try:
                         parsed = ast.literal_eval(raw_names)
                         if isinstance(parsed, list):
-                            names = [str(x).strip() for x in parsed if str(x).strip()]
+                            parsed_list = parsed
                     except Exception:
                         pass
 
-                if not names:
+                if parsed_list is None:
                     raise ValueError(
                         "Invalid 'noms des fichiers' value for disaron "
                         f"{disaron_nom!r}: {raw_names!r}. Expected a JSON/Python list."
                     )
 
+                # Empty lists are valid: this means no documents/Tiles for this page.
+                names = [str(x).strip() for x in parsed_list if str(x).strip()]
                 mapping.setdefault(disaron_nom, []).extend(names)
             return mapping
 
@@ -505,6 +507,27 @@ def main() -> int:
         if chapeau:
             left_column_content.append(("text", f'<div id="chapeau">{escape(chapeau)}</div>'))
 
+        left_width = "8" if right_column_content else "12"
+        columns: list[tuple[str, dict[str, object]]] = [
+            (
+                "column",
+                {
+                    "width": left_width,
+                    "content": left_column_content,
+                },
+            )
+        ]
+        if right_column_content:
+            columns.append(
+                (
+                    "column",
+                    {
+                        "width": "4",
+                        "content": right_column_content,
+                    },
+                )
+            )
+
         body = [
             (
                 "multicolumns",
@@ -516,22 +539,7 @@ def main() -> int:
                     "top_margin": 5,
                     "bottom_margin": 5,
                     "vertical_align": "",
-                    "columns": [
-                        (
-                            "column",
-                            {
-                                "width": "8",
-                                "content": left_column_content,
-                            },
-                        ),
-                        (
-                            "column",
-                            {
-                                "width": "4",
-                                "content": right_column_content,
-                            },
-                        ),
-                    ],
+                    "columns": columns,
                 },
             )
         ]
