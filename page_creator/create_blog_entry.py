@@ -43,9 +43,14 @@ Date values accepted in `disaron:Date_premiere_publication`:
 - `YYYY-MM-DD HH:MM`
 - `YYYY-MM-DD`
 
-2) `--documents-file` CSV (required columns):
-- `nom_fichier`
-- one of: `disaron_nom` or `disaron:nom`
+2) `--documents-file` CSV (supported formats):
+- Format A (one file per row):
+  - `nom_fichier`
+  - one of: `disaron_nom` or `disaron:nom`
+- Format B (one disaron per row):
+  - `disaron:nom`
+  - `nb de fichiers` (optional, informational)
+  - `noms des fichiers` (JSON/Python-style list string)
 
 Prefixing rule for documents:
 - In `--documents-file`, `nom_fichier` should be the unprefixed filename.
@@ -62,7 +67,9 @@ Minimal examples:
 """
 
 import argparse
+import ast
 import csv
+import json
 import sys
 from datetime import datetime
 from html import escape
@@ -169,21 +176,59 @@ def _read_documents_by_disaron_nom(documents_file: str) -> dict[str, list[str]]:
         reader = csv.DictReader(f)
         if not reader.fieldnames:
             raise ValueError("Documents CSV must contain headers.")
-        has_disaron_nom = "disaron_nom" in reader.fieldnames
-        has_disaron_colon_nom = "disaron:nom" in reader.fieldnames
-        if not has_disaron_nom and not has_disaron_colon_nom:
-            raise ValueError("Documents CSV must contain 'disaron_nom' or 'disaron:nom' column.")
-        if "nom_fichier" not in reader.fieldnames:
-            raise ValueError("Documents CSV must contain a 'nom_fichier' column.")
+        fieldnames = set(reader.fieldnames)
 
-        for row in reader:
-            disaron_nom = (
-                (row.get("disaron_nom") or row.get("disaron:nom") or "").strip()
-            )
-            nom_fichier = (row.get("nom_fichier") or "").strip()
-            if not disaron_nom or not nom_fichier:
-                continue
-            mapping.setdefault(disaron_nom, []).append(nom_fichier)
+        # Format A: one file per row (disaron_nom/disaron:nom + nom_fichier)
+        has_disaron_nom = "disaron_nom" in fieldnames or "disaron:nom" in fieldnames
+        if has_disaron_nom and "nom_fichier" in fieldnames:
+            for row in reader:
+                disaron_nom = (
+                    (row.get("disaron_nom") or row.get("disaron:nom") or "").strip()
+                )
+                nom_fichier = (row.get("nom_fichier") or "").strip()
+                if not disaron_nom or not nom_fichier:
+                    continue
+                mapping.setdefault(disaron_nom, []).append(nom_fichier)
+            return mapping
+
+        # Format B: one disaron per row (disaron:nom + noms des fichiers)
+        if {"disaron:nom", "noms des fichiers"}.issubset(fieldnames):
+            for row in reader:
+                disaron_nom = (row.get("disaron:nom") or "").strip()
+                raw_names = (row.get("noms des fichiers") or "").strip()
+                if not disaron_nom or not raw_names:
+                    continue
+
+                names: list[str] = []
+                try:
+                    parsed = json.loads(raw_names)
+                    if isinstance(parsed, list):
+                        names = [str(x).strip() for x in parsed if str(x).strip()]
+                except Exception:
+                    pass
+
+                if not names:
+                    try:
+                        parsed = ast.literal_eval(raw_names)
+                        if isinstance(parsed, list):
+                            names = [str(x).strip() for x in parsed if str(x).strip()]
+                    except Exception:
+                        pass
+
+                if not names:
+                    raise ValueError(
+                        "Invalid 'noms des fichiers' value for disaron "
+                        f"{disaron_nom!r}: {raw_names!r}. Expected a JSON/Python list."
+                    )
+
+                mapping.setdefault(disaron_nom, []).extend(names)
+            return mapping
+
+        raise ValueError(
+            "Unsupported documents CSV format. Expected either: "
+            "(1) disaron_nom/disaron:nom + nom_fichier, or "
+            "(2) disaron:nom + noms des fichiers."
+        )
 
     return mapping
 
