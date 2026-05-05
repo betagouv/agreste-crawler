@@ -119,7 +119,9 @@ def _generate_unique_slug(parent_page: BlogIndexPage, title: str) -> str:
     return slug
 
 
-def _read_rows_from_data_file(data_file: str) -> list[dict[str, object]]:
+def _read_rows_from_data_file(
+    data_file: str,
+) -> tuple[list[dict[str, str]], list[str], Path]:
     csv_path = Path(data_file)
     if not csv_path.exists():
         raise ValueError(f"Data file not found: {csv_path}")
@@ -139,31 +141,39 @@ def _read_rows_from_data_file(data_file: str) -> list[dict[str, object]]:
             raise ValueError(
                 "CSV must contain a 'disaron:Date_premiere_publication' column."
             )
-        for i, row in enumerate(reader, start=2):
-            title = (row.get("dc:title") or "").strip()
-            if title:
-                raw_date = (row.get("disaron:Date_premiere_publication") or "").strip()
-                if not raw_date:
-                    raise ValueError(
-                        f"Missing disaron:Date_premiere_publication at CSV line {i}."
-                    )
-                try:
-                    publication_date = _parse_publication_date(raw_date)
-                except ValueError as exc:
-                    raise ValueError(f"Invalid date at CSV line {i}: {exc}") from exc
-                rows_out.append(
-                    {
-                        "title": title,
-                        "disaron_nom": (row.get("disaron:nom") or "").strip(),
-                        "complement_titre": (row.get("disaron:Complement_titre") or "").strip(),
-                        "chapeau": (row.get("disaron:chapeau") or "").strip(),
-                        "publication_date": publication_date,
-                    }
-                )
+        fieldnames = list(reader.fieldnames)
+        for row in reader:
+            rows_out.append({key: (row.get(key) or "") for key in fieldnames})
 
     if not rows_out:
-        raise ValueError("CSV does not contain any non-empty value in 'dc:title'.")
-    return rows_out
+        raise ValueError("CSV is empty (no data rows).")
+    return rows_out, fieldnames, csv_path
+
+
+def _build_page_row(input_row: dict[str, str], line_no: int) -> dict[str, object]:
+    title = (input_row.get("dc:title") or "").strip()
+    if not title:
+        raise ValueError(f"[line {line_no}] Missing dc:title")
+
+    disaron_nom = (input_row.get("disaron:nom") or "").strip()
+    if not disaron_nom:
+        raise ValueError(f"[line {line_no}] Missing disaron:nom")
+
+    raw_date = (input_row.get("disaron:Date_premiere_publication") or "").strip()
+    if not raw_date:
+        raise ValueError(f"[line {line_no}] Missing disaron:Date_premiere_publication")
+    try:
+        publication_date = _parse_publication_date(raw_date)
+    except ValueError as exc:
+        raise ValueError(f"[line {line_no}] Invalid disaron:Date_premiere_publication: {exc}") from exc
+
+    return {
+        "title": title,
+        "disaron_nom": disaron_nom,
+        "complement_titre": (input_row.get("disaron:Complement_titre") or "").strip(),
+        "chapeau": (input_row.get("disaron:chapeau") or "").strip(),
+        "publication_date": publication_date,
+    }
 
 
 def _read_documents_by_disaron_nom(documents_file: str) -> dict[str, list[str]]:
@@ -392,26 +402,89 @@ def main() -> int:
     )
     args = parser.parse_args()
 
+    data_file_rows: list[dict[str, str]] = []
+    data_file_fieldnames: list[str] = []
+    data_file_path: Path | None = None
+    output_rows: list[dict[str, str]] = []
+    pending_pages: list[tuple[int, dict[str, object]]] = []
+    failure_rows: list[dict[str, str]] = []
+
     if args.data_file:
         if args.title or args.slug:
             parser.error("--data-file cannot be used with --title or --slug.")
         try:
-            rows = _read_rows_from_data_file(args.data_file)
+            data_file_rows, data_file_fieldnames, data_file_path = _read_rows_from_data_file(
+                args.data_file
+            )
         except ValueError as exc:
             parser.error(str(exc))
+
+        output_rows = [
+            {
+                **row,
+                "success": "0",
+                "error_message": "",
+            }
+            for row in data_file_rows
+        ]
+        input_total_rows = len(data_file_rows)
+        for idx, raw_row in enumerate(data_file_rows):
+            line_no = idx + 2
+            disaron_nom = (raw_row.get("disaron:nom") or "").strip()
+            display_nom = disaron_nom or "<missing disaron:nom>"
+            try:
+                page_row = _build_page_row(raw_row, line_no)
+            except ValueError as exc:
+                msg = str(exc)
+                output_rows[idx]["success"] = "0"
+                output_rows[idx]["error_message"] = msg
+                print(
+                    f"[{idx + 1}/{input_total_rows}] {display_nom} Error: {msg}",
+                    file=sys.stderr,
+                )
+                failure_rows.append(
+                    {
+                        "disaron:nom": disaron_nom,
+                        "success": "0",
+                        "error_message": msg,
+                    }
+                )
+                continue
+            pending_pages.append((idx, page_row))
     else:
         title = (args.title or "").strip()
         if not title:
             parser.error("--title is required unless --data-file is specified.")
-        rows = [
-            {
-                "title": title,
-                "disaron_nom": "",
-                "complement_titre": "",
-                "chapeau": "",
-                "publication_date": timezone.now(),
-            }
+        pending_pages = [
+            (
+                0,
+                {
+                    "title": title,
+                    "disaron_nom": "",
+                    "complement_titre": "",
+                    "chapeau": "",
+                    "publication_date": timezone.now(),
+                },
+            )
         ]
+        output_rows = []
+
+    if args.data_file and not pending_pages:
+        print("No valid row to process in --data-file.")
+
+    pages_total = len(pending_pages)
+    created_or_published = 0
+
+    def _record_failure(idx: int, disaron_nom: str, message: str) -> None:
+        output_rows[idx]["success"] = "0"
+        output_rows[idx]["error_message"] = message
+        failure_rows.append(
+            {
+                "disaron:nom": disaron_nom,
+                "success": "0",
+                "error_message": message,
+            }
+        )
 
     publications_collection = _get_publications_collection()
 
@@ -438,7 +511,7 @@ def main() -> int:
         )
         return 1
 
-    total_pages = len(rows)
+    total_pages = len(pending_pages)
     if not args.no_confirmation:
         answer = input(
             f"About to create {total_pages} page(s) under parent id={args.parent_id}. "
@@ -448,24 +521,29 @@ def main() -> int:
             print("Creation cancelled.")
             return 0
 
-    for i, row in enumerate(rows, start=1):
+    for i, (output_idx, row) in enumerate(pending_pages, start=1):
         title = row["title"]
         disaron_nom = row["disaron_nom"]
+        display_nom = disaron_nom or "<missing disaron:nom>"
         complement_titre = row["complement_titre"]
         chapeau = row["chapeau"]
         publication_date = row["publication_date"]
-        noms_fichiers = documents_by_nom.get(disaron_nom, [])
-        right_column_content: list[tuple[str, dict[str, object]]] = []
-        for nom_fichier in noms_fichiers:
-            tile_link: dict[str, object] = {
-                "link_type": "document",
-                "external_url": "",
-                "page": None,
-                "document": None,
-                "anchor": "",
-            }
-            if documents_dir_path is not None:
-                try:
+        try:
+            if args.documents_file and disaron_nom not in documents_by_nom:
+                raise ValueError(
+                    f"No matching disaron_nom found in --documents-file for {disaron_nom!r}"
+                )
+            noms_fichiers = documents_by_nom.get(disaron_nom, [])
+            right_column_content: list[tuple[str, dict[str, object]]] = []
+            for nom_fichier in noms_fichiers:
+                tile_link: dict[str, object] = {
+                    "link_type": "document",
+                    "external_url": "",
+                    "page": None,
+                    "document": None,
+                    "anchor": "",
+                }
+                if documents_dir_path is not None:
                     document = _get_or_create_document(
                         disaron_nom,
                         nom_fichier,
@@ -474,119 +552,165 @@ def main() -> int:
                         force_file_uploads=args.force_file_uploads,
                         debug=args.debug,
                     )
-                except ValueError as exc:
-                    print(f"Error: {exc}", file=sys.stderr)
-                    return 1
-                tile_link["document"] = document
-                description_filename = document.filename
-            else:
-                description_filename = nom_fichier
-            right_column_content.append(
-                (
-                    "tile",
-                    {
-                        "title": _tile_title_for_filename(nom_fichier),
-                        "heading_tag": "h3",
-                        "description": f"<p>{escape(description_filename)}</p>",
-                        "link": tile_link,
-                        "top_detail_badges_tags": [],
-                    },
+                    tile_link["document"] = document
+                    description_filename = document.filename
+                else:
+                    description_filename = nom_fichier
+                right_column_content.append(
+                    (
+                        "tile",
+                        {
+                            "title": _tile_title_for_filename(nom_fichier),
+                            "heading_tag": "h3",
+                            "description": f"<p>{escape(description_filename)}</p>",
+                            "link": tile_link,
+                            "top_detail_badges_tags": [],
+                        },
+                    )
                 )
-            )
-        slug = (args.slug or "").strip() or _generate_unique_slug(parent_page, title)
-        if BlogEntryPage.objects.child_of(parent_page).filter(slug=slug).exists():
-            print(
-                f"Error: A blog entry with slug '{slug}' already exists under this index.",
-                file=sys.stderr,
-            )
-            return 1
-
-        left_column_content: list[tuple[str, str]] = []
-        if complement_titre:
-            left_column_content.append(
-                (
-                    "html",
-                    f'<h2 id="complement-titre">{escape(complement_titre)}</h2>',
+            slug = (args.slug or "").strip() or _generate_unique_slug(parent_page, title)
+            if BlogEntryPage.objects.child_of(parent_page).filter(slug=slug).exists():
+                raise ValueError(
+                    f"A blog entry with slug '{slug}' already exists under this index."
                 )
-            )
-        if chapeau:
-            left_column_content.append(
-                ("html", f'<div id="chapeau">{escape(chapeau)}</div>')
-            )
 
-        left_width = "8" if right_column_content else "12"
-        columns: list[tuple[str, dict[str, object]]] = [
-            (
-                "column",
-                {
-                    "width": left_width,
-                    "content": left_column_content,
-                },
-            )
-        ]
-        if right_column_content:
-            columns.append(
+            left_column_content: list[tuple[str, str]] = []
+            if complement_titre:
+                left_column_content.append(
+                    (
+                        "html",
+                        f'<h2 id="complement-titre">{escape(complement_titre)}</h2>',
+                    )
+                )
+            if chapeau:
+                left_column_content.append(
+                    ("html", f'<div id="chapeau">{escape(chapeau)}</div>')
+                )
+
+            left_width = "8" if right_column_content else "12"
+            columns: list[tuple[str, dict[str, object]]] = [
                 (
                     "column",
                     {
-                        "width": "4",
-                        "content": right_column_content,
+                        "width": left_width,
+                        "content": left_column_content,
                     },
                 )
-            )
+            ]
+            if right_column_content:
+                columns.append(
+                    (
+                        "column",
+                        {
+                            "width": "4",
+                            "content": right_column_content,
+                        },
+                    )
+                )
 
-        body = [
-            (
-                "multicolumns",
-                {
-                    "bg_image": None,
-                    "bg_color_class": "",
-                    "title": "",
-                    "heading_tag": "h2",
-                    "top_margin": 5,
-                    "bottom_margin": 5,
-                    "vertical_align": "",
-                    "columns": columns,
-                },
+            body = [
+                (
+                    "multicolumns",
+                    {
+                        "bg_image": None,
+                        "bg_color_class": "",
+                        "title": "",
+                        "heading_tag": "h2",
+                        "top_margin": 5,
+                        "bottom_margin": 5,
+                        "vertical_align": "",
+                        "columns": columns,
+                    },
+                )
+            ]
+            if disaron_nom:
+                body.append(
+                    ("html", f'<div id="disaron-nom">{escape(disaron_nom)}</div>')
+                )
+            page = BlogEntryPage(
+                title=title,
+                slug=slug,
+                body=body,
+                date=publication_date,
+                show_in_menus=True,
+                # Be explicit: page should start as draft unless --publish is requested.
+                live=False,
             )
+            parent_page.add_child(instance=page)
+
+            if args.publish:
+                page.save_revision().publish()
+                print(
+                    f"[{i}/{pages_total}] {display_nom} Published BlogEntryPage id={page.id} - {page.url}"
+                )
+            else:
+                # Ensure an unpublished draft state even if project-level defaults/signals
+                # set newly created pages live.
+                if page.live:
+                    page.unpublish()
+                page.save_revision()
+                print(
+                    f"[{i}/{pages_total}] {display_nom} Created draft BlogEntryPage id={page.id} "
+                    f"(slug={slug}). Publish it from the Wagtail admin."
+                )
+            page.refresh_from_db(fields=["live"])
+            expected_live = bool(args.publish)
+            if page.live != expected_live:
+                raise RuntimeError(
+                    f"Unexpected live state for page id={page.id}: "
+                    f"expected live={expected_live}, got live={page.live}."
+                )
+        except Exception as exc:
+            message = (
+                f"{type(exc).__name__}: {exc}. "
+                f"Context: disaron:nom={disaron_nom!r}, title={title!r}"
+            )
+            print(f"[{i}/{pages_total}] {display_nom} Error: {message}", file=sys.stderr)
+            if args.data_file:
+                _record_failure(output_idx, disaron_nom, message)
+            continue
+
+        created_or_published += 1
+        if args.data_file:
+            output_rows[output_idx]["success"] = "1"
+            output_rows[output_idx]["error_message"] = ""
+
+    if args.data_file and data_file_path is not None:
+        output_dir = Path(__file__).resolve().parent / "output"
+        output_dir.mkdir(parents=True, exist_ok=True)
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+
+        output_path = output_dir / f"{timestamp}_create_blog_entry.csv"
+        other_columns = [
+            c
+            for c in data_file_fieldnames
+            if c not in {"disaron:nom", "success", "error_message"}
         ]
-        if disaron_nom:
-            body.append(
-                ("html", f'<div id="disaron-nom">{escape(disaron_nom)}</div>')
+        output_fieldnames = ["disaron:nom", "success", "error_message", *other_columns]
+        with output_path.open("w", encoding="utf-8", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=output_fieldnames)
+            writer.writeheader()
+            for row in output_rows:
+                writer.writerow({k: row.get(k, "") for k in output_fieldnames})
+
+        failures_path = output_dir / f"{timestamp}_create_blog_entry_failures.csv"
+        with failures_path.open("w", encoding="utf-8", newline="") as f:
+            writer = csv.DictWriter(
+                f, fieldnames=["disaron:nom", "success", "error_message"]
             )
-        page = BlogEntryPage(
-            title=title,
-            slug=slug,
-            body=body,
-            date=publication_date,
-            show_in_menus=True,
-            # Be explicit: page should start as draft unless --publish is requested.
-            live=False,
+            writer.writeheader()
+            writer.writerows(failure_rows)
+
+        print(
+            f"Wrote detailed output to {output_path} "
+            f"and failures to {failures_path}."
         )
-        parent_page.add_child(instance=page)
 
-        if args.publish:
-            page.save_revision().publish()
-            print(f"[{i}/{len(rows)}] Published BlogEntryPage id={page.id} - {page.url}")
-        else:
-            # Ensure an unpublished draft state even if project-level defaults/signals
-            # set newly created pages live.
-            if page.live:
-                page.unpublish()
-            page.save_revision()
-            print(
-                f"[{i}/{len(rows)}] Created draft BlogEntryPage id={page.id} (slug={slug}). "
-                "Publish it from the Wagtail admin."
-            )
-        page.refresh_from_db(fields=["live"])
-        expected_live = bool(args.publish)
-        if page.live != expected_live:
-            raise RuntimeError(
-                f"Unexpected live state for page id={page.id}: "
-                f"expected live={expected_live}, got live={page.live}."
-            )
-
-    return 0
+    print(
+        f"Done: {created_or_published}/{pages_total} page(s) created or published, "
+        f"{len(failure_rows)} failure(s)."
+    )
+    return 1 if failure_rows else 0
 
 
 if __name__ == "__main__":
