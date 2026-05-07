@@ -28,3 +28,6 @@ add_ids_to_pages *args:
 disaron_fixer *args:
     PYTHONPATH=. uv run python -m metadata_editor.disaron_fixer "$@"
 
+export_to_csv *args:
+    PYTHONPATH=. uv run python -m data_exporter.export_to_csv "$@"
+
