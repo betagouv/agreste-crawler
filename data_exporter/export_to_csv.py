@@ -8,6 +8,8 @@ For each BlogEntryPage under a given BlogIndexPage (--parent-id), export:
 - titre (page title)
 - complement_titre (from <h2 id="complement-titre"> in an html block)
 - chapeau (from <div id="chapeau"> in an html block)
+- date_premiere_publication (page.date)
+- documents (JSON array of linked document titles found in tile blocks)
 
 Flags with examples:
     --parent-id 30
@@ -22,6 +24,7 @@ Flags with examples:
 
 import argparse
 import csv
+import json
 import re
 from html import unescape
 from pathlib import Path
@@ -32,6 +35,7 @@ from django_setup import setup_django
 setup_django(__file__)
 
 from django.utils import timezone  # noqa: E402
+from wagtail.documents.models import Document  # noqa: E402
 from wagtail.models import Page  # noqa: E402
 
 from blog.models import BlogEntryPage, BlogIndexPage  # noqa: E402
@@ -110,6 +114,40 @@ def _resolve_pages(parent_id: int):
     return BlogEntryPage.objects.child_of(parent_page).order_by("id")
 
 
+def _iter_tile_document_ids(node: Any):
+    """Yield document ids linked by tile blocks in nested stream data."""
+    if isinstance(node, dict):
+        if node.get("type") == "tile" and isinstance(node.get("value"), dict):
+            tile_value = node["value"]
+            link_value = tile_value.get("link")
+            if isinstance(link_value, dict):
+                document_id = link_value.get("document")
+                if isinstance(document_id, int):
+                    yield document_id
+                elif isinstance(document_id, str) and document_id.isdigit():
+                    yield int(document_id)
+        for value in node.values():
+            if isinstance(value, (dict, list, tuple)):
+                yield from _iter_tile_document_ids(value)
+    elif isinstance(node, (list, tuple)):
+        for item in node:
+            if isinstance(item, (dict, list, tuple)):
+                yield from _iter_tile_document_ids(item)
+
+
+def _linked_document_titles(stream_data: list[Any]) -> list[str]:
+    ids = list(_iter_tile_document_ids(stream_data))
+    if not ids:
+        return []
+    docs_by_id = Document.objects.in_bulk(set(ids))
+    titles: list[str] = []
+    for doc_id in ids:
+        doc = docs_by_id.get(doc_id)
+        if doc is not None:
+            titles.append(doc.title)
+    return titles
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Export BlogEntryPage metadata to CSV."
@@ -152,7 +190,15 @@ def main() -> int:
     )
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    fieldnames = ["pageId", "disaron_nom", "titre", "complement_titre", "chapeau"]
+    fieldnames = [
+        "pageId",
+        "disaron_nom",
+        "titre",
+        "complement_titre",
+        "chapeau",
+        "date_premiere_publication",
+        "documents",
+    ]
     written = 0
 
     with output_path.open("w", encoding="utf-8", newline="") as f:
@@ -172,6 +218,7 @@ def main() -> int:
             chapeau = _extract_by_id(
                 html_values, id_value="chapeau", expected_tag="div"
             )
+            document_titles = _linked_document_titles(stream_data)
 
             writer.writerow(
                 {
@@ -180,6 +227,10 @@ def main() -> int:
                     "titre": page.title,
                     "complement_titre": complement_titre,
                     "chapeau": chapeau,
+                    "date_premiere_publication": (
+                        page.date.isoformat() if page.date else ""
+                    ),
+                    "documents": json.dumps(document_titles, ensure_ascii=False),
                 }
             )
             written += 1
