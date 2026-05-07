@@ -405,9 +405,16 @@ def main() -> int:
     data_file_rows: list[dict[str, str]] = []
     data_file_fieldnames: list[str] = []
     data_file_path: Path | None = None
-    output_rows: list[dict[str, str]] = []
-    pending_pages: list[tuple[int, dict[str, object]]] = []
-    failure_rows: list[dict[str, str]] = []
+    pending_pages: list[tuple[int, dict[str, object], dict[str, str]]] = []
+    failure_count = 0
+    output_path: Path | None = None
+    failures_path: Path | None = None
+    output_fieldnames: list[str] = []
+
+    def _append_csv_row(path: Path, fieldnames: list[str], row: dict[str, str]) -> None:
+        with path.open("a", encoding="utf-8", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            writer.writerow({k: row.get(k, "") for k in fieldnames})
 
     if args.data_file:
         if args.title or args.slug:
@@ -419,14 +426,27 @@ def main() -> int:
         except ValueError as exc:
             parser.error(str(exc))
 
-        output_rows = [
-            {
-                **row,
-                "success": "0",
-                "error_message": "",
-            }
-            for row in data_file_rows
+        output_dir = Path(__file__).resolve().parent / "output"
+        output_dir.mkdir(parents=True, exist_ok=True)
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        output_path = output_dir / f"{timestamp}_create_blog_entry.csv"
+        failures_path = output_dir / f"{timestamp}_create_blog_entry_failures.csv"
+
+        other_columns = [
+            c
+            for c in data_file_fieldnames
+            if c not in {"disaron:nom", "success", "error_message"}
         ]
+        output_fieldnames = ["disaron:nom", "success", "error_message", *other_columns]
+        with output_path.open("w", encoding="utf-8", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=output_fieldnames)
+            writer.writeheader()
+        with failures_path.open("w", encoding="utf-8", newline="") as f:
+            writer = csv.DictWriter(
+                f, fieldnames=["disaron:nom", "success", "error_message"]
+            )
+            writer.writeheader()
+
         input_total_rows = len(data_file_rows)
         for idx, raw_row in enumerate(data_file_rows):
             line_no = idx + 2
@@ -436,21 +456,29 @@ def main() -> int:
                 page_row = _build_page_row(raw_row, line_no)
             except ValueError as exc:
                 msg = str(exc)
-                output_rows[idx]["success"] = "0"
-                output_rows[idx]["error_message"] = msg
+                if output_path is not None:
+                    _append_csv_row(
+                        output_path,
+                        output_fieldnames,
+                        {**raw_row, "success": "0", "error_message": msg},
+                    )
                 print(
                     f"[{idx + 1}/{input_total_rows}] {display_nom} Error: {msg}",
                     file=sys.stderr,
                 )
-                failure_rows.append(
-                    {
-                        "disaron:nom": disaron_nom,
-                        "success": "0",
-                        "error_message": msg,
-                    }
-                )
+                if failures_path is not None:
+                    _append_csv_row(
+                        failures_path,
+                        ["disaron:nom", "success", "error_message"],
+                        {
+                            "disaron:nom": disaron_nom,
+                            "success": "0",
+                            "error_message": msg,
+                        },
+                    )
+                failure_count += 1
                 continue
-            pending_pages.append((idx, page_row))
+            pending_pages.append((idx, page_row, raw_row))
     else:
         title = (args.title or "").strip()
         if not title:
@@ -465,26 +493,15 @@ def main() -> int:
                     "chapeau": "",
                     "publication_date": timezone.now(),
                 },
+                {},
             )
         ]
-        output_rows = []
 
     if args.data_file and not pending_pages:
         print("No valid row to process in --data-file.")
 
     pages_total = len(pending_pages)
     created_or_published = 0
-
-    def _record_failure(idx: int, disaron_nom: str, message: str) -> None:
-        output_rows[idx]["success"] = "0"
-        output_rows[idx]["error_message"] = message
-        failure_rows.append(
-            {
-                "disaron:nom": disaron_nom,
-                "success": "0",
-                "error_message": message,
-            }
-        )
 
     publications_collection = _get_publications_collection()
 
@@ -521,7 +538,7 @@ def main() -> int:
             print("Creation cancelled.")
             return 0
 
-    for i, (output_idx, row) in enumerate(pending_pages, start=1):
+    for i, (_output_idx, row, raw_row) in enumerate(pending_pages, start=1):
         title = row["title"]
         disaron_nom = row["disaron_nom"]
         display_nom = disaron_nom or "<missing disaron:nom>"
@@ -667,40 +684,34 @@ def main() -> int:
             )
             print(f"[{i}/{pages_total}] {display_nom} Error: {message}", file=sys.stderr)
             if args.data_file:
-                _record_failure(output_idx, disaron_nom, message)
+                if output_path is not None:
+                    _append_csv_row(
+                        output_path,
+                        output_fieldnames,
+                        {**raw_row, "success": "0", "error_message": message},
+                    )
+                if failures_path is not None:
+                    _append_csv_row(
+                        failures_path,
+                        ["disaron:nom", "success", "error_message"],
+                        {
+                            "disaron:nom": disaron_nom,
+                            "success": "0",
+                            "error_message": message,
+                        },
+                    )
+                failure_count += 1
             continue
 
         created_or_published += 1
-        if args.data_file:
-            output_rows[output_idx]["success"] = "1"
-            output_rows[output_idx]["error_message"] = ""
-
-    if args.data_file and data_file_path is not None:
-        output_dir = Path(__file__).resolve().parent / "output"
-        output_dir.mkdir(parents=True, exist_ok=True)
-        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-
-        output_path = output_dir / f"{timestamp}_create_blog_entry.csv"
-        other_columns = [
-            c
-            for c in data_file_fieldnames
-            if c not in {"disaron:nom", "success", "error_message"}
-        ]
-        output_fieldnames = ["disaron:nom", "success", "error_message", *other_columns]
-        with output_path.open("w", encoding="utf-8", newline="") as f:
-            writer = csv.DictWriter(f, fieldnames=output_fieldnames)
-            writer.writeheader()
-            for row in output_rows:
-                writer.writerow({k: row.get(k, "") for k in output_fieldnames})
-
-        failures_path = output_dir / f"{timestamp}_create_blog_entry_failures.csv"
-        with failures_path.open("w", encoding="utf-8", newline="") as f:
-            writer = csv.DictWriter(
-                f, fieldnames=["disaron:nom", "success", "error_message"]
+        if args.data_file and output_path is not None:
+            _append_csv_row(
+                output_path,
+                output_fieldnames,
+                {**raw_row, "success": "1", "error_message": ""},
             )
-            writer.writeheader()
-            writer.writerows(failure_rows)
 
+    if args.data_file and output_path is not None and failures_path is not None:
         print(
             f"Wrote detailed output to {output_path} "
             f"and failures to {failures_path}."
@@ -708,9 +719,9 @@ def main() -> int:
 
     print(
         f"Done: {created_or_published}/{pages_total} page(s) created or published, "
-        f"{len(failure_rows)} failure(s)."
+        f"{failure_count} failure(s)."
     )
-    return 1 if failure_rows else 0
+    return 1 if failure_count else 0
 
 
 if __name__ == "__main__":
