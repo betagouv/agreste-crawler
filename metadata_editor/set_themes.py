@@ -8,6 +8,9 @@ value can contain multiple labels separated by "|".
 Each theme label must correspond to an existing Category that is a child
 or grandchild of the Category named "Thématiques".
 
+After the script runs, only themes listed in the CSV will remain on each page. 
+Any preexisting themes not listed in the CSV are removed.
+
 Usage:
     just set_themes \
         --wagtail-project-root ../agreste \
@@ -116,6 +119,18 @@ def _resolve_theme_categories(theme_names: Iterable[str]) -> list[object]:
     return [allowed[name] for name in theme_names]
 
 
+def _remove_themes(page: BlogEntryPage) -> None:
+    from blog.models import CategoryEntryPage
+
+    # Remove only theme links (children/grandchildren of Thématiques).
+    theme_category_ids = _get_theme_categories_from_site().values_list(
+        "id", flat=True
+    )
+    CategoryEntryPage.objects.filter(
+        page=page, category_id__in=theme_category_ids
+    ).delete()
+
+
 def _apply_themes(page: BlogEntryPage, raw_themes: str) -> None:
     from blog.models import CategoryEntryPage
 
@@ -124,7 +139,7 @@ def _apply_themes(page: BlogEntryPage, raw_themes: str) -> None:
         raise ValueError("themes value is empty after parsing")
 
     categories = _resolve_theme_categories(theme_names)
-    CategoryEntryPage.objects.filter(page=page).delete()
+    _remove_themes(page)
     for category in categories:
         CategoryEntryPage.objects.create(page=page, category=category)
 
