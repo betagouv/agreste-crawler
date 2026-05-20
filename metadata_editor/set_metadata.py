@@ -222,7 +222,11 @@ def run_metadata_update(
                 )
                 continue
 
-            apply_value(page, value)
+            try:
+                apply_value(page, value)
+            except Exception as exc:
+                _fail(page.id, disaron_nom, f"apply failed: {exc}")
+                continue
 
             if not dry_run and update_fields is not None:
                 try:
