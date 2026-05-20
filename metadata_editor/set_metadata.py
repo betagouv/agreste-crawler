@@ -8,6 +8,7 @@ to `run_metadata_update`.
 
 import argparse
 import csv
+import os
 import re
 from html import unescape
 from pathlib import Path
@@ -128,6 +129,12 @@ def _extract_disaron_from_html(html: str) -> str | None:
     return text or None
 
 
+def _flush_failures_file(failures_f) -> None:
+    """Push buffered failure rows to disk so tailing the CSV works mid-run."""
+    failures_f.flush()
+    os.fsync(failures_f.fileno())
+
+
 def find_disaron_nom(page: BlogEntryPage) -> str | None:
     """
     Extract a disaron identifier from page body content.
@@ -220,7 +227,8 @@ def run_metadata_update(
     - Saves with `update_fields` (skipped on --dry-run).
       If `update_fields` is None, no `page.save()` is called (use this when
       `apply_value` already commits to the DB, e.g. M2M .set()).
-    - Streams failures to `failures_file` as they occur.
+    - Streams failures to `failures_file` as they occur (flushed to disk
+      after each row so the file can be tailed while the script runs).
 
     Returns 0 on success.
     """
@@ -239,11 +247,14 @@ def run_metadata_update(
     failures_path = Path(failures_file)
     failures_path.parent.mkdir(parents=True, exist_ok=True)
 
-    with failures_path.open("w", encoding="utf-8", newline="") as failures_f:
+    with failures_path.open(
+        "w", encoding="utf-8", newline="", buffering=1
+    ) as failures_f:
         writer = csv.DictWriter(
             failures_f, fieldnames=["pageId", "disaron_nom", "error"]
         )
         writer.writeheader()
+        _flush_failures_file(failures_f)
 
         def _fail(page_id: int, disaron_nom: str, error: str) -> None:
             nonlocal skipped, failures_count
@@ -256,10 +267,11 @@ def run_metadata_update(
                     "error": error,
                 }
             )
-            failures_f.flush()
+            _flush_failures_file(failures_f)
             print(
                 f"[{updated + skipped}/{page_count}] "
-                f"Skipped id={page_id}: {error}"
+                f"Skipped id={page_id}: {error}",
+                flush=True,
             )
 
         for page in pages:
