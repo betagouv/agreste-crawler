@@ -19,6 +19,9 @@ set_publication_date *args:
 set_collection *args:
     PYTHONPATH=. uv run python -m metadata_editor.set_collection "$@"
 
+set_themes *args:
+    PYTHONPATH=. uv run python -m metadata_editor.set_themes "$@"
+
 reformat_disaron *args:
     PYTHONPATH=. uv run python -m metadata_editor.reformat_disaron "$@"
 
