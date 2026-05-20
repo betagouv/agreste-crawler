@@ -1,0 +1,42 @@
+2) OLD à reventiler,1) THEMES OLD univoque,THEMATIQUES NEW,NEW CODES,theme,parent_theme
+,,"1. CULTURES, PRODUCTIONS VÉGÉTALES",CULTURES,"Cultures, productions végétales",Thématiques
+TOUTCULT,GC,Grandes cultures,GC,Grandes cultures,"Cultures, productions végétales"
+TOUTCULT,FOURRAGE,Fourrages et prairies,FOURRAGE,Fourrages et prairies,"Cultures, productions végétales"
+TOUTCULT,FRUIT|LEGUME,Fruits et légumes,FRUILEG,Fruits et légumes,"Cultures, productions végétales"
+TOUTCULT,VITI,Viticulture,VITI,Viticulture,"Cultures, productions végétales"
+TOUTCULT,HORTI,Autres cultures,AUTRCULT,Autres cultures,"Cultures, productions végétales"
+TOUTCULT,RESFOR|EXFOSCI|RECBOIS|BOISECO,"Forêts, bois et dérivés",BOIS,"Forêts, bois et dérivés","Cultures, productions végétales"
+TOUTCULT,PROT|FERTI|AUTPRA,Pratiques culturales,PRACULT,Pratiques culturales,"Cultures, productions végétales"
+,,"2. ÉLEVAGE, PRODUCTIONS ANIMALES",ANIMAUX,"Élevage, productions animales",Thématiques
+TOUTCHEP,VOLAIL,"Volailles, œufs",VOLAIL,"Volailles, œufs","Élevage, productions animales"
+TOUTCHEP,BOVIN|CAPOV|LAIT,"Bovins, ovins, caprins, lait",CHEPTLAIT,"Bovins, ovins, caprins, lait","Élevage, productions animales"
+TOUTCHEP,PORC,Porcins,PORC,Porcins,"Élevage, productions animales"
+,AQUASTRU|AQUAPROD|AQUAECO,"Pêche, aquaculture",PECHAQUA,"Pêche, aquaculture","Élevage, productions animales"
+TOUTCHEP,AUTANI,Autres animaux et productions animales,AUTANI,Autres animaux et productions animales,"Élevage, productions animales"
+TOUTCHEP,PRAELEV,Pratiques d’élevage,PRAELEV,Pratiques d'élevage,"Élevage, productions animales"
+,,"3. EXPLOITATIONS, POPULATION AGRICOLE",EXPLPOPAGR,"Exploitations, population agricole",Thématiques
+,TAILLE|STATUT|COMMER|DIVERS,"Exploitations, spécialisation",EXPLOITSPEC,"Exploitations, spécialisation","Exploitations, population agricole"
+,SOCIO|AGROEMP,"Population agricole, emploi",POPAGREMP,"Population agricole, emploi","Exploitations, population agricole"
+,AGROFORM,Formation,AGROFORM,Formation,"Exploitations, population agricole"
+,AGROINST|EQUIP,"Installation, équipement",INSTEQUIP,"Installation, équipement","Exploitations, population agricole"
+,,"4. ALIMENTAIRE, AGRO-ALIMENTAIRE",ALIMAGROALIM,"Alimentaire, agro-alimentaire",Thématiques
+,ALIMCOMP,"Alimentation, consommation",ALIMCOMP,"Alimentation, consommation","Alimentaire, agro-alimentaire"
+,SANTE|ALIMSECU,"Santé, sécurité alimentaire",SANTALIM,"Santé, sécurité alimentaire","Alimentaire, agro-alimentaire"
+,SOQO,"Bio, labels, signes de qualité",SOQO,"Bio, labels, signes de qualité","Alimentaire, agro-alimentaire"
+,TISSU|TIC|IAAENV|AGROALIM,Industries agro-alimentaires (IAA),IAA,Industries agro-alimentaires (IAA),"Alimentaire, agro-alimentaire"
+,,"5. ÉCONOMIE, PRIX, POLITIQUES PUBLIQUES",ECONOMIE,"Économie, prix, politiques publiques",Thématiques
+,PRIX,"Prix, coûts de production",COUTPRIX,"Prix, coûts de production","Économie, prix, politiques publiques"
+,RESECO|COMPTES,Résultats économiques des exploitations,RESECOMPTE,Résultats économiques des exploitations,"Économie, prix, politiques publiques"
+,IAAECO,Résultats économiques des IAA,IAAECO,Résultats économiques des IAA,"Économie, prix, politiques publiques"
+,IAAFIL,"Marchés, filières",IAAFIL,"Marchés, filières","Économie, prix, politiques publiques"
+,COMEXT|BILAN,"Commerce extérieur, approvisionnements",COMEXTAPPRO,"Commerce extérieur, approvisionnements","Économie, prix, politiques publiques"
+,AIDE|VEILLE|EVALPOL|PROSP|COMPINT|ANAECO|ANASOC,"Aides, PAC, Politiques publiques",AIDPOLITIQ,"Aides, PAC, politiques publiques","Économie, prix, politiques publiques"
+,,"6. ENVIRONNEMENT, RESSOURCES NATURELLES",ENV,"Environnement, ressources naturelles",Thématiques
+AGROENV,SOL|BIO,Sol,SOLBIODIV,Sol,"Environnement, ressources naturelles"
+AGROENV,EAU,Eau,EAU,Eau,"Environnement, ressources naturelles"
+AGROENV,CLIMAT,Climat,CLIMAT,Climat,"Environnement, ressources naturelles"
+AGROENV,NRJ,Énergie,NRJ,Énergie,"Environnement, ressources naturelles"
+,,,,"Toutes cultures, productions végétales",Thématiques
+,,,,"Tous animaux, productions animales",Thématiques
+"2) Deux 1res : TOUTCULT (168), TOUTCHEP (150), à reventiler dans un second temps",,,,Données de cadrage,Thématiques
+"3) Restent deux : AGROENV (185), GRAMEM (198), à reventiler sur la partie des 383 qui n'aura pas été classée",,,,Agriculture et environnement,Thématiques
