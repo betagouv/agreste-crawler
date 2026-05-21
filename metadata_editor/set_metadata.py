@@ -8,7 +8,9 @@ to `run_metadata_update`.
 
 import argparse
 import csv
+import os
 import re
+from html import unescape
 from pathlib import Path
 from typing import Any, Callable
 
@@ -20,6 +22,11 @@ from blog.models import BlogEntryPage, BlogIndexPage
 DISARON_NOM_RE = re.compile(
     r"\b[A-Z][a-z]{2}[A-Z][a-z]{2}\d+(?:bis|ter)?\b",
     re.IGNORECASE,
+)
+TAG_RE = re.compile(r"<[^>]+>")
+DISARON_NOM_DIV_RE = re.compile(
+    r"<div[^>]*\bid\s*=\s*['\"]disaron-nom['\"][^>]*>(?P<inner>.*?)</div>",
+    re.IGNORECASE | re.DOTALL,
 )
 
 
@@ -79,16 +86,71 @@ def add_common_args(parser: argparse.ArgumentParser) -> None:
 # Shared helpers
 # ---------------------------------------------------------------------------
 
+def _get_stream_data(body_value: Any) -> list[Any]:
+    if hasattr(body_value, "stream_data"):
+        return list(body_value.stream_data)
+    if hasattr(body_value, "raw_data"):
+        return list(body_value.raw_data)
+    raise AttributeError(
+        "Unsupported StreamField value: expected StreamValue with "
+        "'stream_data' or 'raw_data'."
+    )
+
+
+def _iter_html_values(node: Any):
+    """Yield raw HTML strings from nested StreamField data."""
+    if isinstance(node, dict):
+        if node.get("type") == "html":
+            value = node.get("value")
+            if isinstance(value, str):
+                yield value
+        for value in node.values():
+            if isinstance(value, (dict, list, tuple)):
+                yield from _iter_html_values(value)
+    elif isinstance(node, (list, tuple)):
+        for item in node:
+            if isinstance(item, (dict, list, tuple)):
+                yield from _iter_html_values(item)
+            elif (
+                isinstance(item, tuple)
+                and len(item) == 2
+                and item[0] == "html"
+                and isinstance(item[1], str)
+            ):
+                yield item[1]
+
+
+def _extract_disaron_from_html(html: str) -> str | None:
+    match = DISARON_NOM_DIV_RE.search(html)
+    if not match:
+        return None
+    text = TAG_RE.sub("", match.group("inner"))
+    text = unescape(text).strip()
+    return text or None
+
+
+def _flush_failures_file(failures_f) -> None:
+    """Push buffered failure rows to disk so tailing the CSV works mid-run."""
+    failures_f.flush()
+    os.fsync(failures_f.fileno())
+
+
 def find_disaron_nom(page: BlogEntryPage) -> str | None:
     """
     Extract a disaron identifier from page body content.
 
-    Expected formats:
-    - XxxXxx followed by digits (e.g. IraLeg25167)
-    - XxxXxx followed by digits and 'bis'/'ter' (rare edge cases)
+    Looks for <div id="disaron-nom">TOKEN</div> in html StreamField blocks.
     """
-    match = DISARON_NOM_RE.search(str(page.body))
-    return match.group(0) if match else None
+    try:
+        stream_data = _get_stream_data(page.body)
+    except AttributeError:
+        return None
+
+    for html in _iter_html_values(stream_data):
+        disaron_nom = _extract_disaron_from_html(html)
+        if disaron_nom:
+            return disaron_nom
+    return None
 
 
 def resolve_failures_file(provided: str, default_suffix: str) -> str:
@@ -159,13 +221,14 @@ def run_metadata_update(
     Generic per-page update loop.
 
     - Prompts for confirmation before starting.
-    - Looks up disaron_nom in each page body.
+    - Looks up disaron_nom from <div id="disaron-nom"> in each page body.
     - Looks up the mapped value from `values_by_disaron_nom`.
     - Calls `apply_value(page, value)` to mutate the page.
     - Saves with `update_fields` (skipped on --dry-run).
       If `update_fields` is None, no `page.save()` is called (use this when
       `apply_value` already commits to the DB, e.g. M2M .set()).
-    - Streams failures to `failures_file` as they occur.
+    - Streams failures to `failures_file` as they occur (flushed to disk
+      after each row so the file can be tailed while the script runs).
 
     Returns 0 on success.
     """
@@ -184,11 +247,14 @@ def run_metadata_update(
     failures_path = Path(failures_file)
     failures_path.parent.mkdir(parents=True, exist_ok=True)
 
-    with failures_path.open("w", encoding="utf-8", newline="") as failures_f:
+    with failures_path.open(
+        "w", encoding="utf-8", newline="", buffering=1
+    ) as failures_f:
         writer = csv.DictWriter(
             failures_f, fieldnames=["pageId", "disaron_nom", "error"]
         )
         writer.writeheader()
+        _flush_failures_file(failures_f)
 
         def _fail(page_id: int, disaron_nom: str, error: str) -> None:
             nonlocal skipped, failures_count
@@ -201,16 +267,21 @@ def run_metadata_update(
                     "error": error,
                 }
             )
-            failures_f.flush()
+            _flush_failures_file(failures_f)
             print(
                 f"[{updated + skipped}/{page_count}] "
-                f"Skipped id={page_id}: {error}"
+                f"Skipped id={page_id}: {error}",
+                flush=True,
             )
 
         for page in pages:
             disaron_nom = find_disaron_nom(page)
             if disaron_nom is None:
-                _fail(page.id, "", "could not find disaron_nom in page body")
+                _fail(
+                    page.id,
+                    "",
+                    'could not find <div id="disaron-nom"> in page body',
+                )
                 continue
 
             value = values_by_disaron_nom.get(disaron_nom)
@@ -222,7 +293,11 @@ def run_metadata_update(
                 )
                 continue
 
-            apply_value(page, value)
+            try:
+                apply_value(page, value)
+            except Exception as exc:
+                _fail(page.id, disaron_nom, f"apply failed: {exc}")
+                continue
 
             if not dry_run and update_fields is not None:
                 try:
