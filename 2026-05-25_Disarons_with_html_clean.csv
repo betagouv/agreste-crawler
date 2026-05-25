@@ -1040,7 +1040,7 @@ Aut-012,true,false,a78d19f4-5465-4644-8652-441db12d67ab,"<p>&nbsp;</p>
 <li><span>le Chiffres et Donn&eacute;es <a title=""Prix des terres agricoles"" href=""https://agreste.agriculture.gouv.fr/agreste-web/disaron/Chd1919/detail/"" target=""_blank"" rel=""noopener"">Valeur v&eacute;nale des terres 2019</a> (code&nbsp;: Chd1919),</span></li>
 <li><span>le <a title=""la consommation de viande"" href=""https://agreste.agriculture.gouv.fr/agreste-web/disaron/Pri2004/detail/"" target=""_blank"" rel=""noopener"">Primeur</a> et le <a title=""La consommation de viande"" href=""https://agreste.agriculture.gouv.fr/agreste-web/disaron/SynCsm20359/detail/"" target=""_blank"" rel=""noopener"">Synth&egrave;ses</a> sur la consommation de viande (Pri2004, SynCsm20359),</span></li>
 <li><span>des Informations rapides et Synth&egrave;ses sur les grandes cultures <a title=""Grandes cultures. Surfaces"" href=""https://agreste.agriculture.gouv.fr/agreste-web/disaron/IraGcu21053/detail/"" target=""_blank"" rel=""noopener"">IraGcu21053</a>, <a title=""Grandes cultures. Semis de printemps"" href=""https://agreste.agriculture.gouv.fr/agreste-web/disaron/IraGcu21039/detail/"" target=""_blank"" rel=""noopener"">IraGcu21039</a>, <a title=""Grandes cultures. Semis d’hiver 2021 "" href=""https://agreste.agriculture.gouv.fr/agreste-web/disaron/IraGcu21016/detail/"" target=""_blank"" rel=""noopener"">IraGcu21016</a>, <a title=""Grandes cultures. Semis d’hiver "" href=""https://agreste.agriculture.gouv.fr/agreste-web/disaron/IraGcu20175/detail/"" target=""_blank"" rel=""noopener"">IraGcu20175</a>, <a title=""Grandes cultures. Bilan"" href=""https://agreste.agriculture.gouv.fr/agreste-web/disaron/SynGcu21367/detail/"" target=""_blank"" rel=""noopener"">SynGcu21367</a>),</span></li>
-<li><span style=""font-family: arial, helvetica, sans-serif"">les Chiffres et Donn&eacute;es de la SAA 2019 ; d&eacute;finitifs et provisoires (<a title=""SAA 2019"" href=""https://agreste.agriculture.gouv.fr/agreste-web/disaron/Chd2011/detail/"" target=""_blank"" rel=""noopener"">Chd2011</a>, <a title=""SAA 2018-2019"" href=""https://agreste.agriculture.gouv.fr/agreste-web/disaron/Chd2002/detail/"" target=""_blank"" rel=""noopener"">Chd2002</a>),</span></li>
+<li><span>les Chiffres et Donn&eacute;es de la SAA 2019 ; d&eacute;finitifs et provisoires (<a title=""SAA 2019"" href=""https://agreste.agriculture.gouv.fr/agreste-web/disaron/Chd2011/detail/"" target=""_blank"" rel=""noopener"">Chd2011</a>, <a title=""SAA 2018-2019"" href=""https://agreste.agriculture.gouv.fr/agreste-web/disaron/Chd2002/detail/"" target=""_blank"" rel=""noopener"">Chd2002</a>),</span></li>
 <li><span>des Chiffres et Donn&eacute;es sur les pratiques culturales et/ou phytosanitaires (Chd2007, <a title=""Enquête pratiques culturales en Gdes cultures et prairies"" href=""https://agreste.agriculture.gouv.fr/agreste-web/disaron/Chd2009/detail/"" target=""_blank"" rel=""noopener"">Chd2009</a>),</span></li>
 <li><span>les <a href=""https://agreste.agriculture.gouv.fr/agreste-web/methodon/S-RA%202020/methodon/"" target=""_blank"" rel=""noopener"">questionnaires du Recensement agricole 2020</a> (sous l&rsquo;onglet SOURCES, DEFINITIONS, METHODES, Source RA 2020).</span></li>
 </ul>",
@@ -3121,22 +3121,22 @@ ChdAgr245,true,false,57aef8c6-36e1-4a77-87f7-854bf0030dbc,"<p><span>Des r&eacute
 <h2><span style=""color: #007f82"">Principaux th&egrave;mes abord&eacute;s </span></h2>
 <p><span>R&eacute;sultats concernant les producteurs:</span></p>
 <ul>
-<li><span style=""font-family: arial,helvetica,sans-serif"">Caract&eacute;ristiques g&eacute;n&eacute;rales</span></li>
-<li><span style=""font-family: arial,helvetica,sans-serif"">Raisonnement des interventions </span></li>
-<li><span style=""font-family: arial,helvetica,sans-serif"">Pulv&eacute;risateur</span></li>
-<li><span style=""font-family: arial,helvetica,sans-serif"">Protection</span></li>
-<li><span style=""font-family: arial,helvetica,sans-serif"">R&eacute;-entr&eacute;e </span></li>
+<li><span>Caract&eacute;ristiques g&eacute;n&eacute;rales</span></li>
+<li><span>Raisonnement des interventions </span></li>
+<li><span>Pulv&eacute;risateur</span></li>
+<li><span>Protection</span></li>
+<li><span>R&eacute;-entr&eacute;e </span></li>
 </ul>
 <p><span>R&eacute;sultats concernant le verger : </span></p>
 <ul>
-<li><span style=""font-family: arial,helvetica,sans-serif"">Caract&eacute;ristiques g&eacute;n&eacute;rales du verger</span></li>
-<li><span style=""font-family: arial,helvetica,sans-serif"">Irrigation </span></li>
-<li><span style=""font-family: arial,helvetica,sans-serif"">Protections thermiques</span></li>
-<li><span style=""font-family: arial,helvetica,sans-serif"">Commercialisation </span></li>
-<li><span style=""font-family: arial,helvetica,sans-serif"">Enherbement </span></li>
-<li><span style=""font-family: arial,helvetica,sans-serif"">Fertilisation </span></li>
-<li><span style=""font-family: arial,helvetica,sans-serif"">Pression parasitaire </span></li>
-<li><span style=""font-family: arial,helvetica,sans-serif"">Apports au sol et traitements phytosanitaires</span></li>
+<li><span>Caract&eacute;ristiques g&eacute;n&eacute;rales du verger</span></li>
+<li><span>Irrigation </span></li>
+<li><span>Protections thermiques</span></li>
+<li><span>Commercialisation </span></li>
+<li><span>Enherbement </span></li>
+<li><span>Fertilisation </span></li>
+<li><span>Pression parasitaire </span></li>
+<li><span>Apports au sol et traitements phytosanitaires</span></li>
 </ul>
 <p>&nbsp;</p>
 <p><span>&nbsp; <br /></span></p>",
