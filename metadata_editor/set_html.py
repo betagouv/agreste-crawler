@@ -84,21 +84,31 @@ def load_html_by_disaron_nom(data_file: str) -> dict[str, DisaronHtml]:
         reader = csv.DictReader(f)
         if not reader.fieldnames:
             raise ValueError("Data CSV has no headers.")
+        available = set(reader.fieldnames)
         required = {
-            "disaron:nom",
             "has_html_principal",
             "has_html_secondaire",
             "html_principal",
             "html_secondaire",
         }
-        missing = required - set(reader.fieldnames)
+        missing = required - available
         if missing:
             raise ValueError(
                 f"Data CSV missing required column(s): {', '.join(sorted(missing))}"
             )
+        if (
+            "disaron:nom" not in available
+            and "disaron:nom_old" not in available
+        ):
+            raise ValueError(
+                "Data CSV must contain at least one identifier column: "
+                "'disaron:nom' or 'disaron:nom_old'."
+            )
 
         for row in reader:
             disaron_nom = (row.get("disaron:nom") or "").strip()
+            if not disaron_nom:
+                disaron_nom = (row.get("disaron:nom_old") or "").strip()
             if not disaron_nom or not _row_has_html(row):
                 continue
 
