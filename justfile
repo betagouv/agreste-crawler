@@ -22,6 +22,9 @@ set_collection *args:
 set_themes *args:
     PYTHONPATH=. uv run python -m metadata_editor.set_themes "$@"
 
+set_html *args:
+    PYTHONPATH=. uv run python -m metadata_editor.set_html "$@"
+
 create_theme_categories *args:
     PYTHONPATH=. uv run python -m metadata_editor.create_theme_categories "$@"
 
