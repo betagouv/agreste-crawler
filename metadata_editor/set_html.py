@@ -138,7 +138,12 @@ def _html_block(value: str) -> dict[str, Any]:
 
 
 def _wrap_principal(html: str) -> str:
-    return f'<div id="html_principal">{html}</div>'
+    return (
+        '<div id="html_principal">'
+        "<h2>Présentation</h2>"
+        f"{html}"
+        "</div>"
+    )
 
 
 def _wrap_secondaire(html: str) -> str:
