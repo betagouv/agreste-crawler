@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """
-Update BlogEntryPage categories from a configurable collections column in a CSV file.
+Update BlogEntryPage categories from a configurable collections column
+in a CSV file.
 
 The CSV must contain 'disaron:nom' and a collections column (default:
 'collection'). Each
@@ -34,16 +35,37 @@ from metadata_editor.set_metadata import (  # noqa: E402
 COLLECTION_COLUMN = "collection"
 
 
-def _apply_collection(page: BlogEntryPage, category_name: str) -> None:
+def _apply_collection(
+    page: BlogEntryPage, category_name: str
+) -> dict[str, str]:
     from blog.models import Category, CategoryEntryPage
 
-    category = Category.objects.filter(name=category_name).first()
-    if category is None:
+    matches = list(Category.objects.filter(name__iexact=category_name))
+    if not matches:
         raise ValueError(f"Category {category_name!r} not found in database.")
+    if len(matches) > 1:
+        matched_names = ", ".join(repr(category.name) for category in matches)
+        raise ValueError(
+            f"Multiple categories match {category_name!r} "
+            f"(case-insensitive): {matched_names}"
+        )
+    category = matches[0]
+    info = ""
+    if category.name != category_name:
+        info = (
+            f"Input collection {category_name!r} matched "
+            f"{category.name!r} case-insensitively."
+        )
+        print(
+            f"[INFO] id={page.id} title={page.title!r}: "
+            f"matched collection {category_name!r} to {category.name!r} "
+            "case-insensitively."
+        )
     # blog_categories uses a custom through model (CategoryEntryPage), so
     # .set() is not available. Manage the through table directly.
     CategoryEntryPage.objects.filter(page=page).delete()
     CategoryEntryPage.objects.create(page=page, category=category)
+    return {"value": category.name, "info": info}
 
 
 def main() -> int:

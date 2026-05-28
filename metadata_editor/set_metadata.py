@@ -227,7 +227,7 @@ def run_metadata_update(
     *,
     pages: Any,
     values_by_disaron_nom: dict[str, Any],
-    apply_value: Callable[[BlogEntryPage, Any], None],
+    apply_value: Callable[[BlogEntryPage, Any], Any],
     update_fields: list[str] | None,
     failures_file: str,
     successes_file: str,
@@ -279,7 +279,8 @@ def run_metadata_update(
         writer.writeheader()
         _flush_failures_file(failures_f)
         successes_writer = csv.DictWriter(
-            successes_f, fieldnames=["pageId", "disaron_nom", "value"]
+            successes_f,
+            fieldnames=["pageId", "disaron_nom", "value", "info"],
         )
         successes_writer.writeheader()
         _flush_failures_file(successes_f)
@@ -322,7 +323,7 @@ def run_metadata_update(
                 continue
 
             try:
-                apply_value(page, value)
+                apply_result = apply_value(page, value)
             except Exception as exc:
                 _fail(page.id, disaron_nom, f"apply failed: {exc}")
                 continue
@@ -335,11 +336,17 @@ def run_metadata_update(
                     continue
 
             updated += 1
+            success_value = str(value)
+            success_info = ""
+            if isinstance(apply_result, dict):
+                success_value = str(apply_result.get("value", value))
+                success_info = str(apply_result.get("info", "") or "")
             successes_writer.writerow(
                 {
                     "pageId": str(page.id),
                     "disaron_nom": disaron_nom,
-                    "value": str(value),
+                    "value": success_value,
+                    "info": success_info,
                 }
             )
             _flush_failures_file(successes_f)
