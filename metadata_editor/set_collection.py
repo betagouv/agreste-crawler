@@ -27,6 +27,7 @@ from metadata_editor.set_metadata import (  # noqa: E402
     load_csv_column,
     resolve_failures_file,
     resolve_pages,
+    resolve_successes_file,
     run_metadata_update,
 )
 
@@ -61,6 +62,9 @@ def main() -> int:
     failures_file = resolve_failures_file(
         args.failures_file, "collection_failures"
     )
+    successes_file = resolve_successes_file(
+        args.successes_file, "collection_successes"
+    )
     pages = resolve_pages(args.parent_id)
     values_by_disaron_nom = load_csv_column(
         args.data_file, args.collection_column
@@ -72,6 +76,7 @@ def main() -> int:
         apply_value=_apply_collection,
         update_fields=None,
         failures_file=failures_file,
+        successes_file=successes_file,
         dry_run=args.dry_run,
         confirmation_message=(
             f"About to update {pages.count()} BlogEntryPage object(s) "

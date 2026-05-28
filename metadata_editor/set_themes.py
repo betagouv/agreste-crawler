@@ -8,7 +8,7 @@ value can contain multiple labels separated by "|".
 Each theme label must correspond to an existing Category that is a child
 or grandchild of the Category named "Thématiques".
 
-After the script runs, only themes listed in the CSV will remain on each page. 
+After the script runs, only themes listed in the CSV will remain on each page.
 Any preexisting themes not listed in the CSV are removed.
 
 Usage:
@@ -33,6 +33,7 @@ from metadata_editor.set_metadata import (  # noqa: E402
     load_csv_column,
     resolve_failures_file,
     resolve_pages,
+    resolve_successes_file,
     run_metadata_update,
 )
 
@@ -152,6 +153,9 @@ def main() -> int:
     failures_file = resolve_failures_file(
         args.failures_file, "themes_failures"
     )
+    successes_file = resolve_successes_file(
+        args.successes_file, "themes_successes"
+    )
     pages = resolve_pages(args.parent_id)
     values_by_disaron_nom = load_csv_column(args.data_file, THEMES_COLUMN)
 
@@ -161,6 +165,7 @@ def main() -> int:
         apply_value=_apply_themes,
         update_fields=None,
         failures_file=failures_file,
+        successes_file=successes_file,
         dry_run=args.dry_run,
         confirmation_message=(
             f"About to update {pages.count()} BlogEntryPage object(s) "

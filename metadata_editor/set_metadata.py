@@ -1,5 +1,6 @@
 """
-Shared core for metadata-update scripts (set_publication_date, set_collection, …).
+Shared core for metadata-update scripts
+(set_publication_date, set_collection, ...).
 
 Each script builds a `values_by_disaron_nom` mapping, an `apply_value`
 callable that mutates a page object, and delegates the full update loop
@@ -78,6 +79,15 @@ def add_common_args(parser: argparse.ArgumentParser) -> None:
         help=(
             "Path to CSV output for failures "
             "(columns: pageId, disaron_nom, error)."
+        ),
+    )
+    parser.add_argument(
+        "--successes-file",
+        type=str,
+        default="",
+        help=(
+            "Path to CSV output for successful rows "
+            "(columns: pageId, disaron_nom, value)."
         ),
     )
 
@@ -160,6 +170,13 @@ def resolve_failures_file(provided: str, default_suffix: str) -> str:
     return f"metadata_editor/output/{timestamp}_{default_suffix}.csv"
 
 
+def resolve_successes_file(provided: str, default_suffix: str) -> str:
+    if provided:
+        return provided
+    timestamp = timezone.localtime().strftime("%Y-%m-%d_%H-%M-%S")
+    return f"metadata_editor/output/{timestamp}_{default_suffix}.csv"
+
+
 def resolve_pages(parent_id: int):
     parent_page = Page.objects.get(id=parent_id).specific
     if not isinstance(parent_page, BlogIndexPage):
@@ -213,6 +230,7 @@ def run_metadata_update(
     apply_value: Callable[[BlogEntryPage, Any], None],
     update_fields: list[str] | None,
     failures_file: str,
+    successes_file: str,
     dry_run: bool,
     confirmation_message: str,
     success_log: Callable[[int, int, BlogEntryPage, str, Any], str],
@@ -247,14 +265,24 @@ def run_metadata_update(
     failures_path = Path(failures_file)
     failures_path.parent.mkdir(parents=True, exist_ok=True)
 
+    successes_path = Path(successes_file)
+    successes_path.parent.mkdir(parents=True, exist_ok=True)
+
     with failures_path.open(
         "w", encoding="utf-8", newline="", buffering=1
-    ) as failures_f:
+    ) as failures_f, successes_path.open(
+        "w", encoding="utf-8", newline="", buffering=1
+    ) as successes_f:
         writer = csv.DictWriter(
             failures_f, fieldnames=["pageId", "disaron_nom", "error"]
         )
         writer.writeheader()
         _flush_failures_file(failures_f)
+        successes_writer = csv.DictWriter(
+            successes_f, fieldnames=["pageId", "disaron_nom", "value"]
+        )
+        successes_writer.writeheader()
+        _flush_failures_file(successes_f)
 
         def _fail(page_id: int, disaron_nom: str, error: str) -> None:
             nonlocal skipped, failures_count
@@ -307,6 +335,14 @@ def run_metadata_update(
                     continue
 
             updated += 1
+            successes_writer.writerow(
+                {
+                    "pageId": str(page.id),
+                    "disaron_nom": disaron_nom,
+                    "value": str(value),
+                }
+            )
+            _flush_failures_file(successes_f)
             action = "Would update" if dry_run else "Updated"
             print(
                 f"[{updated}/{page_count}] {action} "
@@ -314,6 +350,7 @@ def run_metadata_update(
             )
 
     print(f"Wrote {failures_count} failure row(s) to {failures_file}.")
+    print(f"Wrote {updated} success row(s) to {successes_file}.")
     summary_action = "Would update" if dry_run else "Updated"
     print(
         f"{summary_action} {updated} BlogEntryPage object(s); "
