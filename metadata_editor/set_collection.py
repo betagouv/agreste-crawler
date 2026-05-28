@@ -5,8 +5,9 @@ in a CSV file.
 
 The CSV must contain 'disaron:nom' and a collections column (default:
 'collection'). Each
-BlogEntryPage's disaron identifier is looked up in that mapping and its
-categories field is updated to the corresponding collection name.
+BlogEntryPage's disaron identifier is looked up in that mapping and the
+corresponding collection category is added. Pre-existing categories are
+left unchanged.
 
 Usage:
     just set_collection \
@@ -35,37 +36,73 @@ from metadata_editor.set_metadata import (  # noqa: E402
 COLLECTION_COLUMN = "collection"
 
 
-def _apply_collection(
-    page: BlogEntryPage, category_name: str
-) -> dict[str, str]:
-    from blog.models import Category, CategoryEntryPage
+def _category_on_page(page: BlogEntryPage, category_name: str) -> bool:
+    from blog.models import CategoryEntryPage
 
-    matches = list(Category.objects.filter(name__iexact=category_name))
+    return CategoryEntryPage.objects.filter(
+        page_id=page.pk,
+        category__locale_id=page.locale_id,
+        category__name__iexact=category_name,
+    ).exists()
+
+
+def _resolve_category(page: BlogEntryPage, category_name: str):
+    from blog.models import Category
+
+    matches = list(
+        Category.objects.filter(
+            name__iexact=category_name,
+            locale_id=page.locale_id,
+        )
+    )
     if not matches:
-        raise ValueError(f"Category {category_name!r} not found in database.")
+        raise ValueError(
+            f"Category {category_name!r} not found in database "
+            f"for locale {page.locale_id}."
+        )
     if len(matches) > 1:
         matched_names = ", ".join(repr(category.name) for category in matches)
         raise ValueError(
             f"Multiple categories match {category_name!r} "
             f"(case-insensitive): {matched_names}"
         )
-    category = matches[0]
-    info = ""
+    return matches[0]
+
+
+def _apply_collection(
+    page: BlogEntryPage, category_name: str, *, dry_run: bool = False
+) -> dict[str, str]:
+    from blog.models import CategoryEntryPage
+
+    category = _resolve_category(page, category_name)
+    info_parts: list[str] = []
     if category.name != category_name:
-        info = (
+        msg = (
             f"Input collection {category_name!r} matched "
             f"{category.name!r} case-insensitively."
         )
+        info_parts.append(msg)
         print(
             f"[INFO] id={page.id} title={page.title!r}: "
             f"matched collection {category_name!r} to {category.name!r} "
             "case-insensitively."
         )
-    # blog_categories uses a custom through model (CategoryEntryPage), so
-    # .set() is not available. Manage the through table directly.
-    CategoryEntryPage.objects.filter(page=page).delete()
-    CategoryEntryPage.objects.create(page=page, category=category)
-    return {"value": category.name, "info": info}
+
+    already_linked = _category_on_page(page, category_name)
+    if already_linked:
+        msg = f"Category {category.name!r} was already assigned to this page."
+        info_parts.append(msg)
+        print(f"[INFO] id={page.id} title={page.title!r}: {msg}")
+    elif dry_run:
+        info_parts.append(
+            f"Would assign category {category.name!r} to this page."
+        )
+    else:
+        # blog_categories uses a custom through model (CategoryEntryPage), so
+        # .set() is not available. Manage the through table directly.
+        CategoryEntryPage.objects.create(page=page, category=category)
+
+    return {"value": category.name, "info": " ".join(info_parts)}
 
 
 def main() -> int:
@@ -92,10 +129,13 @@ def main() -> int:
         args.data_file, args.collection_column
     )
 
+    def apply_value(page: BlogEntryPage, value: str) -> dict[str, str]:
+        return _apply_collection(page, value, dry_run=args.dry_run)
+
     return run_metadata_update(
         pages=pages,
         values_by_disaron_nom=values_by_disaron_nom,
-        apply_value=_apply_collection,
+        apply_value=apply_value,
         update_fields=None,
         failures_file=failures_file,
         successes_file=successes_file,
