@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 """
-Update BlogEntryPage categories from the 'collection' column of a CSV file.
+Update BlogEntryPage categories from a configurable collections column in a CSV file.
 
-The CSV must contain 'disaron:nom' and 'collection' columns.  Each
+The CSV must contain 'disaron:nom' and a collections column (default:
+'collection'). Each
 BlogEntryPage's disaron identifier is looked up in that mapping and its
 categories field is updated to the corresponding collection name.
 
@@ -47,13 +48,23 @@ def _apply_collection(page: BlogEntryPage, category_name: str) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     add_common_args(parser)
+    parser.add_argument(
+        "--collection-column",
+        default=COLLECTION_COLUMN,
+        help=(
+            "Name of the CSV column containing collection names "
+            f"(default: {COLLECTION_COLUMN!r})."
+        ),
+    )
     args = parser.parse_args()
 
     failures_file = resolve_failures_file(
         args.failures_file, "collection_failures"
     )
     pages = resolve_pages(args.parent_id)
-    values_by_disaron_nom = load_csv_column(args.data_file, COLLECTION_COLUMN)
+    values_by_disaron_nom = load_csv_column(
+        args.data_file, args.collection_column
+    )
 
     return run_metadata_update(
         pages=pages,
@@ -64,7 +75,8 @@ def main() -> int:
         dry_run=args.dry_run,
         confirmation_message=(
             f"About to update {pages.count()} BlogEntryPage object(s) "
-            f"using collections from {args.data_file}."
+            f"using collections from column {args.collection_column!r} in "
+            f"{args.data_file}."
         ),
         success_log=lambda _i, _n, page, disaron_nom, value: (
             f"id={page.id} disaron_nom={disaron_nom!r} "
