@@ -156,6 +156,40 @@ def resolve_noop_file(provided: str, default_suffix: str) -> str:
     return f"metadata_editor/output/{timestamp}_{default_suffix}.csv"
 
 
+def load_expected_chapeau_by_disaron_nom(
+    inventaire_file: str,
+) -> dict[str, bool]:
+    """
+    Return mapping disaron:nom -> expects_chapeau based on disaron:chapeau.
+    """
+    csv_path = Path(inventaire_file)
+    if not csv_path.exists():
+        raise FileNotFoundError(f"Inventaire file not found: {csv_path}")
+
+    expected: dict[str, bool] = {}
+    with csv_path.open("r", encoding="utf-8", newline="") as f:
+        reader = csv.DictReader(f)
+        if not reader.fieldnames:
+            raise ValueError("Inventaire CSV has no headers.")
+        if "disaron:nom" not in reader.fieldnames:
+            raise ValueError(
+                "Inventaire CSV must contain 'disaron:nom' column."
+            )
+        if "disaron:chapeau" not in reader.fieldnames:
+            raise ValueError(
+                "Inventaire CSV must contain 'disaron:chapeau' column."
+            )
+
+        for row in reader:
+            disaron_nom = (row.get("disaron:nom") or "").strip()
+            if not disaron_nom:
+                continue
+            chapeau_value = (row.get("disaron:chapeau") or "").strip()
+            expected[disaron_nom] = bool(chapeau_value)
+
+    return expected
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -205,11 +239,21 @@ def main() -> int:
             "(columns: pageId, disaron_nom, reason)."
         ),
     )
+    parser.add_argument(
+        "--inventaire-file",
+        type=str,
+        default="2026-05-07_Inventaire-Nuxeo-v11.csv",
+        help=(
+            "Inventaire CSV path with columns 'disaron:nom' and "
+            "'disaron:chapeau'. Used when no chapeau div is found."
+        ),
+    )
     args = parser.parse_args()
 
     failures_file = resolve_failures_file(args.failures_file, "wrap_chapeau_failures")
     noop_file = resolve_noop_file(args.noop_file, "wrap_chapeau_noop")
     pages = resolve_pages(args.parent_id)
+    expected_chapeau = load_expected_chapeau_by_disaron_nom(args.inventaire_file)
     page_count = pages.count()
 
     mode_prefix = "[DRY RUN] " if args.dry_run else ""
@@ -306,8 +350,32 @@ def main() -> int:
                 continue
 
             if chapeau_count == 0:
-                # No <div id="chapeau"> found anywhere in the body: error.
-                _fail(page, disaron_nom, 'no <div id="chapeau"> found in body')
+                # No <div id="chapeau"> found: error only if inventaire expects one.
+                expects_chapeau = expected_chapeau.get(disaron_nom)
+                if expects_chapeau is None:
+                    _fail(
+                        page,
+                        disaron_nom,
+                        (
+                            "disaron_nom not found in inventaire "
+                            f"{args.inventaire_file!r}"
+                        ),
+                    )
+                elif expects_chapeau:
+                    _fail(
+                        page,
+                        disaron_nom,
+                        (
+                            "no <div id=\"chapeau\"> found in body but "
+                            "inventaire disaron:chapeau is non-empty"
+                        ),
+                    )
+                else:
+                    _noop(
+                        page,
+                        disaron_nom,
+                        "no chapeau expected from inventaire; none found",
+                    )
                 continue
             if chapeau_count > 1:
                 _fail(
