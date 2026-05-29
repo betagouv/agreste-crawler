@@ -7,7 +7,8 @@ The CSV must contain 'disaron:nom' and a collections column (default:
 'collection'). Each
 BlogEntryPage's disaron identifier is looked up in that mapping and the
 corresponding collection category is added. Pre-existing categories are
-left unchanged.
+left unchanged. Rows with an empty collection column are logged as noop
+(in a separate CSV) and skipped.
 
 Usage:
     just set_collection \
@@ -28,6 +29,7 @@ from metadata_editor.set_metadata import (  # noqa: E402
     add_common_args,
     load_csv_column,
     resolve_failures_file,
+    resolve_noops_file,
     resolve_pages,
     resolve_successes_file,
     run_metadata_update,
@@ -124,9 +126,12 @@ def main() -> int:
     successes_file = resolve_successes_file(
         args.successes_file, "collection_successes"
     )
+    noops_file = resolve_noops_file(args.noops_file, "collection_noops")
     pages = resolve_pages(args.parent_id)
     values_by_disaron_nom = load_csv_column(
-        args.data_file, args.collection_column
+        args.data_file,
+        args.collection_column,
+        include_empty_as_noop=True,
     )
 
     def apply_value(page: BlogEntryPage, value: str) -> dict[str, str]:
@@ -139,6 +144,7 @@ def main() -> int:
         update_fields=None,
         failures_file=failures_file,
         successes_file=successes_file,
+        noops_file=noops_file,
         dry_run=args.dry_run,
         confirmation_message=(
             f"About to update {pages.count()} BlogEntryPage object(s) "
@@ -149,6 +155,7 @@ def main() -> int:
             f"id={page.id} disaron_nom={disaron_nom!r} "
             f"collection={value!r} title={page.title!r}"
         ),
+        noop_info=f"noop: {args.collection_column!r} is empty",
     )
 
 
