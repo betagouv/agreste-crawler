@@ -7,8 +7,8 @@ The CSV must contain 'disaron:nom' and a collections column (default:
 'collection'). Each
 BlogEntryPage's disaron identifier is looked up in that mapping and the
 corresponding collection category is added. Pre-existing categories are
-left unchanged. Rows with an empty collection column are logged as noop
-(in a separate CSV) and skipped.
+left unchanged. Rows with an empty collection column, or where the
+collection is already assigned, are logged as noop (in a separate CSV).
 
 Usage:
     just set_collection \
@@ -90,20 +90,21 @@ def _apply_collection(
             "case-insensitively."
         )
 
-    already_linked = _category_on_page(page, category_name)
-    if already_linked:
-        msg = f"Category {category.name!r} was already assigned to this page."
-        info_parts.append(msg)
-        print(f"[INFO] id={page.id} title={page.title!r}: {msg}")
-    elif dry_run:
+    if _category_on_page(page, category_name):
+        msg = f"noop: category {category.name!r} was already assigned to this page."
+        if info_parts:
+            msg = f"{msg} {' '.join(info_parts)}"
+        return {"noop": True, "info": msg, "value": category.name}
+
+    if dry_run:
         info_parts.append(
             f"Would assign category {category.name!r} to this page."
         )
-    else:
-        # blog_categories uses a custom through model (CategoryEntryPage), so
-        # .set() is not available. Manage the through table directly.
-        CategoryEntryPage.objects.create(page=page, category=category)
+        return {"value": category.name, "info": " ".join(info_parts)}
 
+    # blog_categories uses a custom through model (CategoryEntryPage), so
+    # .set() is not available. Manage the through table directly.
+    CategoryEntryPage.objects.create(page=page, category=category)
     return {"value": category.name, "info": " ".join(info_parts)}
 
 

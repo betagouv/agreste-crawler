@@ -354,6 +354,27 @@ def run_metadata_update(
                 flush=True,
             )
 
+        def _record_noop(page_id: int, disaron_nom: str, noop_message: str) -> None:
+            nonlocal noop_count
+            noop_count += 1
+            noop_row = {
+                "pageId": str(page_id),
+                "disaron_nom": disaron_nom,
+                "info": noop_message,
+            }
+            if noops_writer is not None:
+                noops_writer.writerow(noop_row)
+                _flush_failures_file(noops_f)
+            else:
+                successes_writer.writerow({**noop_row, "value": ""})
+                _flush_failures_file(successes_f)
+            print(
+                f"[{updated + noop_count + skipped}/{page_count}] "
+                f"Noop id={page_id} disaron_nom={disaron_nom!r}: "
+                f"{noop_message}",
+                flush=True,
+            )
+
         for page in pages:
             disaron_nom = find_disaron_nom(page)
             if disaron_nom is None:
@@ -374,29 +395,10 @@ def run_metadata_update(
 
             value = values_by_disaron_nom[disaron_nom]
             if value is NOOP:
-                noop_count += 1
-                noop_message = noop_info or "noop: value column is empty"
-                noop_row = {
-                    "pageId": str(page.id),
-                    "disaron_nom": disaron_nom,
-                    "info": noop_message,
-                }
-                if noops_writer is not None:
-                    noops_writer.writerow(noop_row)
-                    _flush_failures_file(noops_f)
-                else:
-                    successes_writer.writerow(
-                        {
-                            **noop_row,
-                            "value": "",
-                        }
-                    )
-                    _flush_failures_file(successes_f)
-                print(
-                    f"[{updated + noop_count + skipped}/{page_count}] "
-                    f"Noop id={page.id} disaron_nom={disaron_nom!r}: "
-                    f"{noop_message}",
-                    flush=True,
+                _record_noop(
+                    page.id,
+                    disaron_nom,
+                    noop_info or "noop: value column is empty",
                 )
                 continue
 
@@ -404,6 +406,14 @@ def run_metadata_update(
                 apply_result = apply_value(page, value)
             except Exception as exc:
                 _fail(page.id, disaron_nom, f"apply failed: {exc}")
+                continue
+
+            if isinstance(apply_result, dict) and apply_result.get("noop"):
+                _record_noop(
+                    page.id,
+                    disaron_nom,
+                    str(apply_result.get("info") or "noop"),
+                )
                 continue
 
             if not dry_run and update_fields is not None:
