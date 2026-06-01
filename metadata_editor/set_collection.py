@@ -23,7 +23,7 @@ from django_setup import setup_django
 
 setup_django(__file__)
 
-from blog.models import BlogEntryPage  # noqa: E402
+from sites_conformes.blog.models import BlogEntryPage  # noqa: E402
 
 from metadata_editor.set_metadata import (  # noqa: E402
     add_common_args,
@@ -39,7 +39,7 @@ COLLECTION_COLUMN = "collection"
 
 
 def _category_on_page(page: BlogEntryPage, category_name: str) -> bool:
-    from blog.models import CategoryEntryPage
+    from sites_conformes.blog.models import CategoryEntryPage
 
     return CategoryEntryPage.objects.filter(
         page_id=page.pk,
@@ -49,7 +49,7 @@ def _category_on_page(page: BlogEntryPage, category_name: str) -> bool:
 
 
 def _resolve_category(page: BlogEntryPage, category_name: str):
-    from blog.models import Category
+    from sites_conformes.blog.models import Category
 
     matches = list(
         Category.objects.filter(
@@ -74,7 +74,7 @@ def _resolve_category(page: BlogEntryPage, category_name: str):
 def _apply_collection(
     page: BlogEntryPage, category_name: str, *, dry_run: bool = False
 ) -> dict[str, str]:
-    from blog.models import CategoryEntryPage
+    from sites_conformes.blog.models import CategoryEntryPage
 
     category = _resolve_category(page, category_name)
     info_parts: list[str] = []

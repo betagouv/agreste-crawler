@@ -81,6 +81,46 @@ def _load_requested_env_file(project_root: Path) -> None:
     load_dotenv(dotenv_path=env_path, override=False)
 
 
+def _crawler_root(current_file: str) -> Path:
+    return Path(current_file).resolve().parents[1]
+
+
+def _reexec_with_project_python(project_python: Path, current_file: str) -> None:
+    """
+    Re-run in the Wagtail project's venv.
+
+    Crawler and Wagtail projects may share the same uv-managed interpreter
+    binary while using different site-packages; compare Django availability,
+    not sys.executable paths.
+    """
+    crawler_root = _crawler_root(current_file)
+    env = os.environ.copy()
+    pythonpath_parts = [str(crawler_root)]
+    if env.get("PYTHONPATH"):
+        pythonpath_parts.append(env["PYTHONPATH"])
+    env["PYTHONPATH"] = os.pathsep.join(pythonpath_parts)
+
+    if "-m" in sys.argv:
+        module_index = sys.argv.index("-m")
+        module_name = sys.argv[module_index + 1]
+        os.execve(
+            str(project_python),
+            [
+                str(project_python),
+                "-m",
+                module_name,
+                *sys.argv[module_index + 2 :],
+            ],
+            env,
+        )
+
+    os.execve(
+        str(project_python),
+        [str(project_python), current_file, *sys.argv[1:]],
+        env,
+    )
+
+
 def setup_django(current_file: str) -> None:
     project_root = _resolve_django_project_root(current_file)
     if str(project_root) not in sys.path:
@@ -88,21 +128,13 @@ def setup_django(current_file: str) -> None:
 
     _load_requested_env_file(project_root)
 
-    # If Django is missing, re-run with the target project venv.
     if importlib.util.find_spec("django") is None:
         project_python = project_root / ".venv" / "bin" / "python"
-        current_python = Path(sys.executable)
-        if (
-            project_python.exists()
-            and current_python != project_python
-        ):
-            os.execv(
-                str(project_python),
-                [str(project_python), current_file, *sys.argv[1:]],
-            )
+        if project_python.exists():
+            _reexec_with_project_python(project_python, current_file)
         raise ModuleNotFoundError(
-            "Django is not available. Install dependencies in agreste-crawler "
-            "or create <wagtail-project-root>/.venv."
+            "Django is not available. Install dependencies in the Wagtail "
+            f"project venv at {project_root / '.venv'}."
         )
 
     import django

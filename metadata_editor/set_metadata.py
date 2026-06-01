@@ -19,7 +19,7 @@ from typing import Any, Callable
 from django.utils import timezone
 from wagtail.models import Page
 
-from blog.models import BlogEntryPage, BlogIndexPage
+from sites_conformes.blog.models import BlogEntryPage, BlogIndexPage
 
 DISARON_NOM_RE = re.compile(
     r"\b[A-Z][a-z]{2}[A-Z][a-z]{2}\d+(?:bis|ter)?\b",
