@@ -86,7 +86,7 @@ from django.utils.text import slugify  # noqa: E402
 from wagtail.documents.models import Document  # noqa: E402
 from wagtail.models import Page  # noqa: E402
 
-from blog.models import BlogEntryPage, BlogIndexPage  # noqa: E402
+from sites_conformes.blog.models import BlogEntryPage, BlogIndexPage  # noqa: E402
 
 DOCUMENTS_COLLECTION_NAME = "Publications"
 
