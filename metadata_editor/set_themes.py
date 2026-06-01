@@ -26,7 +26,7 @@ from django_setup import setup_django
 
 setup_django(__file__)
 
-from blog.models import BlogEntryPage  # noqa: E402
+from sites_conformes.blog.models import BlogEntryPage  # noqa: E402
 
 from metadata_editor.set_metadata import (  # noqa: E402
     add_common_args,
@@ -55,7 +55,7 @@ def _parse_themes(raw_value: str) -> list[str]:
 def _get_theme_categories_from_site():
     from django.db.models import Q
 
-    from blog.models import Category
+    from sites_conformes.blog.models import Category
 
     # Allowed themes must map to categories under "Thématiques":
     # direct children or grandchildren only.
@@ -121,7 +121,7 @@ def _resolve_theme_categories(theme_names: Iterable[str]) -> list[object]:
 
 
 def _remove_themes(page: BlogEntryPage) -> None:
-    from blog.models import CategoryEntryPage
+    from sites_conformes.blog.models import CategoryEntryPage
 
     # Remove only theme links (children/grandchildren of Thématiques).
     theme_category_ids = _get_theme_categories_from_site().values_list(
@@ -133,7 +133,7 @@ def _remove_themes(page: BlogEntryPage) -> None:
 
 
 def _apply_themes(page: BlogEntryPage, raw_themes: str) -> None:
-    from blog.models import CategoryEntryPage
+    from sites_conformes.blog.models import CategoryEntryPage
 
     theme_names = _parse_themes(raw_themes)
     if not theme_names:

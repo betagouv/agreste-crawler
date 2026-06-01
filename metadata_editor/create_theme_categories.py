@@ -35,7 +35,7 @@ setup_django(__file__)
 
 from django.utils import timezone  # noqa: E402
 
-from blog.models import Category  # noqa: E402
+from sites_conformes.blog.models import Category  # noqa: E402
 
 THEME_COLUMN = "theme"
 PARENT_THEME_COLUMN = "parent_theme"
