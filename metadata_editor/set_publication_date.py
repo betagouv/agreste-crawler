@@ -22,13 +22,12 @@ setup_django(__file__)
 
 from django.utils import timezone  # noqa: E402
 
-from blog.models import BlogEntryPage  # noqa: E402
-
 from metadata_editor.set_metadata import (  # noqa: E402
     add_common_args,
     load_csv_column,
     resolve_failures_file,
     resolve_pages,
+    resolve_successes_file,
     run_metadata_update,
 )
 
@@ -46,7 +45,9 @@ def _parse_date(raw_value: str) -> datetime:
     for fmt in parse_formats:
         try:
             naive_dt = datetime.strptime(value, fmt)
-            return timezone.make_aware(naive_dt, timezone.get_current_timezone())
+            return timezone.make_aware(
+                naive_dt, timezone.get_current_timezone()
+            )
         except ValueError:
             continue
     raise ValueError(
@@ -60,6 +61,9 @@ def main() -> int:
     args = parser.parse_args()
 
     failures_file = resolve_failures_file(args.failures_file, "date_failures")
+    successes_file = resolve_successes_file(
+        args.successes_file, "date_successes"
+    )
     pages = resolve_pages(args.parent_id)
 
     raw_dates = load_csv_column(args.data_file, DATE_COLUMN)
@@ -73,6 +77,7 @@ def main() -> int:
         apply_value=lambda page, value: setattr(page, "date", value),
         update_fields=["date"],
         failures_file=failures_file,
+        successes_file=successes_file,
         dry_run=args.dry_run,
         confirmation_message=(
             f"About to update {pages.count()} BlogEntryPage object(s) "

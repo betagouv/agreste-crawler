@@ -63,7 +63,8 @@ Minimal examples:
 
     # Batch mode from CSV
     uv run python -m page_creator.create_blog_entry \
-        --wagtail-project-root ../agreste --parent-id 30 --data-file page_creator/data/infos-rapides.csv
+        --wagtail-project-root ../agreste --parent-id 30 \ 
+        --data-file page_creator/data/infos-rapides.csv
 """
 
 import argparse
@@ -601,7 +602,7 @@ def main() -> int:
                 )
             if chapeau:
                 left_column_content.append(
-                    ("html", f'<div id="chapeau">{escape(chapeau)}</div>')
+                    ("html", f'<div id="chapeau"><p>{escape(chapeau)}</p></div>')
                 )
 
             left_width = "8" if right_column_content else "12"

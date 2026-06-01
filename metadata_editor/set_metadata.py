@@ -1,5 +1,6 @@
 """
-Shared core for metadata-update scripts (set_publication_date, set_collection, …).
+Shared core for metadata-update scripts
+(set_publication_date, set_collection, ...).
 
 Each script builds a `values_by_disaron_nom` mapping, an `apply_value`
 callable that mutates a page object, and delegates the full update loop
@@ -10,6 +11,7 @@ import argparse
 import csv
 import os
 import re
+from contextlib import ExitStack
 from html import unescape
 from pathlib import Path
 from typing import Any, Callable
@@ -28,6 +30,9 @@ DISARON_NOM_DIV_RE = re.compile(
     r"<div[^>]*\bid\s*=\s*['\"]disaron-nom['\"][^>]*>(?P<inner>.*?)</div>",
     re.IGNORECASE | re.DOTALL,
 )
+
+# Sentinel: disaron is in CSV but the value column is empty (no update).
+NOOP = object()
 
 
 # ---------------------------------------------------------------------------
@@ -78,6 +83,24 @@ def add_common_args(parser: argparse.ArgumentParser) -> None:
         help=(
             "Path to CSV output for failures "
             "(columns: pageId, disaron_nom, error)."
+        ),
+    )
+    parser.add_argument(
+        "--successes-file",
+        type=str,
+        default="",
+        help=(
+            "Path to CSV output for successful rows "
+            "(columns: pageId, disaron_nom, value, info)."
+        ),
+    )
+    parser.add_argument(
+        "--noops-file",
+        type=str,
+        default="",
+        help=(
+            "Path to CSV output for noop rows "
+            "(columns: pageId, disaron_nom, info)."
         ),
     )
 
@@ -160,6 +183,20 @@ def resolve_failures_file(provided: str, default_suffix: str) -> str:
     return f"metadata_editor/output/{timestamp}_{default_suffix}.csv"
 
 
+def resolve_successes_file(provided: str, default_suffix: str) -> str:
+    if provided:
+        return provided
+    timestamp = timezone.localtime().strftime("%Y-%m-%d_%H-%M-%S")
+    return f"metadata_editor/output/{timestamp}_{default_suffix}.csv"
+
+
+def resolve_noops_file(provided: str, default_suffix: str) -> str:
+    if provided:
+        return provided
+    timestamp = timezone.localtime().strftime("%Y-%m-%d_%H-%M-%S")
+    return f"metadata_editor/output/{timestamp}_{default_suffix}.csv"
+
+
 def resolve_pages(parent_id: int):
     try:
         parent_page = Page.objects.get(id=parent_id).specific
@@ -178,10 +215,15 @@ def resolve_pages(parent_id: int):
 def load_csv_column(
     data_file: str,
     value_column: str,
-) -> dict[str, str]:
+    *,
+    include_empty_as_noop: bool = False,
+) -> dict[str, Any]:
     """
     Read a CSV and return a mapping of disaron:nom -> raw string value
     from `value_column`.
+
+    When ``include_empty_as_noop`` is True, rows with a ``disaron:nom`` but
+    an empty ``value_column`` are stored as ``NOOP`` instead of being omitted.
     """
     csv_path = Path(data_file)
     if not csv_path.exists():
@@ -201,8 +243,12 @@ def load_csv_column(
         for row in reader:
             disaron_nom = (row.get("disaron:nom") or "").strip()
             raw_value = (row.get(value_column) or "").strip()
-            if disaron_nom and raw_value:
+            if not disaron_nom:
+                continue
+            if raw_value:
                 out[disaron_nom] = raw_value
+            elif include_empty_as_noop:
+                out[disaron_nom] = NOOP
 
     return out
 
@@ -215,12 +261,15 @@ def run_metadata_update(
     *,
     pages: Any,
     values_by_disaron_nom: dict[str, Any],
-    apply_value: Callable[[BlogEntryPage, Any], None],
+    apply_value: Callable[[BlogEntryPage, Any], Any],
     update_fields: list[str] | None,
     failures_file: str,
+    successes_file: str,
+    noops_file: str = "",
     dry_run: bool,
     confirmation_message: str,
     success_log: Callable[[int, int, BlogEntryPage, str, Any], str],
+    noop_info: str | None = None,
 ) -> int:
     """
     Generic per-page update loop.
@@ -247,19 +296,50 @@ def run_metadata_update(
         return 0
 
     updated = 0
+    noop_count = 0
     skipped = 0
     failures_count = 0
     failures_path = Path(failures_file)
     failures_path.parent.mkdir(parents=True, exist_ok=True)
 
-    with failures_path.open(
-        "w", encoding="utf-8", newline="", buffering=1
-    ) as failures_f:
+    successes_path = Path(successes_file)
+    successes_path.parent.mkdir(parents=True, exist_ok=True)
+
+    noops_path = Path(noops_file) if noops_file else None
+    if noops_path is not None:
+        noops_path.parent.mkdir(parents=True, exist_ok=True)
+
+    with ExitStack() as stack:
+        failures_f = stack.enter_context(
+            failures_path.open("w", encoding="utf-8", newline="", buffering=1)
+        )
+        successes_f = stack.enter_context(
+            successes_path.open("w", encoding="utf-8", newline="", buffering=1)
+        )
+        noops_f = None
+        if noops_path is not None:
+            noops_f = stack.enter_context(
+                noops_path.open("w", encoding="utf-8", newline="", buffering=1)
+            )
+
         writer = csv.DictWriter(
             failures_f, fieldnames=["pageId", "disaron_nom", "error"]
         )
         writer.writeheader()
         _flush_failures_file(failures_f)
+        successes_writer = csv.DictWriter(
+            successes_f,
+            fieldnames=["pageId", "disaron_nom", "value", "info"],
+        )
+        successes_writer.writeheader()
+        _flush_failures_file(successes_f)
+        noops_writer = None
+        if noops_f is not None:
+            noops_writer = csv.DictWriter(
+                noops_f, fieldnames=["pageId", "disaron_nom", "info"]
+            )
+            noops_writer.writeheader()
+            _flush_failures_file(noops_f)
 
         def _fail(page_id: int, disaron_nom: str, error: str) -> None:
             nonlocal skipped, failures_count
@@ -279,6 +359,27 @@ def run_metadata_update(
                 flush=True,
             )
 
+        def _record_noop(page_id: int, disaron_nom: str, noop_message: str) -> None:
+            nonlocal noop_count
+            noop_count += 1
+            noop_row = {
+                "pageId": str(page_id),
+                "disaron_nom": disaron_nom,
+                "info": noop_message,
+            }
+            if noops_writer is not None:
+                noops_writer.writerow(noop_row)
+                _flush_failures_file(noops_f)
+            else:
+                successes_writer.writerow({**noop_row, "value": ""})
+                _flush_failures_file(successes_f)
+            print(
+                f"[{updated + noop_count + skipped}/{page_count}] "
+                f"Noop id={page_id} disaron_nom={disaron_nom!r}: "
+                f"{noop_message}",
+                flush=True,
+            )
+
         for page in pages:
             disaron_nom = find_disaron_nom(page)
             if disaron_nom is None:
@@ -289,8 +390,7 @@ def run_metadata_update(
                 )
                 continue
 
-            value = values_by_disaron_nom.get(disaron_nom)
-            if value is None:
+            if disaron_nom not in values_by_disaron_nom:
                 _fail(
                     page.id,
                     disaron_nom,
@@ -298,10 +398,27 @@ def run_metadata_update(
                 )
                 continue
 
+            value = values_by_disaron_nom[disaron_nom]
+            if value is NOOP:
+                _record_noop(
+                    page.id,
+                    disaron_nom,
+                    noop_info or "noop: value column is empty",
+                )
+                continue
+
             try:
-                apply_value(page, value)
+                apply_result = apply_value(page, value)
             except Exception as exc:
                 _fail(page.id, disaron_nom, f"apply failed: {exc}")
+                continue
+
+            if isinstance(apply_result, dict) and apply_result.get("noop"):
+                _record_noop(
+                    page.id,
+                    disaron_nom,
+                    str(apply_result.get("info") or "noop"),
+                )
                 continue
 
             if not dry_run and update_fields is not None:
@@ -312,6 +429,20 @@ def run_metadata_update(
                     continue
 
             updated += 1
+            success_value = str(value)
+            success_info = ""
+            if isinstance(apply_result, dict):
+                success_value = str(apply_result.get("value", value))
+                success_info = str(apply_result.get("info", "") or "")
+            successes_writer.writerow(
+                {
+                    "pageId": str(page.id),
+                    "disaron_nom": disaron_nom,
+                    "value": success_value,
+                    "info": success_info,
+                }
+            )
+            _flush_failures_file(successes_f)
             action = "Would update" if dry_run else "Updated"
             print(
                 f"[{updated}/{page_count}] {action} "
@@ -319,9 +450,14 @@ def run_metadata_update(
             )
 
     print(f"Wrote {failures_count} failure row(s) to {failures_file}.")
+    print(f"Wrote {updated} success row(s) to {successes_file}.")
+    if noop_count and noops_file:
+        print(f"Wrote {noop_count} noop row(s) to {noops_file}.")
+    elif noop_count:
+        print(f"Logged {noop_count} noop row(s) in {successes_file}.")
     summary_action = "Would update" if dry_run else "Updated"
     print(
         f"{summary_action} {updated} BlogEntryPage object(s); "
-        f"skipped {skipped}."
+        f"noop {noop_count}; skipped {skipped}."
     )
     return 0
