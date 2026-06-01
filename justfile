@@ -40,3 +40,6 @@ disaron_fixer *args:
 export_to_csv *args:
     PYTHONPATH=. uv run python -m data_exporter.export_to_csv "$@"
 
+sort_theme_codes_column *args:
+    PYTHONPATH=. uv run python -m data_exporter.sort_theme_codes_column "$@"
+
