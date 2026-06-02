@@ -35,7 +35,7 @@ setup_django(__file__)
 
 from django.utils import timezone  # noqa: E402
 
-from blog.models import BlogEntryPage  # noqa: E402
+from sites_conformes.blog.models import BlogEntryPage  # noqa: E402
 
 from metadata_editor.set_metadata import (  # noqa: E402
     _flush_failures_file,
