@@ -22,6 +22,9 @@ set_collection *args:
 set_themes *args:
     PYTHONPATH=. uv run python -m metadata_editor.set_themes "$@"
 
+theme_reventilation *args:
+    PYTHONPATH=. uv run python -m metadata_editor.theme_reventilation "$@"
+
 create_theme_categories *args:
     PYTHONPATH=. uv run python -m metadata_editor.create_theme_categories "$@"
 
@@ -36,4 +39,7 @@ disaron_fixer *args:
 
 export_to_csv *args:
     PYTHONPATH=. uv run python -m data_exporter.export_to_csv "$@"
+
+sort_theme_codes_column *args:
+    PYTHONPATH=. uv run python -m data_exporter.sort_theme_codes_column "$@"
 
