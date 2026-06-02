@@ -49,3 +49,6 @@ export_to_csv *args:
 sort_theme_codes_column *args:
     PYTHONPATH=. uv run python -m data_exporter.sort_theme_codes_column "$@"
 
+extract_disaron_links *args:
+    PYTHONPATH=. uv run python -m metadata_editor.extract_disaron_links "$@"
+
