@@ -198,7 +198,12 @@ def resolve_noops_file(provided: str, default_suffix: str) -> str:
 
 
 def resolve_pages(parent_id: int):
-    parent_page = Page.objects.get(id=parent_id).specific
+    try:
+        parent_page = Page.objects.get(id=parent_id).specific
+    except Page.DoesNotExist as exc:
+        raise ValueError(
+            f"Page id={parent_id} does not exist in this Wagtail database."
+        ) from exc
     if not isinstance(parent_page, BlogIndexPage):
         raise ValueError(
             f"Page id={parent_id} is not a BlogIndexPage "

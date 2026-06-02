@@ -25,6 +25,9 @@ set_themes *args:
 theme_reventilation *args:
     PYTHONPATH=. uv run python -m metadata_editor.theme_reventilation "$@"
 
+set_html *args:
+    PYTHONPATH=. uv run python -m metadata_editor.set_html "$@"
+
 create_theme_categories *args:
     PYTHONPATH=. uv run python -m metadata_editor.create_theme_categories "$@"
 
@@ -33,6 +36,9 @@ reformat_disaron *args:
 
 add_ids_to_pages *args:
     PYTHONPATH=. uv run python -m metadata_editor.add_ids_to_pages "$@"
+
+wrap_chapeau *args:
+    PYTHONPATH=. uv run python -m metadata_editor.wrap_chapeau "$@"
 
 disaron_fixer *args:
     PYTHONPATH=. uv run python -m metadata_editor.disaron_fixer "$@"
