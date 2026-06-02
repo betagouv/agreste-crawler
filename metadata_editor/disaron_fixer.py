@@ -27,7 +27,7 @@ setup_django(__file__)
 from django.utils import timezone  # noqa: E402
 from wagtail.models import Page  # noqa: E402
 
-from blog.models import BlogEntryPage, BlogIndexPage  # noqa: E402
+from sites_conformes.blog.models import BlogEntryPage, BlogIndexPage  # noqa: E402
 
 PROPER_DISARON_RE = re.compile(r"\bIra[A-Z][a-z]{2}\d+\b")
 BAD_DISARON_RE = re.compile(r"\bira([a-z]{3})(\d+)\b", re.IGNORECASE)
