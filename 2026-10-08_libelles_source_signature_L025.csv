@@ -1,0 +1,61 @@
+contenunomenclature:modalite,contenunomenclature:modalite_stockage,dc:title
+1,TERUTI,Agreste - Enquête TERUTI
+2,CONJMETEO,Agreste - Conjoncture météo
+3,STRUCTURE,Agreste - Enquêtes structures (ESEA)
+4,RECENS,Agreste - Recensements agricoles (RA)
+5,PKGC,Agreste - Pratiques culturales en grandes cultures et prairies
+6,PKVITI,Agreste - Pratiques culturales en viticulture
+7,PKLEG,Agreste - Pratiques culturales en maraîchage
+8,PKFRUI,Agreste - Pratiques culturales en arboriculture
+9,PKANIM,Agreste - Pratiques d'élevage
+10,CEEA,Agreste - Enquête Consommation d'énergie des exploitations agricoles (EACEA)
+11,CECUMA,Agreste - Enquête Consommation d'énergie des EDT et CUMA
+12,TERLAB,Agreste - Terres labourables
+13,GCMENS,Agreste - Conjoncture grandes cultures
+14,ISOP,Agreste - Conjoncture prairies
+15,CONJVITI,Agreste - Conjoncture viticole
+16,CONJFRUI,Agreste - Conjoncture fruit
+17,CONJLEG,Agreste - Conjoncture légumes
+18,CHEPTEL,"Agreste - Enquêtes cheptels (ovins, porcins, caprins)"
+19,ABAT,"Agreste - Enquêtes sur les abattages de porcins, ovins, caprins"
+20,ABATVOL,Agreste - Enquête sur les abattages de volailles et lapins
+21,ACCOUVEUR,Agreste - Enquête accouveurs
+22,SELECT,Agreste - Enquête sélectionneurs
+23,QUALVOL,Agreste - Enquête qualité auprès des abattoirs de volailles et lapins
+24,CONJANI,Agreste - Conjoncture productions animales
+25,EML,"Agreste, FranceAgriMer - Enquête mensuelle laitière, DGDDI (Douanes)"
+26,EAL,Agreste - Enquête annuelle laitière (EAL)
+27,SAA,Agreste - Statistique agricole annuelle (SAA)
+28,BILAN,Agreste - Bilans d'approvisionnement
+29,CONCOURS,Agreste - Concours publics
+30,BAEA,Agreste - Bilan annuel de l'emploi agricole (BAEA)
+31,IPPAP,"Agreste, Insee - Indice des prix des produits agricoles à la production (IPPAP)"
+32,EPCIA,Agreste - Enquête sur les prix des consommations intermédiaires (EPCI)
+33,IPAMPA,"Agreste, Insee - Indice des prix d'achat des moyens de prod. agricole (IPAMPA)"
+34,VVT,Agreste - Valeur vénale des terres (VVT)
+35,RICA,Agreste - Réseau d'information comptable agricole (RICA)
+36,COMPTES,Agreste - Comptes de l'Agriculture
+37,IAA,"Agreste - Démographie, emploi et  résultats économique des IAA"
+38,MPAA,Agreste - Matières premières utilisées pour les aliments des animaux de ferme (MPAA)
+39,CONJIAA,Agreste - Conjoncture IAA
+40,COMEXT,Agreste - Conjoncture du commerce extérieur
+41,EMIAA,Agreste - Enquêtes mensuelles de productions
+42,IPI,Agreste - Indice des productions industrielles (IPI)
+43,PRODCOM,Agreste - Productions commercialisées des IAA
+44,SFP,Agreste - Structure de la forêt privée
+45,EXFSRI,Agreste - Enquête exploitations forestières et scieries (EXFSRI)
+46,PRIXBOIS,Agreste - Enquêtes sur les prix des bois
+47,COMEXTBOIS,Agreste - Conjoncture échanges extérieurs bois et dérivés
+48,ESANE,"Agreste, Insee - Élaboration des statistiques annuelles d’entreprise (ESANE)"
+49,BDNI,Agreste - Base de données nationale de l'identification française (BDNI)
+50,IPC,"Agreste, Insee - Indice des prix à la consommation (IPC)"
+51,ASP,"Agreste, Agence de services et de paiement (ASP)"
+52,DOUANES,"Agreste, Direction générale des douanes et droits indirects (DGDDI)"
+53,AGRINSEE,"Agreste, Insee"
+54,AGRINSEECT,"Agreste, Insee - Comptes nationaux trimestriels"
+55,UIPP,"Agreste, Union des industries de la protection des plantes (UIPP)"
+56,EALDGDDI,"Agreste - EAL, Direction générale des douanes et droits indirects (DGDDI)"
+57,EALEUROSTAT,"Agreste - EAL, Eurostat"
+58,BDNIABAT,Agreste - BDNI et enquêtes auprès des abattoirs
+59,AQUA,Agreste - Enquête aquaculture
+60,SACROIS,"Agreste, DPMA - Données de production et d'effort de pêche (SACROIS)"
