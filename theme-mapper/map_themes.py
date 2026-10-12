@@ -34,7 +34,7 @@ def load_theme_mapping(mapping_csv: str) -> dict[str, tuple[str, str]]:
     old_theme_label and old_theme_code values respectively.
     """
     mapping: dict[str, tuple[str, str]] = {}
-    with Path(mapping_csv).open("r", encoding="utf-8", newline="") as f:
+    with Path(mapping_csv).open("r", encoding="utf-8-sig", newline="") as f:
         for row in csv.DictReader(f):
             old_theme_code = (row.get("old_theme_code") or "").strip()
             if not old_theme_code:
@@ -95,7 +95,7 @@ def main() -> int:
     failures_count = 0
 
     with (
-        input_path.open("r", encoding="utf-8", newline="") as in_f,
+        input_path.open("r", encoding="utf-8-sig", newline="") as in_f,
         output_path.open("w", encoding="utf-8", newline="") as out_f,
         failures_path.open("w", encoding="utf-8", newline="") as fail_f,
     ):
