@@ -111,17 +111,17 @@ G_0035,COMMER,"Exploitations, spécialisation",EXPLOITSPEC
 G_0036,SOQO,"Bio, labels, signes de qualité",SOQO
 G_0037,AGROEMP,"Population agricole, emploi",POPAGREMP
 G_0038,AGROFORM,Formation,AGROFORM
-G_0043,PRAELEV,Pratiques d’élevage,PRAELEV
-G_0044,PRAELEV,Pratiques d’élevage,PRAELEV
+G_0043,PRAELEV,Pratiques d'élevage,PRAELEV
+G_0044,PRAELEV,Pratiques d'élevage,PRAELEV
 G_0045,TAILLE,"Exploitations, spécialisation",EXPLOITSPEC
-G_0046,PRAELEV,Pratiques d’élevage,PRAELEV
+G_0046,PRAELEV,Pratiques d'élevage,PRAELEV
 G_0051,AUTPRA|TOUTCULT|GC|FOURRAGE|LEGUME|FRUIT|VITI|HORTI,"Pratiques culturales|Grandes cultures|Fourrages et prairies|Fruits et légumes|Viticulture|Autres cultures|Forêts, bois et dérivés|Pratiques culturales|Grandes cultures|Fourrages et prairies|Fruits et légumes|Viticulture|Autres cultures",PRACULT|GC|FOURRAGE|FRUILEG|VITI|AUTRCULT|BOIS|PRACULT|GC|FOURRAGE|FRUILEG|VITI|AUTRCULT
 G_0052,AGROEMP,"Population agricole, emploi",POPAGREMP
 G_0053,TOUTCHEP,"Volailles, œufs|Bovins, ovins, caprins, lait|Porcins|Autres animaux et productions animales|Pratiques d'élevage",VOLAIL|CHEPTLAIT|PORC|AUTANI|PRAELEV
 G_0054,BOVIN|CAPOV|PORC,"Bovins, ovins, caprins, lait|Porcins",CHEPTLAIT|PORC
-G_0060,AIDE,"Aides, PAC, Politiques publiques",AIDPOLITIQ
-G_0061,AIDE,"Aides, PAC, Politiques publiques",AIDPOLITIQ
-G_0063,AIDE,"Aides, PAC, Politiques publiques",AIDPOLITIQ
+G_0060,AIDE,"Aides, PAC, politiques publiques",AIDPOLITIQ
+G_0061,AIDE,"Aides, PAC, politiques publiques",AIDPOLITIQ
+G_0063,AIDE,"Aides, PAC, politiques publiques",AIDPOLITIQ
 G_1010,TOUTCHEP|BOVIN|CAPOV|PORC|VOLAIL,"Volailles, œufs|Bovins, ovins, caprins, lait|Porcins|Autres animaux et productions animales|Pratiques d'élevage|Bovins, ovins, caprins, lait|Porcins|Volailles, œufs",VOLAIL|CHEPTLAIT|PORC|AUTANI|PRAELEV|CHEPTLAIT|PORC|VOLAIL
 G_1013,TOUTCULT|GC|FOURRAGE|LEGUME|FRUIT|VITI|HORTI,"Grandes cultures|Fourrages et prairies|Fruits et légumes|Viticulture|Autres cultures|Forêts, bois et dérivés|Pratiques culturales|Grandes cultures|Fourrages et prairies|Fruits et légumes|Viticulture|Autres cultures",GC|FOURRAGE|FRUILEG|VITI|AUTRCULT|BOIS|PRACULT|GC|FOURRAGE|FRUILEG|VITI|AUTRCULT
 G_2001,STATUT,"Exploitations, spécialisation",EXPLOITSPEC
@@ -186,7 +186,7 @@ G_7805,AGROEMP,"Population agricole, emploi",POPAGREMP
 G_7812,TOUTCULT|GC|FOURRAGE|LEGUME|FRUIT|VITI|HORTI,"Grandes cultures|Fourrages et prairies|Fruits et légumes|Viticulture|Autres cultures|Forêts, bois et dérivés|Pratiques culturales|Grandes cultures|Fourrages et prairies|Fruits et légumes|Viticulture|Autres cultures",GC|FOURRAGE|FRUILEG|VITI|AUTRCULT|BOIS|PRACULT|GC|FOURRAGE|FRUILEG|VITI|AUTRCULT
 G_7813,TOUTCULT|GC|FOURRAGE|LEGUME|FRUIT|VITI|HORTI,"Grandes cultures|Fourrages et prairies|Fruits et légumes|Viticulture|Autres cultures|Forêts, bois et dérivés|Pratiques culturales|Grandes cultures|Fourrages et prairies|Fruits et légumes|Viticulture|Autres cultures",GC|FOURRAGE|FRUILEG|VITI|AUTRCULT|BOIS|PRACULT|GC|FOURRAGE|FRUILEG|VITI|AUTRCULT
 G_7826,BIO|AUTPRA,Sol|Pratiques culturales,SOLBIODIV|PRACULT
-IPAMPA,PRIX|EQUIP|PROT|FERTI|PRAELEV,"Prix, coûts de production|Installation, équipement|Pratiques culturales|Pratiques d’élevage",COUTPRIX|INSTEQUIP|PRACULT|PRAELEV
+IPAMPA,PRIX|EQUIP|PROT|FERTI|PRAELEV,"Prix, coûts de production|Installation, équipement|Pratiques culturales|Pratiques d'élevage",COUTPRIX|INSTEQUIP|PRACULT|PRAELEV
 IPPAP,PRIX|TOUTCHEP|BOVIN|CAPOV|PORC|VOLAIL|LAIT|AUTANI|TOUTCULT|GC|FOURRAGE|LEGUME|FRUIT|VITI|HORTI,"Prix, coûts de production|Volailles, œufs|Bovins, ovins, caprins, lait|Porcins|Autres animaux et productions animales|Pratiques d'élevage|Bovins, ovins, caprins, lait|Porcins|Volailles, œufs|Autres animaux et productions animales|Grandes cultures|Fourrages et prairies|Fruits et légumes|Viticulture|Autres cultures|Forêts, bois et dérivés|Pratiques culturales|Grandes cultures|Fourrages et prairies|Fruits et légumes|Viticulture|Autres cultures",COUTPRIX|VOLAIL|CHEPTLAIT|PORC|AUTANI|PRAELEV|CHEPTLAIT|PORC|VOLAIL|AUTANI|GC|FOURRAGE|FRUILEG|VITI|AUTRCULT|BOIS|PRACULT|GC|FOURRAGE|FRUILEG|VITI|AUTRCULT
 L_0004,LAIT|TISSU,"Bovins, ovins, caprins, lait|Industries agro-alimentaires (IAA)",CHEPTLAIT|IAA
 L_0005,LAIT|TISSU,"Bovins, ovins, caprins, lait|Industries agro-alimentaires (IAA)",CHEPTLAIT|IAA
