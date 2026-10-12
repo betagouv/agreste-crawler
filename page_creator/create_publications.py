@@ -38,7 +38,7 @@ Expected CSV columns:
 - `disaron:nom`
 - `disaron:source_signature`
 - `disaron:Date_premiere_publication` (format: `YYYY/MM/DD HH:MM`)
-- `disaron:categorie` (`CHDET` or `SERIES`)
+- `disaron:categorie` (`CHDET`, `SERIES`, or `SERIESLONG`)
 
 2) `--documents-file` (required):
 - `disaron:nom`
@@ -49,6 +49,7 @@ Expected CSV columns:
 Page Collections from `disaron:categorie`:
 - `CHDET` → "Données", "Chiffres détaillés"
 - `SERIES` → "Données", "Séries longues conjoncturelles"
+- `SERIESLONG` → "Données", "Séries longues"
 
 Wagtail Documents are stored in document Collection "Données".
 
@@ -93,6 +94,7 @@ DEFAULT_LABELS_FILE = "2026-10-08_libelles_source_signature_L025.csv"
 CATEGORIE_TO_PAGE_COLLECTION_NAMES: dict[str, tuple[str, ...]] = {
     "CHDET": ("Données", "Chiffres détaillés"),
     "SERIES": ("Données", "Séries longues conjoncturelles"),
+    "SERIESLONG": ("Données", "Séries longues"),
 }
 
 DATE_FORMAT = "%Y/%m/%d %H:%M"
