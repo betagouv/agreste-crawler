@@ -12,7 +12,6 @@ import csv
 import os
 import re
 from contextlib import ExitStack
-from html import unescape
 from pathlib import Path
 from typing import Any, Callable
 
@@ -24,11 +23,6 @@ from sites_conformes.blog.models import BlogEntryPage, BlogIndexPage
 DISARON_NOM_RE = re.compile(
     r"\b[A-Z][a-z]{2}[A-Z][a-z]{2}\d+(?:bis|ter)?\b",
     re.IGNORECASE,
-)
-TAG_RE = re.compile(r"<[^>]+>")
-DISARON_NOM_DIV_RE = re.compile(
-    r"<div[^>]*\bid\s*=\s*['\"]disaron-nom['\"][^>]*>(?P<inner>.*?)</div>",
-    re.IGNORECASE | re.DOTALL,
 )
 
 # Sentinel: disaron is in CSV but the value column is empty (no update).
@@ -120,60 +114,19 @@ def _get_stream_data(body_value: Any) -> list[Any]:
     )
 
 
-def _iter_html_values(node: Any):
-    """Yield raw HTML strings from nested StreamField data."""
-    if isinstance(node, dict):
-        if node.get("type") == "html":
-            value = node.get("value")
-            if isinstance(value, str):
-                yield value
-        for value in node.values():
-            if isinstance(value, (dict, list, tuple)):
-                yield from _iter_html_values(value)
-    elif isinstance(node, (list, tuple)):
-        for item in node:
-            if isinstance(item, (dict, list, tuple)):
-                yield from _iter_html_values(item)
-            elif (
-                isinstance(item, tuple)
-                and len(item) == 2
-                and item[0] == "html"
-                and isinstance(item[1], str)
-            ):
-                yield item[1]
-
-
-def _extract_disaron_from_html(html: str) -> str | None:
-    match = DISARON_NOM_DIV_RE.search(html)
-    if not match:
-        return None
-    text = TAG_RE.sub("", match.group("inner"))
-    text = unescape(text).strip()
-    return text or None
-
-
 def _flush_failures_file(failures_f) -> None:
     """Push buffered failure rows to disk so tailing the CSV works mid-run."""
     failures_f.flush()
     os.fsync(failures_f.fileno())
 
 
-def find_disaron_nom(page: BlogEntryPage) -> str | None:
-    """
-    Extract a disaron identifier from page body content.
-
-    Looks for <div id="disaron-nom">TOKEN</div> in html StreamField blocks.
-    """
-    try:
-        stream_data = _get_stream_data(page.body)
-    except AttributeError:
+def find_disaron_nom(page: Any) -> str | None:
+    """Return the page's ``disaron_id``, or None if missing/blank."""
+    value = getattr(page, "disaron_id", None)
+    if value is None:
         return None
-
-    for html in _iter_html_values(stream_data):
-        disaron_nom = _extract_disaron_from_html(html)
-        if disaron_nom:
-            return disaron_nom
-    return None
+    value = str(value).strip()
+    return value or None
 
 
 def resolve_failures_file(provided: str, default_suffix: str) -> str:
@@ -275,7 +228,7 @@ def run_metadata_update(
     Generic per-page update loop.
 
     - Prompts for confirmation before starting.
-    - Looks up disaron_nom from <div id="disaron-nom"> in each page body.
+    - Looks up disaron_nom from each page's ``disaron_id`` field.
     - Looks up the mapped value from `values_by_disaron_nom`.
     - Calls `apply_value(page, value)` to mutate the page.
     - Saves with `update_fields` (skipped on --dry-run).
@@ -386,7 +339,7 @@ def run_metadata_update(
                 _fail(
                     page.id,
                     "",
-                    'could not find <div id="disaron-nom"> in page body',
+                    "page has no disaron_id",
                 )
                 continue
 
