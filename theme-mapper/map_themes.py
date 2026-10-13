@@ -22,18 +22,50 @@ from pathlib import Path
 DEFAULT_MAPPING_CSV = "theme-mapper/themes-old-new.csv"
 
 
-def load_theme_mapping(mapping_csv: str) -> dict[str, tuple[str, str]]:
+def _split_pipe(value: str) -> list[str]:
+    return [part.strip() for part in value.split("|") if part.strip()]
+
+
+def _mapped_themes(
+    theme_label: str, theme_code: str, fallback_label: str, fallback_code: str
+) -> list[tuple[str, str]]:
     """
-    Build a lookup: old_theme_code -> (theme_label, theme_code).
+    Resolve one mapping row into one or more (label, code) pairs.
+
+    Pipe-separated theme_label / theme_code (reventilation targets) expand to
+    multiple pairs. Lengths must match when both sides contain pipes.
+    """
+    label = theme_label or fallback_label
+    code = theme_code or fallback_code
+    labels = _split_pipe(label)
+    codes = _split_pipe(code)
+    if not labels or not codes:
+        return []
+    if len(labels) == 1 and len(codes) == 1:
+        return [(labels[0], codes[0])]
+    if len(labels) != len(codes):
+        raise ValueError(
+            f"theme_label/theme_code length mismatch: "
+            f"labels={labels!r} codes={codes!r}"
+        )
+    return list(zip(labels, codes))
+
+
+def load_theme_mapping(mapping_csv: str) -> dict[str, list[tuple[str, str]]]:
+    """
+    Build a lookup: old_theme_code -> [(theme_label, theme_code), ...].
 
     Each row in the mapping file may contain several pipe-separated codes in
-    its old_theme_code column; all of them map to the same new theme.
+    its old_theme_code column; all of them map to the same new theme(s).
     Rows with an empty old_theme_code (section headers) are skipped.
 
     When theme_label or theme_code are empty, falls back to the per-code
     old_theme_label and old_theme_code values respectively.
+
+    Pipe-separated theme_label/theme_code values (reventilation) expand to
+    multiple target themes.
     """
-    mapping: dict[str, tuple[str, str]] = {}
+    mapping: dict[str, list[tuple[str, str]]] = {}
     with Path(mapping_csv).open("r", encoding="utf-8-sig", newline="") as f:
         for row in csv.DictReader(f):
             old_theme_code = (row.get("old_theme_code") or "").strip()
@@ -43,17 +75,13 @@ def load_theme_mapping(mapping_csv: str) -> dict[str, tuple[str, str]]:
             theme_label = (row.get("theme_label") or "").strip()
             theme_code = (row.get("theme_code") or "").strip()
 
-            old_codes = [c.strip() for c in old_theme_code.split("|")]
-            old_labels = [l.strip() for l in old_theme_label.split("|")]
+            old_codes = _split_pipe(old_theme_code)
+            old_labels = _split_pipe(old_theme_label)
 
             for i, code in enumerate(old_codes):
-                if not code:
-                    continue
                 fallback_label = old_labels[i] if i < len(old_labels) else code
-                fallback_code = code
-                mapping[code] = (
-                    theme_label or fallback_label,
-                    theme_code or fallback_code,
+                mapping[code] = _mapped_themes(
+                    theme_label, theme_code, fallback_label, code
                 )
     return mapping
 
@@ -119,7 +147,7 @@ def main() -> int:
 
             labels: list[str] = []
             codes: list[str] = []
-            seen: set[str] = set()
+            seen_codes: set[str] = set()
             for code in old_codes:
                 result = mapping.get(code)
                 if result is None:
@@ -133,9 +161,10 @@ def main() -> int:
                     fail_f.flush()
                     failures_count += 1
                     continue
-                theme_label, theme_code = result
-                if theme_label not in seen:
-                    seen.add(theme_label)
+                for theme_label, theme_code in result:
+                    if theme_code in seen_codes:
+                        continue
+                    seen_codes.add(theme_code)
                     labels.append(theme_label)
                     codes.append(theme_code)
 
