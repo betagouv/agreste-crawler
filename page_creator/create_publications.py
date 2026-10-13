@@ -2,8 +2,9 @@
 """
 Create `PublicationPage` entries under a `PublicationIndexPage`.
 
-Each page contains a single `standard_publication` block with Data-typed
-downloadable documents. Pages are published by default.
+Each page contains a single `standard_publication` block with downloadable
+documents: PDF files use type Publication, all others use type Data.
+Pages are published by default.
 
 Flags with examples:
     --parent-id 42
@@ -36,9 +37,12 @@ Expected CSV columns:
 1) `--data-file` (required):
 - `dc:title`
 - `disaron:nom`
-- `disaron:source_signature`
 - `disaron:Date_premiere_publication` (format: `YYYY/MM/DD HH:MM`)
 - `disaron:categorie` (`CHDET`, `SERIES`, or `SERIESLONG`)
+- `disaron:source_signature` (required for `CHDET` / `SERIES`; unused for `SERIESLONG`)
+- For `SERIESLONG` only (optional columns):
+  - `disaron:Complement_titre` → standard_publication subtitle (if present)
+  - `disaron:chapeau` → standard_publication summary (if present)
 
 2) `--documents-file` (required):
 - `disaron:nom`
@@ -50,6 +54,10 @@ Page Collections from `disaron:categorie`:
 - `CHDET` → "Données", "Chiffres détaillés"
 - `SERIES` → "Données", "Séries longues conjoncturelles"
 - `SERIESLONG` → "Données", "Séries longues"
+
+For `CHDET` / `SERIES`, subtitle comes from the labels file via
+`disaron:source_signature`. For `SERIESLONG`, subtitle/summary come from
+`disaron:Complement_titre` / `disaron:chapeau` when present.
 
 Wagtail Documents are stored in document Collection "Données".
 
@@ -132,7 +140,6 @@ def _read_rows_from_data_file(
     required = {
         "dc:title",
         "disaron:nom",
-        "disaron:source_signature",
         "disaron:Date_premiere_publication",
         "disaron:categorie",
     }
@@ -164,10 +171,6 @@ def _build_page_row(input_row: dict[str, str], line_no: int) -> dict[str, object
     if not disaron_nom:
         raise ValueError(f"[line {line_no}] Missing disaron:nom")
 
-    source_signature = (input_row.get("disaron:source_signature") or "").strip()
-    if not source_signature:
-        raise ValueError(f"[line {line_no}] Missing disaron:source_signature")
-
     categorie = (input_row.get("disaron:categorie") or "").strip()
     if not categorie:
         raise ValueError(f"[line {line_no}] Missing disaron:categorie")
@@ -189,12 +192,25 @@ def _build_page_row(input_row: dict[str, str], line_no: int) -> dict[str, object
             f"[line {line_no}] Invalid disaron:Date_premiere_publication: {exc}"
         ) from exc
 
+    if categorie == "SERIESLONG":
+        subtitle = (input_row.get("disaron:Complement_titre") or "").strip()
+        summary = (input_row.get("disaron:chapeau") or "").strip()
+        source_signature = ""
+    else:
+        source_signature = (input_row.get("disaron:source_signature") or "").strip()
+        if not source_signature:
+            raise ValueError(f"[line {line_no}] Missing disaron:source_signature")
+        subtitle = ""
+        summary = ""
+
     return {
         "title": title,
         "disaron_nom": disaron_nom,
         "source_signature": source_signature,
         "categorie": categorie,
         "publication_date": publication_date,
+        "subtitle": subtitle,
+        "summary": summary,
     }
 
 
@@ -503,13 +519,14 @@ def main() -> int:
         display_nom = disaron_nom or "<missing disaron:nom>"
         try:
             page_row = _build_page_row(raw_row, line_no)
-            signature = str(page_row["source_signature"])
-            if signature not in labels:
-                raise ValueError(
-                    f"[line {line_no}] Unknown disaron:source_signature "
-                    f"{signature!r} (not found in labels file)."
-                )
-            page_row["subtitle"] = labels[signature]
+            if page_row["categorie"] != "SERIESLONG":
+                signature = str(page_row["source_signature"])
+                if signature not in labels:
+                    raise ValueError(
+                        f"[line {line_no}] Unknown disaron:source_signature "
+                        f"{signature!r} (not found in labels file)."
+                    )
+                page_row["subtitle"] = labels[signature]
 
             noms_fichiers = documents_by_nom.get(str(page_row["disaron_nom"]))
             if noms_fichiers is None:
@@ -582,6 +599,7 @@ def main() -> int:
                 f"title={row['title']!r} categorie={row['categorie']!r} "
                 f"collections={list(coll_names)} "
                 f"subtitle={row['subtitle']!r} "
+                f"summary={row['summary']!r} "
                 f"docs={len(filenames)} {filenames}"
             )
             _append_csv_row(
@@ -616,6 +634,7 @@ def main() -> int:
         display_nom = disaron_nom
         categorie = str(row["categorie"])
         subtitle = str(row["subtitle"])
+        summary = str(row["summary"])
         publication_date = row["publication_date"]
         filenames = row["filenames"]
         assert isinstance(filenames, list)
@@ -626,26 +645,32 @@ def main() -> int:
                     f"A PublicationPage with disaron_id={disaron_nom!r} already exists."
                 )
 
-            documents: list[Document] = []
+            downloadable_documents: list[dict[str, object]] = []
             for nom_fichier in filenames:
+                nom_fichier_str = str(nom_fichier)
                 document = _get_or_create_document(
-                    str(nom_fichier),
+                    nom_fichier_str,
                     documents_dir_path,
                     documents_collection,
                     force_file_uploads=args.force_file_uploads,
                     debug=args.debug,
                 )
-                documents.append(document)
+                download_type = (
+                    "publication"
+                    if nom_fichier_str.lower().endswith(".pdf")
+                    else "data"
+                )
+                downloadable_documents.append(
+                    {"download_type": download_type, "document": document}
+                )
 
             body = [
                 (
                     "standard_publication",
                     {
                         "subtitle": subtitle,
-                        "downloadable_documents": [
-                            {"download_type": "data", "document": doc}
-                            for doc in documents
-                        ],
+                        "summary": summary,
+                        "downloadable_documents": downloadable_documents,
                     },
                 )
             ]
