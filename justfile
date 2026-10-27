@@ -55,3 +55,6 @@ sort_theme_codes_column *args:
 extract_disaron_links *args:
     PYTHONPATH=. uv run python -m metadata_editor.extract_disaron_links "$@"
 
+get_raw_text_fields *args:
+    PYTHONPATH=. uv run python -m metadata_editor.get_raw_text_fields "$@"
+
