@@ -28,6 +28,9 @@ theme_reventilation *args:
 set_html *args:
     PYTHONPATH=. uv run python -m metadata_editor.set_html "$@"
 
+set_text_fields *args:
+    PYTHONPATH=. uv run python -m metadata_editor.set_text_fields "$@"
+
 create_theme_categories *args:
     PYTHONPATH=. uv run python -m metadata_editor.create_theme_categories "$@"
 
