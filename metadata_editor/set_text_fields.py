@@ -14,13 +14,17 @@ Loops over CSV rows with content (not over existing pages). For each
 Empty CSV cells leave the existing field unchanged. Rows with no content are
 ignored when loading. Missing ``standard_publication`` block is an error.
 
-If no page exists for a CSV ``disaron:nom``, the inventaire is checked
-(match on ``disaron:nom`` or ``disaron:nom_old``). Prefer ``Garder`` over
-``Exclure``: Exclure-only → skip log. Garder or absent → check
-``2026-05-18_Disarons.json`` for post-cutoff publication/data and skip with
-that reason; otherwise failure log (unidentified type, or no page).
-Cutoffs (strictly later than): publications ``2026-03-01``, data
-``2026-09-30`` (type ``t``, or type ``p`` with ``SeriesLongues`` in the nom).
+When no page is found for a CSV ``disaron:nom``, checks run in order:
+
+1. Inventaire (``Garder`` / ``Exclure`` on ``disaron:nom`` or
+   ``disaron:nom_old``): Exclure → skip.
+2. Cutoffs from Disarons JSON (strictly later than): publication after
+   ``2026-03-01``; data after ``2026-09-30`` (type ``t``, or type ``p``
+   with ``SeriesLongues`` in the nom) → skip.
+3. ``disaron:communaute_restit`` without ``DISAR-PUBLIC`` → skip
+   (non-public).
+4. Otherwise → failure (unidentified type, or identified but on/before
+   cutoff with no page).
 
 On success, saves a revision and re-publishes if the page was live.
 
@@ -85,6 +89,8 @@ PUBLICATION_CUTOFF = date(2026, 3, 1)
 DATA_CUTOFF = date(2026, 9, 30)
 SKIP_REASON_PUBLICATION_CUTOFF = "Publication published after 2026-03-01"
 SKIP_REASON_DATA_CUTOFF = "Data published after 2026-09-30"
+SKIP_REASON_NON_PUBLIC = "Non-public page"
+DISAR_PUBLIC = "DISAR-PUBLIC"
 
 CutoffClassifyResult = Literal[
     "skip_publication",
@@ -100,6 +106,9 @@ _DISARON_TYPE_RE = re.compile(
 )
 _DISARON_DATE_RE = re.compile(
     r'"disaron:Date_premiere_publication"\s*:\s*"(?P<value>[^"]*)"'
+)
+_DISARON_RESTIT_RE = re.compile(
+    r'"disaron:communaute_restit"\s*:\s*\[(?P<value>[^\]]*)\]'
 )
 
 
@@ -255,6 +264,25 @@ def classify_missing_page(
 class DisaronMeta:
     type_disaron: str
     date_premiere_publication: date | None
+    communaute_restit: tuple[str, ...]
+
+
+def _parse_communaute_restit(raw: object) -> tuple[str, ...]:
+    if isinstance(raw, list):
+        return tuple(str(item) for item in raw if item is not None and str(item))
+    if isinstance(raw, str) and raw.strip():
+        return (raw.strip(),)
+    return ()
+
+
+def _parse_communaute_restit_from_raw_array(raw_inner: str) -> tuple[str, ...]:
+    """Parse string literals inside a ``[...]`` array fragment from raw JSON."""
+    return tuple(re.findall(r'"([^"]*)"', raw_inner))
+
+
+def is_non_public(meta: DisaronMeta) -> bool:
+    """True when restit does not include ``DISAR-PUBLIC`` (null/empty included)."""
+    return DISAR_PUBLIC not in meta.communaute_restit
 
 
 def _parse_premiere_publication(raw: object) -> date | None:
@@ -352,6 +380,14 @@ def _iter_disaron_json_docs(path: Path):
                                 continue
                             type_m = _DISARON_TYPE_RE.search(raw_obj)
                             date_m = _DISARON_DATE_RE.search(raw_obj)
+                            restit_m = _DISARON_RESTIT_RE.search(raw_obj)
+                            restit: list[str] = []
+                            if restit_m:
+                                restit = list(
+                                    _parse_communaute_restit_from_raw_array(
+                                        restit_m.group("value")
+                                    )
+                                )
                             yield {
                                 "properties": {
                                     "disaron:nom": nom_m.group("value"),
@@ -361,6 +397,7 @@ def _iter_disaron_json_docs(path: Path):
                                     "disaron:Date_premiere_publication": (
                                         date_m.group("value") if date_m else ""
                                     ),
+                                    "disaron:communaute_restit": restit,
                                 }
                             }
                             continue
@@ -369,7 +406,7 @@ def _iter_disaron_json_docs(path: Path):
 
 
 def load_disaron_meta(disarons_json: str | Path) -> dict[str, DisaronMeta]:
-    """Map ``disaron:nom`` → type and first-publication date from a JSON dump."""
+    """Map ``disaron:nom`` → type, date, and restit communities from a JSON dump."""
     path = Path(disarons_json)
     if not path.exists():
         raise FileNotFoundError(f"Disarons JSON not found: {path}")
@@ -387,6 +424,9 @@ def load_disaron_meta(disarons_json: str | Path) -> dict[str, DisaronMeta]:
             type_disaron="" if type_disaron is None else str(type_disaron),
             date_premiere_publication=_parse_premiere_publication(
                 props.get("disaron:Date_premiere_publication")
+            ),
+            communaute_restit=_parse_communaute_restit(
+                props.get("disaron:communaute_restit")
             ),
         )
     return out
@@ -631,9 +671,17 @@ def run_content_update(
                 )
                 if cutoff_kind == "skip_publication":
                     _skip(disaron_nom, SKIP_REASON_PUBLICATION_CUTOFF)
-                elif cutoff_kind == "skip_data":
+                    continue
+                if cutoff_kind == "skip_data":
                     _skip(disaron_nom, SKIP_REASON_DATA_CUTOFF)
-                elif cutoff_kind == "error_unidentified":
+                    continue
+
+                meta = meta_by_nom.get(disaron_nom)
+                if meta is not None and is_non_public(meta):
+                    _skip(disaron_nom, SKIP_REASON_NON_PUBLIC)
+                    continue
+
+                if cutoff_kind == "error_unidentified":
                     _fail(
                         "",
                         disaron_nom,
@@ -765,8 +813,9 @@ def main() -> int:
         type=str,
         default="",
         help=(
-            "Path to CSV output for skipped rows (Exclure or post-cutoff "
-            "publication/data; columns: pageId, disaron_nom, reason)."
+            "Path to CSV output for skipped rows (Exclure, post-cutoff "
+            "publication/data, or non-public; columns: pageId, disaron_nom, "
+            "reason)."
         ),
     )
     args = parser.parse_args()
