@@ -16,16 +16,14 @@ ignored when loading. Missing ``standard_publication`` block is an error.
 
 When no page is found for a CSV ``disaron:nom``, checks run in order:
 
-1. Inventaire (``Garder`` / ``Exclure`` on ``disaron:nom`` or
-   ``disaron:nom_old``): Exclure → skip.
-2. Cutoffs from Disarons JSON (strictly later than): publication after
+1. Curated upload-exception CSVs: ``will not upload`` / ``not uploaded yet``
+   (plus CSV ``reason`` when present) → skip.
+2. ``disaron:communaute_restit`` without ``DISAR-PUBLIC`` → skip
+   (non-public).
+3. Cutoffs from Disarons JSON (strictly later than): publication after
    ``2026-03-01``; data after ``2026-09-30`` (type ``t``, or type ``p``
    with ``SeriesLongues`` in the nom) → skip.
-3. ``disaron:communaute_restit`` without ``DISAR-PUBLIC`` → skip
-   (non-public).
-4. Curated upload-exception CSVs: ``will not upload`` / ``not uploaded yet``
-   (plus CSV ``reason`` when present) → skip.
-5. Otherwise → failure (unidentified type, or identified but on/before
+4. Otherwise → failure (unidentified type, or identified but on/before
    cutoff with no page).
 
 On success, saves a revision and re-publishes if the page was live.
@@ -33,8 +31,7 @@ On success, saves a revision and re-publishes if the page was live.
 ``--parent-id`` from shared args is not used by this script.
 
 Defaults:
-- ``--data-file``: ``metadata_editor/data/2026-05-18_Disarons_clean_text_fields.csv``
-- ``--inventaire-file``: ``2026-06-02_Inventaire-Nuxeo-v18.csv``
+- ``--clean-text-file``: ``metadata_editor/data/2026-05-18_Disarons_clean_text_fields.csv``
 - ``--disarons-json``: ``2026-05-18_Disarons.json``
 - ``--will-not-upload-file``: ``2026-10-28_will_not_upload.csv``
 - ``--not-uploaded-yet-file``: ``2026-10-28_not_uploaded_yet.csv``
@@ -45,7 +42,7 @@ Usage:
 
     just set_text_fields \\
         --wagtail-project-root ../agreste \\
-        --data-file path/to/content.csv
+        --clean-text-file path/to/content.csv
 """
 
 from __future__ import annotations
@@ -55,7 +52,6 @@ import csv
 import html
 import json
 import re
-from collections import defaultdict
 from dataclasses import dataclass
 from datetime import date, datetime
 from pathlib import Path
@@ -83,10 +79,9 @@ from metadata_editor.set_metadata import (  # noqa: E402
 NOTES_COLUMNS = ("notes", "disaron:notes")
 STANDARD_PUBLICATION_TYPE = "standard_publication"
 
-_DEFAULT_DATA_FILE = (
+_DEFAULT_CLEAN_TEXT_FILE = (
     "metadata_editor/data/2026-05-18_Disarons_clean_text_fields.csv"
 )
-_DEFAULT_INVENTAIRE_FILE = "2026-06-02_Inventaire-Nuxeo-v18.csv"
 _DEFAULT_DISARONS_JSON = "2026-05-18_Disarons.json"
 _DEFAULT_WILL_NOT_UPLOAD_FILE = "2026-10-28_will_not_upload.csv"
 _DEFAULT_NOT_UPLOADED_YET_FILE = "2026-10-28_not_uploaded_yet.csv"
@@ -222,50 +217,6 @@ def load_content_by_disaron_nom(data_file: str) -> dict[str, ContentFields]:
             out[disaron_nom] = content
 
     return out
-
-
-def load_inventaire_statuses(
-    inventaire_file: str | Path,
-) -> dict[str, frozenset[str]]:
-    """Map nom / nom_old → set of Garder/Exclure statuses for that key."""
-    path = Path(inventaire_file)
-    if not path.exists():
-        raise FileNotFoundError(f"Inventaire file not found: {path}")
-
-    by_key: dict[str, set[str]] = defaultdict(set)
-    with path.open(encoding="utf-8", newline="") as f:
-        reader = csv.DictReader(f)
-        if not reader.fieldnames:
-            raise ValueError(f"Inventaire CSV has no headers: {path}")
-        required = {"disaron:nom", "disaron:nom_old", "Garder/Exclure"}
-        missing = required - set(reader.fieldnames)
-        if missing:
-            raise ValueError(
-                f"Inventaire CSV missing column(s): "
-                f"{', '.join(sorted(missing))}"
-            )
-        for row in reader:
-            status = (row.get("Garder/Exclure") or "").strip()
-            if not status:
-                continue
-            for col in ("disaron:nom", "disaron:nom_old"):
-                key = (row.get(col) or "").strip()
-                if key:
-                    by_key[key].add(status)
-
-    return {key: frozenset(statuses) for key, statuses in by_key.items()}
-
-
-def classify_missing_page(
-    disaron_nom: str, inventaire_statuses: dict[str, frozenset[str]]
-) -> str:
-    """Return ``exclure`` or ``error`` for a CSV nom with no matching page."""
-    statuses = inventaire_statuses.get(disaron_nom, frozenset())
-    if "Garder" in statuses:
-        return "error"
-    if "Exclure" in statuses:
-        return "exclure"
-    return "error"
 
 
 @dataclass(frozen=True)
@@ -443,7 +394,7 @@ def load_disaron_meta(disarons_json: str | Path) -> dict[str, DisaronMeta]:
 def classify_missing_by_cutoff(
     disaron_nom: str, meta_by_nom: dict[str, DisaronMeta]
 ) -> CutoffClassifyResult:
-    """Classify a missing page after inventaire has already failed.
+    """Classify a missing page for cutoff skips.
 
     Returns a cutoff skip, unidentified error, or not-after-cutoff (caller
     should keep the usual no-page failure).
@@ -604,7 +555,6 @@ def run_content_update(
     *,
     pages_by_nom: dict[str, PublicationPage],
     content_by_disaron_nom: dict[str, ContentFields],
-    inventaire_statuses: dict[str, frozenset[str]],
     meta_by_nom: dict[str, DisaronMeta],
     will_not_upload: dict[str, str],
     not_uploaded_yet: dict[str, str],
@@ -703,28 +653,6 @@ def run_content_update(
             processed += 1
             page = pages_by_nom.get(disaron_nom)
             if page is None:
-                inventaire_kind = classify_missing_page(
-                    disaron_nom, inventaire_statuses
-                )
-                if inventaire_kind == "exclure":
-                    _skip(disaron_nom, "Exclure in inventaire")
-                    continue
-
-                cutoff_kind = classify_missing_by_cutoff(
-                    disaron_nom, meta_by_nom
-                )
-                if cutoff_kind == "skip_publication":
-                    _skip(disaron_nom, SKIP_REASON_PUBLICATION_CUTOFF)
-                    continue
-                if cutoff_kind == "skip_data":
-                    _skip(disaron_nom, SKIP_REASON_DATA_CUTOFF)
-                    continue
-
-                meta = meta_by_nom.get(disaron_nom)
-                if meta is not None and is_non_public(meta):
-                    _skip(disaron_nom, SKIP_REASON_NON_PUBLIC)
-                    continue
-
                 if disaron_nom in will_not_upload:
                     _skip(
                         disaron_nom,
@@ -742,6 +670,21 @@ def run_content_update(
                             not_uploaded_yet[disaron_nom],
                         ),
                     )
+                    continue
+
+                meta = meta_by_nom.get(disaron_nom)
+                if meta is not None and is_non_public(meta):
+                    _skip(disaron_nom, SKIP_REASON_NON_PUBLIC)
+                    continue
+
+                cutoff_kind = classify_missing_by_cutoff(
+                    disaron_nom, meta_by_nom
+                )
+                if cutoff_kind == "skip_publication":
+                    _skip(disaron_nom, SKIP_REASON_PUBLICATION_CUTOFF)
+                    continue
+                if cutoff_kind == "skip_data":
+                    _skip(disaron_nom, SKIP_REASON_DATA_CUTOFF)
                     continue
 
                 if cutoff_kind == "error_unidentified":
@@ -815,13 +758,20 @@ def run_content_update(
     return 0
 
 
-def _set_data_file_default(
+def _replace_data_file_with_clean_text_file(
     parser: argparse.ArgumentParser, default: str
 ) -> None:
+    """Rename shared ``--data-file`` to ``--clean-text-file`` for this script."""
     for action in parser._actions:
         if "--data-file" in getattr(action, "option_strings", []):
+            action.option_strings = ["--clean-text-file"]
+            action.dest = "clean_text_file"
             action.required = False
             action.default = default
+            action.help = (
+                "CSV with cleaned text fields "
+                "('disaron:nom', html_principal, html_secondaire, notes)."
+            )
             return
     raise RuntimeError("--data-file argument not found on parser")
 
@@ -842,24 +792,15 @@ def _make_parent_id_optional(parser: argparse.ArgumentParser) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     add_common_args(parser)
-    _set_data_file_default(parser, _DEFAULT_DATA_FILE)
+    _replace_data_file_with_clean_text_file(parser, _DEFAULT_CLEAN_TEXT_FILE)
     _make_parent_id_optional(parser)
-    parser.add_argument(
-        "--inventaire-file",
-        type=str,
-        default=_DEFAULT_INVENTAIRE_FILE,
-        help=(
-            "Inventaire CSV used when a CSV disaron:nom has no matching page "
-            f"(default: {_DEFAULT_INVENTAIRE_FILE})."
-        ),
-    )
     parser.add_argument(
         "--disarons-json",
         type=str,
         default=_DEFAULT_DISARONS_JSON,
         help=(
-            "Disarons JSON dump used for cutoff skips when inventaire does "
-            f"not mark Exclure (default: {_DEFAULT_DISARONS_JSON})."
+            "Disarons JSON dump used for non-public and cutoff skips "
+            f"(default: {_DEFAULT_DISARONS_JSON})."
         ),
     )
     parser.add_argument(
@@ -894,8 +835,8 @@ def main() -> int:
         type=str,
         default="",
         help=(
-            "Path to CSV output for skipped rows (Exclure, post-cutoff "
-            "publication/data, non-public, or upload exceptions; columns: "
+            "Path to CSV output for skipped rows (upload exceptions, "
+            "non-public, or post-cutoff publication/data; columns: "
             "pageId, disaron_nom, reason)."
         ),
     )
@@ -912,8 +853,7 @@ def main() -> int:
     )
     pages = resolve_all_publication_pages()
     pages_by_nom = pages_by_disaron_nom(pages)
-    content_by_disaron_nom = load_content_by_disaron_nom(args.data_file)
-    inventaire_statuses = load_inventaire_statuses(args.inventaire_file)
+    content_by_disaron_nom = load_content_by_disaron_nom(args.clean_text_file)
     meta_by_nom = load_disaron_meta(args.disarons_json)
     will_not_upload = load_upload_exception_reasons(args.will_not_upload_file)
     not_uploaded_yet = load_upload_exception_reasons(
@@ -923,7 +863,6 @@ def main() -> int:
     return run_content_update(
         pages_by_nom=pages_by_nom,
         content_by_disaron_nom=content_by_disaron_nom,
-        inventaire_statuses=inventaire_statuses,
         meta_by_nom=meta_by_nom,
         will_not_upload=will_not_upload,
         not_uploaded_yet=not_uploaded_yet,
@@ -933,7 +872,7 @@ def main() -> int:
         dry_run=args.dry_run,
         confirmation_message=(
             f"About to process {len(content_by_disaron_nom)} CSV row(s) "
-            f"with content from {args.data_file} "
+            f"with content from {args.clean_text_file} "
             f"against {len(pages_by_nom)} PublicationPage(s) "
             f"under all PublicationIndexPages."
         ),
