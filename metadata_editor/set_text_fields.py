@@ -23,7 +23,9 @@ When no page is found for a CSV ``disaron:nom``, checks run in order:
    with ``SeriesLongues`` in the nom) → skip.
 3. ``disaron:communaute_restit`` without ``DISAR-PUBLIC`` → skip
    (non-public).
-4. Otherwise → failure (unidentified type, or identified but on/before
+4. Curated upload-exception CSVs: ``will not upload`` / ``not uploaded yet``
+   (plus CSV ``reason`` when present) → skip.
+5. Otherwise → failure (unidentified type, or identified but on/before
    cutoff with no page).
 
 On success, saves a revision and re-publishes if the page was live.
@@ -34,6 +36,8 @@ Defaults:
 - ``--data-file``: ``metadata_editor/data/2026-05-18_Disarons_clean_text_fields.csv``
 - ``--inventaire-file``: ``2026-06-02_Inventaire-Nuxeo-v18.csv``
 - ``--disarons-json``: ``2026-05-18_Disarons.json``
+- ``--will-not-upload-file``: ``2026-10-28_will_not_upload.csv``
+- ``--not-uploaded-yet-file``: ``2026-10-28_not_uploaded_yet.csv``
 
 Usage:
     just set_text_fields \\
@@ -84,12 +88,16 @@ _DEFAULT_DATA_FILE = (
 )
 _DEFAULT_INVENTAIRE_FILE = "2026-06-02_Inventaire-Nuxeo-v18.csv"
 _DEFAULT_DISARONS_JSON = "2026-05-18_Disarons.json"
+_DEFAULT_WILL_NOT_UPLOAD_FILE = "2026-10-28_will_not_upload.csv"
+_DEFAULT_NOT_UPLOADED_YET_FILE = "2026-10-28_not_uploaded_yet.csv"
 
 PUBLICATION_CUTOFF = date(2026, 3, 1)
 DATA_CUTOFF = date(2026, 9, 30)
 SKIP_REASON_PUBLICATION_CUTOFF = "Publication published after 2026-03-01"
 SKIP_REASON_DATA_CUTOFF = "Data published after 2026-09-30"
 SKIP_REASON_NON_PUBLIC = "Non-public page"
+SKIP_LABEL_WILL_NOT_UPLOAD = "will not upload"
+SKIP_LABEL_NOT_UPLOADED_YET = "not uploaded yet"
 DISAR_PUBLIC = "DISAR-PUBLIC"
 
 CutoffClassifyResult = Literal[
@@ -558,12 +566,48 @@ def resolve_success_file(provided: str, default_suffix: str) -> str:
     return f"metadata_editor/output/{timestamp}_{default_suffix}.csv"
 
 
+def load_upload_exception_reasons(
+    path: str | Path,
+) -> dict[str, str]:
+    """Map ``disaron:nom`` → reason string (empty if the reason cell is blank)."""
+    csv_path = Path(path)
+    if not csv_path.exists():
+        raise FileNotFoundError(f"Upload-exception CSV not found: {csv_path}")
+
+    out: dict[str, str] = {}
+    with csv_path.open(encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f)
+        if not reader.fieldnames:
+            raise ValueError(f"Upload-exception CSV has no headers: {csv_path}")
+        required = {"disaron:nom", "reason"}
+        missing = required - set(reader.fieldnames)
+        if missing:
+            raise ValueError(
+                f"Upload-exception CSV missing column(s): "
+                f"{', '.join(sorted(missing))}"
+            )
+        for row in reader:
+            disaron_nom = (row.get("disaron:nom") or "").strip()
+            if not disaron_nom:
+                continue
+            out[disaron_nom] = (row.get("reason") or "").strip()
+    return out
+
+
+def format_upload_exception_skip(label: str, reason: str) -> str:
+    if reason:
+        return f"{label}: {reason}"
+    return label
+
+
 def run_content_update(
     *,
     pages_by_nom: dict[str, PublicationPage],
     content_by_disaron_nom: dict[str, ContentFields],
     inventaire_statuses: dict[str, frozenset[str]],
     meta_by_nom: dict[str, DisaronMeta],
+    will_not_upload: dict[str, str],
+    not_uploaded_yet: dict[str, str],
     failures_file: str,
     success_file: str,
     skipped_file: str,
@@ -679,6 +723,25 @@ def run_content_update(
                 meta = meta_by_nom.get(disaron_nom)
                 if meta is not None and is_non_public(meta):
                     _skip(disaron_nom, SKIP_REASON_NON_PUBLIC)
+                    continue
+
+                if disaron_nom in will_not_upload:
+                    _skip(
+                        disaron_nom,
+                        format_upload_exception_skip(
+                            SKIP_LABEL_WILL_NOT_UPLOAD,
+                            will_not_upload[disaron_nom],
+                        ),
+                    )
+                    continue
+                if disaron_nom in not_uploaded_yet:
+                    _skip(
+                        disaron_nom,
+                        format_upload_exception_skip(
+                            SKIP_LABEL_NOT_UPLOADED_YET,
+                            not_uploaded_yet[disaron_nom],
+                        ),
+                    )
                     continue
 
                 if cutoff_kind == "error_unidentified":
@@ -800,6 +863,24 @@ def main() -> int:
         ),
     )
     parser.add_argument(
+        "--will-not-upload-file",
+        type=str,
+        default=_DEFAULT_WILL_NOT_UPLOAD_FILE,
+        help=(
+            "CSV of disaron:nom values that will not be uploaded "
+            f"(default: {_DEFAULT_WILL_NOT_UPLOAD_FILE})."
+        ),
+    )
+    parser.add_argument(
+        "--not-uploaded-yet-file",
+        type=str,
+        default=_DEFAULT_NOT_UPLOADED_YET_FILE,
+        help=(
+            "CSV of disaron:nom values not uploaded yet "
+            f"(default: {_DEFAULT_NOT_UPLOADED_YET_FILE})."
+        ),
+    )
+    parser.add_argument(
         "--success-file",
         type=str,
         default="",
@@ -814,8 +895,8 @@ def main() -> int:
         default="",
         help=(
             "Path to CSV output for skipped rows (Exclure, post-cutoff "
-            "publication/data, or non-public; columns: pageId, disaron_nom, "
-            "reason)."
+            "publication/data, non-public, or upload exceptions; columns: "
+            "pageId, disaron_nom, reason)."
         ),
     )
     args = parser.parse_args()
@@ -834,12 +915,18 @@ def main() -> int:
     content_by_disaron_nom = load_content_by_disaron_nom(args.data_file)
     inventaire_statuses = load_inventaire_statuses(args.inventaire_file)
     meta_by_nom = load_disaron_meta(args.disarons_json)
+    will_not_upload = load_upload_exception_reasons(args.will_not_upload_file)
+    not_uploaded_yet = load_upload_exception_reasons(
+        args.not_uploaded_yet_file
+    )
 
     return run_content_update(
         pages_by_nom=pages_by_nom,
         content_by_disaron_nom=content_by_disaron_nom,
         inventaire_statuses=inventaire_statuses,
         meta_by_nom=meta_by_nom,
+        will_not_upload=will_not_upload,
+        not_uploaded_yet=not_uploaded_yet,
         failures_file=failures_file,
         success_file=success_file,
         skipped_file=skipped_file,
