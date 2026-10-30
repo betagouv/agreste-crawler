@@ -11,8 +11,9 @@ Walks PublicationPages under any PublicationIndexPage. Looks up each page's
 Reuse existing taxonomy objects by slug; create when missing:
 
 - ReferenceYear: ``name=<token>``, ``slug=annee-<token>``, ``parent=None``
-- GeographicLevel: ``name=<token>``, ``slug=niveau-geographique-<token>``
-  (code kept as-is, e.g. ``niveau-geographique-DEP``), ``parent=None``
+- GeographicLevel: ``slug=niveau-geographique-<token>`` (code kept as-is,
+  e.g. ``niveau-geographique-DEP``), ``name=<label>`` from the geo labels
+  CSV, ``parent=None``
 
 Rules:
 
@@ -29,6 +30,7 @@ Defaults:
   - ``2026-09-30_dump_tableaux_de_colin_publies.csv``
   - ``2026-10-12_series_longues.csv``
   - ``2026-06-02_Inventaire-Nuxeo-v18.csv``
+- ``--geo-labels-file``: ``metadata_editor/data/2026-10-30_niveaux_geographiques.csv``
 - ``--failures-file``: ``metadata_editor/output/<YYYY-MM-DD_HH-MM-SS>_ref_years_geo_failures.csv``
 - ``--successes-file``: ``metadata_editor/output/<YYYY-MM-DD_HH-MM-SS>_ref_years_geo_successes.csv``
 - ``--noops-file``: ``metadata_editor/output/<YYYY-MM-DD_HH-MM-SS>_ref_years_geo_noops.csv``
@@ -72,11 +74,16 @@ from metadata_editor.set_metadata import (  # noqa: E402
 
 YEARS_COLUMN = "disaron:annees_reference"
 GEO_COLUMN = "disaron:niveau_geographique"
+GEO_CODE_COLUMN = "disaron:niveau_geographique"
+GEO_LABEL_COLUMN = "label"
 DEFAULT_DATA_FILES = [
     "2026-09-30_dump_tableaux_de_colin_publies.csv",
     "2026-10-12_series_longues.csv",
     "2026-06-02_Inventaire-Nuxeo-v18.csv",
 ]
+DEFAULT_GEO_LABELS_FILE = (
+    "metadata_editor/data/2026-10-30_niveaux_geographiques.csv"
+)
 SUCCESS_FIELDNAMES = [
     "pageId",
     "disaron_nom",
@@ -131,6 +138,35 @@ def _parse_pipe_tokens(raw: str) -> list[str]:
         seen.add(token)
         out.append(token)
     return out
+
+
+def _load_geo_labels(labels_file: str) -> dict[str, str]:
+    csv_path = Path(labels_file)
+    if not csv_path.is_absolute():
+        csv_path = (Path.cwd() / csv_path).resolve()
+    if not csv_path.exists():
+        raise FileNotFoundError(f"Geo labels file not found: {csv_path}")
+
+    labels: dict[str, str] = {}
+    with csv_path.open(encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f)
+        if not reader.fieldnames:
+            raise ValueError(f"Geo labels CSV has no headers: {csv_path}")
+        required = {GEO_CODE_COLUMN, GEO_LABEL_COLUMN}
+        if not required.issubset(set(reader.fieldnames)):
+            raise ValueError(
+                "Geo labels CSV must contain columns "
+                f"{GEO_CODE_COLUMN!r} and {GEO_LABEL_COLUMN!r}."
+            )
+        for row in reader:
+            code = (row.get(GEO_CODE_COLUMN) or "").strip()
+            label = (row.get(GEO_LABEL_COLUMN) or "").strip()
+            if code and label:
+                labels[code] = label
+
+    if not labels:
+        raise ValueError("Geo labels CSV has no usable rows.")
+    return labels
 
 
 def load_input_files(
@@ -240,6 +276,7 @@ def _apply_fields(
     page: PublicationPage,
     fields: CsvFields,
     *,
+    geo_labels: dict[str, str],
     dry_run: bool,
 ) -> dict[str, Any]:
     year_tokens = _parse_pipe_tokens(fields.years_raw)
@@ -251,6 +288,14 @@ def _apply_fields(
             "info": "noop: both annees_reference and niveau_geographique empty",
             "value": "",
         }
+
+    if geo_tokens:
+        missing = [token for token in geo_tokens if not geo_labels.get(token)]
+        if missing:
+            raise ValueError(
+                "unknown or unlabeled niveau_geographique code(s): "
+                + ", ".join(repr(m) for m in missing)
+            )
 
     info_parts: list[str] = []
     years_changed = False
@@ -282,7 +327,7 @@ def _apply_fields(
             obj, note = _get_or_create_taxonomy(
                 GeographicLevel,
                 slug=_geo_slug(token),
-                name=token,
+                name=geo_labels[token],
                 locale_id=page.locale_id,
                 dry_run=dry_run,
             )
@@ -347,6 +392,7 @@ def run_update(
     pages,
     by_nom: dict[str, CsvFields],
     duplicate_noms: set[str],
+    geo_labels: dict[str, str],
     failures_file: str,
     successes_file: str,
     noops_file: str,
@@ -456,7 +502,10 @@ def run_update(
 
             try:
                 result = _apply_fields(
-                    page, by_nom[disaron_nom], dry_run=dry_run
+                    page,
+                    by_nom[disaron_nom],
+                    geo_labels=geo_labels,
+                    dry_run=dry_run,
                 )
             except Exception as exc:
                 _fail(page.id, disaron_nom, f"apply failed: {exc}")
@@ -512,9 +561,19 @@ def main() -> int:
             f"(default: {DEFAULT_DATA_FILES!r})."
         ),
     )
+    parser.add_argument(
+        "--geo-labels-file",
+        type=str,
+        default=DEFAULT_GEO_LABELS_FILE,
+        help=(
+            "CSV mapping niveau_geographique codes to labels "
+            f"(default: {DEFAULT_GEO_LABELS_FILE!r})."
+        ),
+    )
     args = parser.parse_args()
 
     by_nom, duplicate_noms = load_input_files(args.data_files)
+    geo_labels = _load_geo_labels(args.geo_labels_file)
     if duplicate_noms:
         print(
             f"Warning: {len(duplicate_noms)} disaron:nom value(s) appear in "
@@ -534,6 +593,7 @@ def main() -> int:
         pages=pages,
         by_nom=by_nom,
         duplicate_noms=duplicate_noms,
+        geo_labels=geo_labels,
         failures_file=failures_file,
         successes_file=successes_file,
         noops_file=noops_file,
