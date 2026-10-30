@@ -19,8 +19,6 @@ Flags with examples:
             CSV mapping disaron:nom → renamed_filename (required).
     --documents-dir my-downloader/downloads
             Directory containing files named as renamed_filename (required).
-    --labels-file 2026-10-08_libelles_source_signature_L025.csv
-            Source-signature → subtitle labels (optional default).
     --publish / --no-publish
             Publish pages (default: publish).
     --dry-run
@@ -39,8 +37,7 @@ Expected CSV columns:
 - `disaron:nom`
 - `disaron:Date_premiere_publication` (format: `YYYY/MM/DD HH:MM`)
 - `disaron:categorie` (`CHDET`, `SERIES`, or `SERIESLONG`)
-- `disaron:source_signature` (required for `CHDET` / `SERIES`; unused for `SERIESLONG`)
-- For `SERIESLONG` only (optional columns):
+- Optional:
   - `disaron:Complement_titre` → standard_publication subtitle (if present)
   - `disaron:chapeau` → standard_publication summary (if present)
 
@@ -55,9 +52,8 @@ Page Collections from `disaron:categorie`:
 - `SERIES` → "Données", "Séries longues conjoncturelles"
 - `SERIESLONG` → "Données", "Séries longues"
 
-For `CHDET` / `SERIES`, subtitle comes from the labels file via
-`disaron:source_signature`. For `SERIESLONG`, subtitle/summary come from
-`disaron:Complement_titre` / `disaron:chapeau` when present.
+Subtitle/summary come from `disaron:Complement_titre` / `disaron:chapeau`
+when present (all categories). ``disaron:source_signature`` is ignored.
 
 Wagtail Documents are stored in document Collection "Données".
 
@@ -97,7 +93,6 @@ from publications.models import (  # noqa: E402
 )
 
 DOCUMENTS_COLLECTION_NAME = "Données"
-DEFAULT_LABELS_FILE = "2026-10-08_libelles_source_signature_L025.csv"
 
 CATEGORIE_TO_PAGE_COLLECTION_NAMES: dict[str, tuple[str, ...]] = {
     "CHDET": ("Données", "Chiffres détaillés"),
@@ -192,21 +187,12 @@ def _build_page_row(input_row: dict[str, str], line_no: int) -> dict[str, object
             f"[line {line_no}] Invalid disaron:Date_premiere_publication: {exc}"
         ) from exc
 
-    if categorie == "SERIESLONG":
-        subtitle = (input_row.get("disaron:Complement_titre") or "").strip()
-        summary = (input_row.get("disaron:chapeau") or "").strip()
-        source_signature = ""
-    else:
-        source_signature = (input_row.get("disaron:source_signature") or "").strip()
-        if not source_signature:
-            raise ValueError(f"[line {line_no}] Missing disaron:source_signature")
-        subtitle = ""
-        summary = ""
+    subtitle = (input_row.get("disaron:Complement_titre") or "").strip()
+    summary = (input_row.get("disaron:chapeau") or "").strip()
 
     return {
         "title": title,
         "disaron_nom": disaron_nom,
-        "source_signature": source_signature,
         "categorie": categorie,
         "publication_date": publication_date,
         "subtitle": subtitle,
@@ -240,36 +226,6 @@ def _read_documents_by_disaron_nom(documents_file: str) -> dict[str, list[str]]:
     if not mapping:
         raise ValueError("Documents CSV has no usable rows.")
     return mapping
-
-
-def _load_source_signature_labels(labels_file: str) -> dict[str, str]:
-    csv_path = Path(labels_file)
-    if not csv_path.is_absolute():
-        csv_path = (Path.cwd() / csv_path).resolve()
-    if not csv_path.exists():
-        raise ValueError(f"Labels file not found: {csv_path}")
-
-    labels: dict[str, str] = {}
-    with csv_path.open(encoding="utf-8-sig", newline="") as f:
-        reader = csv.DictReader(f)
-        required = {
-            "contenunomenclature:modalite_stockage",
-            "dc:title",
-        }
-        if not reader.fieldnames or not required.issubset(set(reader.fieldnames)):
-            raise ValueError(
-                "Labels CSV must contain columns "
-                "'contenunomenclature:modalite_stockage' and 'dc:title'."
-            )
-        for row in reader:
-            key = (row.get("contenunomenclature:modalite_stockage") or "").strip()
-            title = (row.get("dc:title") or "").strip()
-            if key and title:
-                labels[key] = title
-
-    if not labels:
-        raise ValueError("Labels CSV has no usable rows.")
-    return labels
 
 
 def _get_wagtail_documents_collection() -> WagtailCollection:
@@ -411,15 +367,6 @@ def main() -> int:
         help="Directory containing files named as renamed_filename.",
     )
     parser.add_argument(
-        "--labels-file",
-        type=str,
-        default=DEFAULT_LABELS_FILE,
-        help=(
-            "CSV mapping source_signature codes to subtitle labels "
-            f"(default: {DEFAULT_LABELS_FILE})."
-        ),
-    )
-    parser.add_argument(
         "--publish",
         action=argparse.BooleanOptionalAction,
         default=True,
@@ -460,7 +407,6 @@ def main() -> int:
             args.data_file
         )
         documents_by_nom = _read_documents_by_disaron_nom(args.documents_file)
-        labels = _load_source_signature_labels(args.labels_file)
     except ValueError as exc:
         parser.error(str(exc))
 
@@ -519,14 +465,6 @@ def main() -> int:
         display_nom = disaron_nom or "<missing disaron:nom>"
         try:
             page_row = _build_page_row(raw_row, line_no)
-            if page_row["categorie"] != "SERIESLONG":
-                signature = str(page_row["source_signature"])
-                if signature not in labels:
-                    raise ValueError(
-                        f"[line {line_no}] Unknown disaron:source_signature "
-                        f"{signature!r} (not found in labels file)."
-                    )
-                page_row["subtitle"] = labels[signature]
 
             noms_fichiers = documents_by_nom.get(str(page_row["disaron_nom"]))
             if noms_fichiers is None:
@@ -587,7 +525,6 @@ def main() -> int:
         )
         print(
             f"[DRY-RUN] Document collection={DOCUMENTS_COLLECTION_NAME!r}; "
-            f"labels loaded={len(labels)}; "
             f"validation failures so far={failure_count}."
         )
         for i, (_idx, row, raw_row) in enumerate(pending_pages, start=1):
