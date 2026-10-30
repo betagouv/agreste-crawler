@@ -1,0 +1,42 @@
+disaron:niveau_geographique,label,number of public disaron:nom,example_disaron_nom
+FRDOM,Métropole ou DOM,379,G_2005
+REG,Région,1339,R28Et2109
+FRANCE,France entière,3267,Chd2308
+DEP,Département,281,G_2005
+EPCI,EPCI,2,RA2020_1013_EPCI
+DEPZ,Département (DEPZ),40,RA_6027
+ZONES,Regroupement de zones,26,Ndl26
+PAYS,Pays,65,Ana1
+MOND,Monde,285,VeiSoc2401
+UE_HUE,Union Européenne (UE) et Hors UE,34,Chd2316
+COM,Commune,184,G_2005
+CANTON,Canton,111,Carte-RA-nbexplmg10
+PRA,Petites régions agricoles,25,RA_6027
+FRANCEZ,France entière (FRANCEZ),5,FTD051
+VITI,Bassin viticole,4,infographie-2024-1
+TOUT,Géographie administrative,0,
+BASSIN,Bassin d'élevage,0,
+CONT1,Zones continentales,0,
+FRDOMZ,Métropole ou DOM (FRDOMZ),0,
+MAR4,Sous-Division FAO,0,
+CONCHY,Zone conchylicole,0,
+ZONAGE,Zonages,0,
+MAR3,Division FAO,0,
+PAYS_DET,Belgique ou Luxembourg,0,
+LITTORAL,Littoral,0,
+MAR5,Unité FAO,0,
+ASSO1,Association d'états,0,
+MAR,Zone de pêche FAO,0,
+INTERN,International,0,
+SCOT,Schéma de cohérence territoriale,0,
+PN,Parcs nationaux,0,
+MAR1,Zone FAO,0,
+ASSO,Ensemble des associations d'états,0,
+REGCONCHY,Région conchylicole,0,
+DEFAVO,Zone défavorisée,0,
+MASSIF,Zone de massif,0,
+FAO,Zone de pêche,0,
+VITI0,Bassin viticole ensemble,0,
+PNR,Parcs naturels régionaux,0,
+CONT,Eaux continentales,0,
+MAR2,Sous-Zone FAO,0,
