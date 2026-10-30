@@ -183,7 +183,7 @@ def load_csv_column(
         raise FileNotFoundError(f"Data file not found: {csv_path}")
 
     out: dict[str, str] = {}
-    with csv_path.open("r", encoding="utf-8", newline="") as f:
+    with csv_path.open("r", encoding="utf-8-sig", newline="") as f:
         reader = csv.DictReader(f)
         if not reader.fieldnames:
             raise ValueError("Data CSV has no headers.")

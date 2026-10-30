@@ -22,6 +22,9 @@ set_collection *args:
 set_themes *args:
     PYTHONPATH=. uv run python -m metadata_editor.set_themes "$@"
 
+set_source *args:
+    PYTHONPATH=. uv run python -m metadata_editor.set_source "$@"
+
 theme_reventilation *args:
     PYTHONPATH=. uv run python -m metadata_editor.theme_reventilation "$@"
 
