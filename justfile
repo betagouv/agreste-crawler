@@ -25,6 +25,9 @@ set_themes *args:
 set_source *args:
     PYTHONPATH=. uv run python -m metadata_editor.set_source "$@"
 
+remove_source_from_subtitle *args:
+    PYTHONPATH=. uv run python -m metadata_editor.remove_source_from_subtitle "$@"
+
 theme_reventilation *args:
     PYTHONPATH=. uv run python -m metadata_editor.theme_reventilation "$@"
 
