@@ -70,6 +70,9 @@ extract_disaron_links *args:
 get_raw_text_fields *args:
     PYTHONPATH=. uv run python -m metadata_editor.get_raw_text_fields "$@"
 
+extract_modalities *args:
+    PYTHONPATH=. uv run python -m metadata_editor.extract_modalities "$@"
+
 clean_text_fields *args:
     PYTHONPATH=. uv run python -m metadata_editor.clean_text_fields "$@"
 
