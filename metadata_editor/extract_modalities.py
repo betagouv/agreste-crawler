@@ -8,36 +8,46 @@ Reads Nuxeo Disaron documents from either:
 - a concatenated dump of objects (optionally comma-separated), as in
   ``2026-05-18_Disarons.json``
 
-and writes a JSON array of objects with:
+and writes a CSV with one row per modality:
 
-- ``disaron:nom``
-- ``disaron:inventaire_disaron``
+- ``disaron:nom_old`` (from JSON ``disaron:nom``)
+- ``metadonnee_nom``
+- ``libelle_modalite``
+- ``metadonnee_modalite``
 
-Only entries with a non-empty ``disaron:inventaire_disaron`` and
-``DISAR-PUBLIC`` in ``disaron:communaute_restit`` are kept.
+Only modalities from documents with a non-empty ``disaron:inventaire_disaron``
+and ``DISAR-PUBLIC`` in ``disaron:communaute_restit`` are kept. Records use
+CRLF line endings.
 
 Defaults:
 - ``--input-file``: ``2026-05-18_Disarons.json``
-- ``--output-file``: ``metadata_editor/data/2026-05-18_Disarons_modalities.json``
+- ``--output-file``: ``metadata_editor/data/2026-05-18_Disarons_modalities.csv``
 
 Usage:
     just extract_modalities
 
     just extract_modalities \\
         --input-file 2026-05-18_Disarons.json \\
-        --output-file metadata_editor/data/2026-05-18_Disarons_modalities.json
+        --output-file metadata_editor/data/2026-05-18_Disarons_modalities.csv
 """
 
 from __future__ import annotations
 
 import argparse
-import json
+import csv
 from collections.abc import Iterable
 from pathlib import Path
 
 from metadata_editor.get_raw_text_fields import load_docs
 
 DISAR_PUBLIC = "DISAR-PUBLIC"
+
+FIELDNAMES = [
+    "disaron:nom_old",
+    "metadonnee_nom",
+    "libelle_modalite",
+    "metadonnee_modalite",
+]
 
 
 def _is_public(communaute_restit: object) -> bool:
@@ -46,8 +56,14 @@ def _is_public(communaute_restit: object) -> bool:
     return DISAR_PUBLIC in communaute_restit
 
 
-def extract_entries(docs: Iterable[object]) -> list[dict[str, object]]:
-    entries: list[dict[str, object]] = []
+def _cell(value: object) -> str:
+    if value is None:
+        return ""
+    return str(value)
+
+
+def extract_rows(docs: Iterable[object]) -> list[dict[str, str]]:
+    rows: list[dict[str, str]] = []
     for doc in docs:
         if not isinstance(doc, dict):
             continue
@@ -66,13 +82,19 @@ def extract_entries(docs: Iterable[object]) -> list[dict[str, object]]:
         if not _is_public(props.get("disaron:communaute_restit")):
             continue
 
-        entries.append(
-            {
-                "disaron:nom": nom.strip(),
-                "disaron:inventaire_disaron": inventaire,
-            }
-        )
-    return entries
+        nom_old = nom.strip()
+        for item in inventaire:
+            if not isinstance(item, dict):
+                continue
+            rows.append(
+                {
+                    "disaron:nom_old": nom_old,
+                    "metadonnee_nom": _cell(item.get("metadonnee_nom")),
+                    "libelle_modalite": _cell(item.get("libelle_modalite")),
+                    "metadonnee_modalite": _cell(item.get("metadonnee_modalite")),
+                }
+            )
+    return rows
 
 
 def main() -> int:
@@ -84,8 +106,8 @@ def main() -> int:
     )
     parser.add_argument(
         "--output-file",
-        default="metadata_editor/data/2026-05-18_Disarons_modalities.json",
-        help="Output JSON path.",
+        default="metadata_editor/data/2026-05-18_Disarons_modalities.csv",
+        help="Output CSV path.",
     )
     args = parser.parse_args()
 
@@ -96,13 +118,18 @@ def main() -> int:
     output_file = Path(args.output_file).resolve()
     output_file.parent.mkdir(parents=True, exist_ok=True)
 
-    entries = extract_entries(load_docs(input_file))
+    rows = extract_rows(load_docs(input_file))
 
-    with output_file.open("w", encoding="utf-8") as f:
-        json.dump(entries, f, ensure_ascii=False, indent=2)
-        f.write("\n")
+    with output_file.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(
+            f,
+            fieldnames=FIELDNAMES,
+            lineterminator="\r\n",
+        )
+        writer.writeheader()
+        writer.writerows(rows)
 
-    print(f"Wrote {output_file} ({len(entries)} entries)")
+    print(f"Wrote {output_file} ({len(rows)} rows)")
     return 0
 
 
