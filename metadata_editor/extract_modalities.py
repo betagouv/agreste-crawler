@@ -10,6 +10,7 @@ Reads Nuxeo Disaron documents from either:
 
 and writes a CSV with one row per modality:
 
+- ``disaron:nom`` (from inventaire / mapping CSV, else ``disaron:nom_old``)
 - ``disaron:nom_old`` (from JSON ``disaron:nom``)
 - ``metadonnee_nom``
 - ``libelle_modalite``
@@ -19,8 +20,14 @@ Only modalities from documents with a non-empty ``disaron:inventaire_disaron``
 and ``DISAR-PUBLIC`` in ``disaron:communaute_restit`` are kept. Records use
 CRLF line endings.
 
+``disaron:nom`` is resolved from the inventaire CSV via ``disaron:nom_old``,
+then overlaid with the curated mapping CSV (mapping wins on conflict). If no
+match is found, ``disaron:nom`` is filled with ``disaron:nom_old``.
+
 Defaults:
 - ``--input-file``: ``2026-05-18_Disarons.json``
+- ``--inventaire-file``: ``2026-06-02_Inventaire-Nuxeo-v18.csv``
+- ``--mapping-file``: ``2026-10-28_data_disaron_old_new_mapping.csv``
 - ``--output-file``: ``metadata_editor/data/2026-05-18_Disarons_modalities.csv``
 
 Usage:
@@ -38,11 +45,13 @@ import csv
 from collections.abc import Iterable
 from pathlib import Path
 
+from metadata_editor.clean_text_fields import load_inventaire_nom_map
 from metadata_editor.get_raw_text_fields import load_docs
 
 DISAR_PUBLIC = "DISAR-PUBLIC"
 
 FIELDNAMES = [
+    "disaron:nom",
     "disaron:nom_old",
     "metadonnee_nom",
     "libelle_modalite",
@@ -62,7 +71,47 @@ def _cell(value: object) -> str:
     return str(value)
 
 
-def extract_rows(docs: Iterable[object]) -> list[dict[str, str]]:
+def load_mapping_nom_map(mapping_file: Path) -> dict[str, str]:
+    """Map stripped nom_old -> stripped nom from the curated mapping CSV."""
+    with mapping_file.open(encoding="utf-8", newline="") as f:
+        reader = csv.DictReader(f)
+        if not reader.fieldnames:
+            raise ValueError(f"Mapping CSV has no headers: {mapping_file}")
+        required = {"disaron:nom", "disaron:nom_old"}
+        missing = required - set(reader.fieldnames)
+        if missing:
+            raise ValueError(
+                f"Mapping CSV missing column(s): {', '.join(sorted(missing))}"
+            )
+        rows = list(reader)
+
+    mapping: dict[str, str] = {}
+    for row in rows:
+        old = (row.get("disaron:nom_old") or "").strip()
+        nom = (row.get("disaron:nom") or "").strip()
+        if not old or not nom:
+            continue
+        existing = mapping.get(old)
+        if existing is not None and existing != nom:
+            raise ValueError(
+                f"Mapping: ambiguous disaron:nom for disaron:nom_old={old!r}: "
+                f"{existing!r}, {nom!r}"
+            )
+        mapping[old] = nom
+    return mapping
+
+
+def build_nom_map(inventaire_file: Path, mapping_file: Path) -> dict[str, str]:
+    """Inventaire map overlaid by curated mapping (mapping wins)."""
+    nom_map = load_inventaire_nom_map(inventaire_file)
+    nom_map.update(load_mapping_nom_map(mapping_file))
+    return nom_map
+
+
+def extract_rows(
+    docs: Iterable[object],
+    nom_map: dict[str, str],
+) -> list[dict[str, str]]:
     rows: list[dict[str, str]] = []
     for doc in docs:
         if not isinstance(doc, dict):
@@ -83,11 +132,13 @@ def extract_rows(docs: Iterable[object]) -> list[dict[str, str]]:
             continue
 
         nom_old = nom.strip()
+        resolved_nom = nom_map.get(nom_old, nom_old)
         for item in inventaire:
             if not isinstance(item, dict):
                 continue
             rows.append(
                 {
+                    "disaron:nom": resolved_nom,
                     "disaron:nom_old": nom_old,
                     "metadonnee_nom": _cell(item.get("metadonnee_nom")),
                     "libelle_modalite": _cell(item.get("libelle_modalite")),
@@ -105,6 +156,16 @@ def main() -> int:
         help="Raw Disarons JSON dump.",
     )
     parser.add_argument(
+        "--inventaire-file",
+        default="2026-06-02_Inventaire-Nuxeo-v18.csv",
+        help="Inventaire CSV used to resolve disaron:nom.",
+    )
+    parser.add_argument(
+        "--mapping-file",
+        default="2026-10-28_data_disaron_old_new_mapping.csv",
+        help="Curated old/new nom mapping CSV (overrides inventaire).",
+    )
+    parser.add_argument(
         "--output-file",
         default="metadata_editor/data/2026-05-18_Disarons_modalities.csv",
         help="Output CSV path.",
@@ -115,10 +176,19 @@ def main() -> int:
     if not input_file.exists():
         raise FileNotFoundError(f"Input file not found: {input_file}")
 
+    inventaire_file = Path(args.inventaire_file).resolve()
+    if not inventaire_file.exists():
+        raise FileNotFoundError(f"Inventaire file not found: {inventaire_file}")
+
+    mapping_file = Path(args.mapping_file).resolve()
+    if not mapping_file.exists():
+        raise FileNotFoundError(f"Mapping file not found: {mapping_file}")
+
     output_file = Path(args.output_file).resolve()
     output_file.parent.mkdir(parents=True, exist_ok=True)
 
-    rows = extract_rows(load_docs(input_file))
+    nom_map = build_nom_map(inventaire_file, mapping_file)
+    rows = extract_rows(load_docs(input_file), nom_map)
 
     with output_file.open("w", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(
