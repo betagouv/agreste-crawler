@@ -15,12 +15,20 @@ Leading underscores are stripped from labels in the level columns.
 For underscore hierarchies, ``codes`` is generated as ``1``, ``1.1``, ``1.1.1``,
 …. For dot and flat groups, ``codes`` copies ``metadonnee_modalite``.
 
+Exception: ``L_0018`` / ``Produit`` uses the curated override CSV
+(``2026-05-18_Disarons_modalities_hierarchized_L_0018.csv``) instead of
+auto-detection. Other L_0018 nomenclatures still use the normal path.
+
+``L_0017`` underscore depths use ``underscores // 2 + 1`` (double-underscore
+steps map to consecutive levels).
+
 Output columns: ``disaron:nom``, ``nomenclature``, ``isHierarchical``,
 ``metadonnee_modalite``, ``codes``, ``level1`` … ``levelN``. Sorted by
 ``disaron:nom``, ``nomenclature``, ``metadonnee_modalite``. CRLF endings.
 
 Defaults:
 - ``--input-file``: ``metadata_editor/data/2026-05-18_Disarons_modalities.csv``
+- ``--l0018-override-file``: ``metadata_editor/data/2026-05-18_Disarons_modalities_hierarchized_L_0018.csv``
 - ``--output-file``: ``metadata_editor/data/2026-05-18_Disarons_modalities_hierarchized.csv``
 
 Usage:
@@ -42,6 +50,8 @@ FIXED_FIELDNAMES = [
     "metadonnee_modalite",
     "codes",
 ]
+
+L0018_PRODUIT_KEY = ("L_0018", "Produit")
 
 
 def _strip_leading_underscores(label: str) -> str:
@@ -152,8 +162,37 @@ def hierarchize_group(
     )
 
 
+def _path_from_override_row(row: dict[str, str]) -> list[str]:
+    path: list[str] = []
+    i = 1
+    while f"level{i}" in row:
+        value = row.get(f"level{i}") or ""
+        if value == "" and not any(
+            (row.get(f"level{j}") or "") for j in range(i + 1, i + 20)
+        ):
+            break
+        path.append(value)
+        i += 1
+    # Trim trailing empties
+    while path and path[-1] == "":
+        path.pop()
+    return path or [""]
+
+
+def load_l0018_override(path: Path) -> list[dict[str, str]]:
+    """Load curated L_0018 / Produit hierarchy rows."""
+    with path.open(encoding="utf-8", newline="") as f:
+        rows = list(csv.DictReader(f))
+    return [
+        r
+        for r in rows
+        if r.get("disaron:nom") == "L_0018" and r.get("nomenclature") == "Produit"
+    ]
+
+
 def hierarchize_rows(
     rows: Iterable[dict[str, str]],
+    l0018_override: list[dict[str, str]] | None = None,
 ) -> tuple[list[dict[str, str]], int]:
     groups: dict[tuple[str, str], list[dict[str, str]]] = defaultdict(list)
     for row in rows:
@@ -162,6 +201,25 @@ def hierarchize_rows(
     pending: list[tuple[str, str, str, str, str, list[str]]] = []
     max_depth = 1
     for (disaron_nom, metadonnee_nom), group in groups.items():
+        if (
+            (disaron_nom, metadonnee_nom) == L0018_PRODUIT_KEY
+            and l0018_override is not None
+        ):
+            for row in l0018_override:
+                path = _path_from_override_row(row)
+                max_depth = max(max_depth, len(path))
+                pending.append(
+                    (
+                        row.get("disaron:nom", disaron_nom),
+                        row.get("nomenclature", metadonnee_nom),
+                        row.get("isHierarchical", "True"),
+                        row["metadonnee_modalite"],
+                        row.get("codes", ""),
+                        path,
+                    )
+                )
+            continue
+
         mode, items = hierarchize_group(group, disaron_nom)
         is_hierarchical = "True" if mode != "flat" else "False"
         for row, path, codes in items:
@@ -215,6 +273,13 @@ def main() -> int:
         help="Flat modalities CSV from extract_modalities.",
     )
     parser.add_argument(
+        "--l0018-override-file",
+        default=(
+            "metadata_editor/data/2026-05-18_Disarons_modalities_hierarchized_L_0018.csv"
+        ),
+        help="Curated hierarchy for L_0018 / Produit.",
+    )
+    parser.add_argument(
         "--output-file",
         default="metadata_editor/data/2026-05-18_Disarons_modalities_hierarchized.csv",
         help="Hierarchized output CSV path.",
@@ -225,13 +290,18 @@ def main() -> int:
     if not input_file.exists():
         raise FileNotFoundError(f"Input file not found: {input_file}")
 
+    override_file = Path(args.l0018_override_file).resolve()
+    if not override_file.exists():
+        raise FileNotFoundError(f"L_0018 override file not found: {override_file}")
+
     output_file = Path(args.output_file).resolve()
     output_file.parent.mkdir(parents=True, exist_ok=True)
 
     with input_file.open(encoding="utf-8", newline="") as f:
         rows = list(csv.DictReader(f))
 
-    finalized, max_depth = hierarchize_rows(rows)
+    l0018_override = load_l0018_override(override_file)
+    finalized, max_depth = hierarchize_rows(rows, l0018_override)
     fieldnames = FIXED_FIELDNAMES + [f"level{i}" for i in range(1, max_depth + 1)]
 
     with output_file.open("w", encoding="utf-8", newline="") as f:
