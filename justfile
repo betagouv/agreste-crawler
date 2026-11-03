@@ -73,6 +73,9 @@ get_raw_text_fields *args:
 extract_modalities *args:
     PYTHONPATH=. uv run python -m metadata_editor.extract_modalities "$@"
 
+hierarchize_modalities *args:
+    PYTHONPATH=. uv run python -m metadata_editor.hierarchize_modalities "$@"
+
 clean_text_fields *args:
     PYTHONPATH=. uv run python -m metadata_editor.clean_text_fields "$@"
 
