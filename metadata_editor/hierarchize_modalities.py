@@ -12,8 +12,11 @@ a hierarchized CSV. For each ``(disaron:nom, metadonnee_nom)`` group:
 
 Leading underscores are stripped from labels in the level columns.
 
-Output columns: ``disaron:nom``, ``nomenclature``, ``metadonnee_modalite``,
-``level1`` … ``levelN`` (as many as the global max depth). Sorted by
+For underscore hierarchies, ``codes`` is generated as ``1``, ``1.1``, ``1.1.1``,
+…. For dot and flat groups, ``codes`` copies ``metadonnee_modalite``.
+
+Output columns: ``disaron:nom``, ``nomenclature``, ``isHierarchical``,
+``metadonnee_modalite``, ``codes``, ``level1`` … ``levelN``. Sorted by
 ``disaron:nom``, ``nomenclature``, ``metadonnee_modalite``. CRLF endings.
 
 Defaults:
@@ -35,7 +38,9 @@ from pathlib import Path
 FIXED_FIELDNAMES = [
     "disaron:nom",
     "nomenclature",
+    "isHierarchical",
     "metadonnee_modalite",
+    "codes",
 ]
 
 
@@ -69,36 +74,72 @@ def _path_dot(row: dict[str, str], by_code: dict[str, dict[str, str]]) -> list[s
     return path
 
 
-def _paths_underscore(rows: list[dict[str, str]]) -> list[list[str]]:
-    """Return one path per row, walking in metadonnee_modalite order."""
+def _paths_and_codes_underscore(
+    rows: list[dict[str, str]],
+) -> list[tuple[list[str], str]]:
+    """Return (path, generated_code) per row, walking in metadonnee_modalite order."""
     ordered = sorted(rows, key=lambda r: r["metadonnee_modalite"])
-    stack: list[str] = []
-    paths_by_id: dict[int, list[str]] = {}
+    label_stack: list[str] = []
+    code_stack: list[str] = []
+    sibling_count: dict[str, int] = defaultdict(int)
+    result_by_id: dict[int, tuple[list[str], str]] = {}
+
     for r in ordered:
         depth = len(r["libelle_modalite"]) - len(r["libelle_modalite"].lstrip("_")) + 1
         label = _strip_leading_underscores(r["libelle_modalite"])
         if depth <= 0:
             depth = 1
-        if len(stack) >= depth:
-            stack = stack[: depth - 1]
-        while len(stack) < depth - 1:
-            stack.append("")
-        stack.append(label)
-        paths_by_id[id(r)] = list(stack)
-    return [paths_by_id[id(r)] for r in rows]
+
+        if len(label_stack) >= depth:
+            label_stack = label_stack[: depth - 1]
+            code_stack = code_stack[: depth - 1]
+        while len(label_stack) < depth - 1:
+            label_stack.append("")
+            code_stack.append("")
+
+        parent_key = ".".join(code_stack) if code_stack else ""
+        sibling_count[parent_key] += 1
+        segment = str(sibling_count[parent_key])
+        code = f"{parent_key}.{segment}" if parent_key else segment
+
+        label_stack.append(label)
+        code_stack.append(segment)
+        result_by_id[id(r)] = (list(label_stack), code)
+
+    return [result_by_id[id(r)] for r in rows]
 
 
-def hierarchize_group(rows: list[dict[str, str]]) -> list[tuple[dict[str, str], list[str]]]:
+def hierarchize_group(
+    rows: list[dict[str, str]],
+) -> tuple[str, list[tuple[dict[str, str], list[str], str]]]:
+    """Return (mode, list of (row, path, codes))."""
     mode = _detect_mode(rows)
     if mode == "flat":
-        return [
-            (r, [_strip_leading_underscores(r["libelle_modalite"])]) for r in rows
-        ]
+        return (
+            mode,
+            [
+                (
+                    r,
+                    [_strip_leading_underscores(r["libelle_modalite"])],
+                    r["metadonnee_modalite"],
+                )
+                for r in rows
+            ],
+        )
     if mode == "dot":
         by_code = {r["metadonnee_modalite"]: r for r in rows}
-        return [(r, _path_dot(r, by_code)) for r in rows]
-    paths = _paths_underscore(rows)
-    return list(zip(rows, paths))
+        return (
+            mode,
+            [
+                (r, _path_dot(r, by_code), r["metadonnee_modalite"])
+                for r in rows
+            ],
+        )
+    paired = _paths_and_codes_underscore(rows)
+    return (
+        mode,
+        [(r, path, code) for r, (path, code) in zip(rows, paired)],
+    )
 
 
 def hierarchize_rows(
@@ -108,26 +149,39 @@ def hierarchize_rows(
     for row in rows:
         groups[(row["disaron:nom"], row["metadonnee_nom"])].append(row)
 
-    pending: list[tuple[str, str, str, list[str]]] = []
+    pending: list[tuple[str, str, str, str, str, list[str]]] = []
     max_depth = 1
     for (disaron_nom, metadonnee_nom), group in groups.items():
-        for row, path in hierarchize_group(group):
+        mode, items = hierarchize_group(group)
+        is_hierarchical = "True" if mode != "flat" else "False"
+        for row, path, codes in items:
             max_depth = max(max_depth, len(path))
             pending.append(
                 (
                     disaron_nom,
                     metadonnee_nom,
+                    is_hierarchical,
                     row["metadonnee_modalite"],
+                    codes,
                     path,
                 )
             )
 
     finalized: list[dict[str, str]] = []
-    for disaron_nom, nomenclature, modalite, path in pending:
+    for (
+        disaron_nom,
+        nomenclature,
+        is_hierarchical,
+        modalite,
+        codes,
+        path,
+    ) in pending:
         record = {
             "disaron:nom": disaron_nom,
             "nomenclature": nomenclature,
+            "isHierarchical": is_hierarchical,
             "metadonnee_modalite": modalite,
+            "codes": codes,
         }
         for i in range(1, max_depth + 1):
             record[f"level{i}"] = path[i - 1] if i <= len(path) else ""
