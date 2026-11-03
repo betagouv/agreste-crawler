@@ -74,8 +74,19 @@ def _path_dot(row: dict[str, str], by_code: dict[str, dict[str, str]]) -> list[s
     return path
 
 
+def _underscore_depth(libelle: str, disaron_nom: str) -> int:
+    leading = len(libelle) - len(libelle.lstrip("_"))
+    # L_0017 uses double underscores per level (depths 1,3,5 → 1,2,3).
+    if disaron_nom == "L_0017":
+        depth = (leading // 2) + 1
+    else:
+        depth = leading + 1
+    return depth if depth > 0 else 1
+
+
 def _paths_and_codes_underscore(
     rows: list[dict[str, str]],
+    disaron_nom: str,
 ) -> list[tuple[list[str], str]]:
     """Return (path, generated_code) per row, walking in metadonnee_modalite order."""
     ordered = sorted(rows, key=lambda r: r["metadonnee_modalite"])
@@ -85,10 +96,8 @@ def _paths_and_codes_underscore(
     result_by_id: dict[int, tuple[list[str], str]] = {}
 
     for r in ordered:
-        depth = len(r["libelle_modalite"]) - len(r["libelle_modalite"].lstrip("_")) + 1
+        depth = _underscore_depth(r["libelle_modalite"], disaron_nom)
         label = _strip_leading_underscores(r["libelle_modalite"])
-        if depth <= 0:
-            depth = 1
 
         if len(label_stack) >= depth:
             label_stack = label_stack[: depth - 1]
@@ -111,6 +120,7 @@ def _paths_and_codes_underscore(
 
 def hierarchize_group(
     rows: list[dict[str, str]],
+    disaron_nom: str,
 ) -> tuple[str, list[tuple[dict[str, str], list[str], str]]]:
     """Return (mode, list of (row, path, codes))."""
     mode = _detect_mode(rows)
@@ -135,7 +145,7 @@ def hierarchize_group(
                 for r in rows
             ],
         )
-    paired = _paths_and_codes_underscore(rows)
+    paired = _paths_and_codes_underscore(rows, disaron_nom)
     return (
         mode,
         [(r, path, code) for r, (path, code) in zip(rows, paired)],
@@ -152,7 +162,7 @@ def hierarchize_rows(
     pending: list[tuple[str, str, str, str, str, list[str]]] = []
     max_depth = 1
     for (disaron_nom, metadonnee_nom), group in groups.items():
-        mode, items = hierarchize_group(group)
+        mode, items = hierarchize_group(group, disaron_nom)
         is_hierarchical = "True" if mode != "flat" else "False"
         for row, path, codes in items:
             max_depth = max(max_depth, len(path))
