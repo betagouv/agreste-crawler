@@ -43,11 +43,12 @@ from __future__ import annotations
 
 import argparse
 import csv
-from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 
 from bs4 import BeautifulSoup, NavigableString, Tag
+
+from disaron_mapper import load_inventaire_nom_map
 
 INPUT_FIELDS = [
     "disaron:nom_old",
@@ -77,10 +78,6 @@ MEDIA_TAGS = frozenset(
 
 class DuplicateError(ValueError):
     """Raised when a required unique column has duplicates."""
-
-
-class AmbiguousNomError(ValueError):
-    """Raised when inventaire yields more than one disaron:nom for a nom_old."""
 
 
 def _bool_cell(flag: bool) -> str:
@@ -142,48 +139,6 @@ def clean_html(html: str) -> tuple[str, list[str]]:
         cleaned = str(soup)
 
     return cleaned, removed
-
-
-def load_inventaire_nom_map(inventaire_file: Path) -> dict[str, str]:
-    """Map stripped nom_old -> stripped nom, preferring Garder rows.
-
-    Crashes if more than one distinct nom remains after Garder preference.
-    """
-    with inventaire_file.open(encoding="utf-8", newline="") as f:
-        reader = csv.DictReader(f)
-        if not reader.fieldnames:
-            raise ValueError(f"Inventaire CSV has no headers: {inventaire_file}")
-        required = {"disaron:nom", "disaron:nom_old"}
-        missing = required - set(reader.fieldnames)
-        if missing:
-            raise ValueError(
-                f"Inventaire CSV missing column(s): {', '.join(sorted(missing))}"
-            )
-        rows = list(reader)
-
-    by_old: dict[str, list[tuple[str, str]]] = defaultdict(list)
-    for row in rows:
-        old = (row.get("disaron:nom_old") or "").strip()
-        nom = (row.get("disaron:nom") or "").strip()
-        if not old or not nom:
-            continue
-        garder = (row.get("Garder/Exclure") or "").strip()
-        by_old[old].append((nom, garder))
-
-    mapping: dict[str, str] = {}
-    for old, candidates in by_old.items():
-        garder_noms = {nom for nom, garder in candidates if garder == "Garder"}
-        if garder_noms:
-            noms = garder_noms
-        else:
-            noms = {nom for nom, _ in candidates}
-        if len(noms) > 1:
-            raise AmbiguousNomError(
-                f"Inventaire: ambiguous disaron:nom for disaron:nom_old={old!r}: "
-                + ", ".join(sorted(repr(n) for n in noms))
-            )
-        mapping[old] = next(iter(noms))
-    return mapping
 
 
 def load_input_rows(input_file: Path) -> list[dict[str, str]]:

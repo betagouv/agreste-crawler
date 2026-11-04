@@ -22,14 +22,19 @@ auto-detection. Other L_0018 nomenclatures still use the normal path.
 ``L_0017`` underscore depths use ``underscores // 2 + 1`` (double-underscore
 steps map to consecutive levels).
 
-Output columns: ``disaron:nom_old``, ``nomenclature``, ``isHierarchical``,
-``metadonnee_modalite``, ``codes``, ``level1`` … ``levelN``. Sorted by
-``disaron:nom_old``, ``nomenclature``, ``codes`` (numeric dotted order:
-``1,2,…,9,10`` and ``1.9,1.10``). CRLF endings.
+Output columns: ``disaron:nom``, ``disaron:nom_old``, ``nomenclature``,
+``isHierarchical``, ``metadonnee_modalite``, ``codes``, ``level1`` … ``levelN``.
+Sorted by ``disaron:nom_old``, ``nomenclature``, ``codes`` (numeric dotted
+order: ``1,2,…,9,10`` and ``1.9,1.10``). CRLF endings.
+
+``disaron:nom`` is resolved from ``disaron:nom_old`` via
+``disaron_mapper`` (inventaire + dedicated mapping CSV). Unmapped names keep
+``disaron:nom = disaron:nom_old``.
 
 Defaults:
 - ``--input-file``: ``metadata_editor/data/2026-05-18_Disarons_modalities.csv``
 - ``--l0018-override-file``: ``metadata_editor/data/2026-05-18_Disarons_modalities_hierarchized_L_0018.csv``
+- ``--disaron-mapping-files``: inventaire + ``2026-10-28_data_disaron_old_new_mapping.csv``
 - ``--output-file``: ``metadata_editor/data/2026-05-18_Disarons_modalities_hierarchized.csv``
 
 Usage:
@@ -44,7 +49,14 @@ from collections import defaultdict
 from collections.abc import Iterable
 from pathlib import Path
 
+from disaron_mapper import (
+    DEFAULT_DISARON_MAPPING_FILES,
+    load_disaron_nom_map,
+    resolve_disaron_nom,
+)
+
 FIXED_FIELDNAMES = [
+    "disaron:nom",
     "disaron:nom_old",
     "nomenclature",
     "isHierarchical",
@@ -208,7 +220,9 @@ def load_l0018_override(path: Path) -> list[dict[str, str]]:
 def hierarchize_rows(
     rows: Iterable[dict[str, str]],
     l0018_override: list[dict[str, str]] | None = None,
+    nom_map: dict[str, str] | None = None,
 ) -> tuple[list[dict[str, str]], int]:
+    mapping = nom_map or {}
     groups: dict[tuple[str, str], list[dict[str, str]]] = defaultdict(list)
     for row in rows:
         groups[(row["disaron:nom"], row["metadonnee_nom"])].append(row)
@@ -252,7 +266,7 @@ def hierarchize_rows(
 
     finalized: list[dict[str, str]] = []
     for (
-        disaron_nom,
+        disaron_nom_old,
         nomenclature,
         is_hierarchical,
         modalite,
@@ -260,7 +274,8 @@ def hierarchize_rows(
         path,
     ) in pending:
         record = {
-            "disaron:nom_old": disaron_nom,
+            "disaron:nom": resolve_disaron_nom(disaron_nom_old, mapping),
+            "disaron:nom_old": disaron_nom_old,
             "nomenclature": nomenclature,
             "isHierarchical": is_hierarchical,
             "metadonnee_modalite": modalite,
@@ -295,6 +310,15 @@ def main() -> int:
         help="Curated hierarchy for L_0018 / Produit.",
     )
     parser.add_argument(
+        "--disaron-mapping-files",
+        nargs="+",
+        default=list(DEFAULT_DISARON_MAPPING_FILES),
+        help=(
+            "CSVs with disaron:nom_old → disaron:nom "
+            f"(default: {DEFAULT_DISARON_MAPPING_FILES!r})."
+        ),
+    )
+    parser.add_argument(
         "--output-file",
         default="metadata_editor/data/2026-05-18_Disarons_modalities_hierarchized.csv",
         help="Hierarchized output CSV path.",
@@ -309,14 +333,22 @@ def main() -> int:
     if not override_file.exists():
         raise FileNotFoundError(f"L_0018 override file not found: {override_file}")
 
+    mapping_files = [Path(p).resolve() for p in args.disaron_mapping_files]
+    for mapping_file in mapping_files:
+        if not mapping_file.exists():
+            raise FileNotFoundError(
+                f"Disaron mapping file not found: {mapping_file}"
+            )
+
     output_file = Path(args.output_file).resolve()
     output_file.parent.mkdir(parents=True, exist_ok=True)
 
     with input_file.open(encoding="utf-8", newline="") as f:
         rows = list(csv.DictReader(f))
 
+    nom_map = load_disaron_nom_map(mapping_files)
     l0018_override = load_l0018_override(override_file)
-    finalized, max_depth = hierarchize_rows(rows, l0018_override)
+    finalized, max_depth = hierarchize_rows(rows, l0018_override, nom_map)
     fieldnames = FIXED_FIELDNAMES + [f"level{i}" for i in range(1, max_depth + 1)]
 
     with output_file.open("w", encoding="utf-8", newline="") as f:
