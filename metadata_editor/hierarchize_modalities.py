@@ -24,7 +24,8 @@ steps map to consecutive levels).
 
 Output columns: ``disaron:nom``, ``nomenclature``, ``isHierarchical``,
 ``metadonnee_modalite``, ``codes``, ``level1`` … ``levelN``. Sorted by
-``disaron:nom``, ``nomenclature``, ``metadonnee_modalite``. CRLF endings.
+``disaron:nom``, ``nomenclature``, ``codes`` (numeric dotted order:
+``1,2,…,9,10`` and ``1.9,1.10``). CRLF endings.
 
 Defaults:
 - ``--input-file``: ``metadata_editor/data/2026-05-18_Disarons_modalities.csv``
@@ -52,6 +53,20 @@ FIXED_FIELDNAMES = [
 ]
 
 L0018_PRODUIT_KEY = ("L_0018", "Produit")
+
+
+def _codes_sort_key(codes: str) -> tuple:
+    """Numeric dotted-code order: 1,2,…9,10 and 1.9,1.10 (not lexical)."""
+    if not codes:
+        return ()
+    parts: list[tuple[int, object]] = []
+    for part in codes.split("."):
+        if part.isdigit() or (part.startswith("-") and part[1:].isdigit()):
+            parts.append((0, int(part)))
+        else:
+            # Non-numeric segments sort after ints at the same depth.
+            parts.append((1, part))
+    return tuple(parts)
 
 
 def _strip_leading_underscores(label: str) -> str:
@@ -259,7 +274,7 @@ def hierarchize_rows(
         key=lambda r: (
             r["disaron:nom"],
             r["nomenclature"],
-            r["metadonnee_modalite"],
+            _codes_sort_key(r["codes"]),
         )
     )
     return finalized, max_depth
