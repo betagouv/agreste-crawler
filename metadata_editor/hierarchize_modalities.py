@@ -22,9 +22,9 @@ auto-detection. Other L_0018 nomenclatures still use the normal path.
 ``L_0017`` underscore depths use ``underscores // 2 + 1`` (double-underscore
 steps map to consecutive levels).
 
-Output columns: ``disaron:nom``, ``nomenclature``, ``isHierarchical``,
+Output columns: ``disaron:nom_old``, ``nomenclature``, ``isHierarchical``,
 ``metadonnee_modalite``, ``codes``, ``level1`` … ``levelN``. Sorted by
-``disaron:nom``, ``nomenclature``, ``codes`` (numeric dotted order:
+``disaron:nom_old``, ``nomenclature``, ``codes`` (numeric dotted order:
 ``1,2,…,9,10`` and ``1.9,1.10``). CRLF endings.
 
 Defaults:
@@ -45,7 +45,7 @@ from collections.abc import Iterable
 from pathlib import Path
 
 FIXED_FIELDNAMES = [
-    "disaron:nom",
+    "disaron:nom_old",
     "nomenclature",
     "isHierarchical",
     "metadonnee_modalite",
@@ -260,7 +260,7 @@ def hierarchize_rows(
         path,
     ) in pending:
         record = {
-            "disaron:nom": disaron_nom,
+            "disaron:nom_old": disaron_nom,
             "nomenclature": nomenclature,
             "isHierarchical": is_hierarchical,
             "metadonnee_modalite": modalite,
@@ -272,7 +272,7 @@ def hierarchize_rows(
 
     finalized.sort(
         key=lambda r: (
-            r["disaron:nom"],
+            r["disaron:nom_old"],
             r["nomenclature"],
             _codes_sort_key(r["codes"]),
         )
