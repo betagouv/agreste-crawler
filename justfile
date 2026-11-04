@@ -31,6 +31,9 @@ remove_source_from_subtitle *args:
 set_reference_years_and_geographic_levels *args:
     PYTHONPATH=. uv run python -m metadata_editor.set_reference_years_and_geographic_levels "$@"
 
+set_nomenclatures *args:
+    PYTHONPATH=. uv run python -m metadata_editor.set_nomenclatures "$@"
+
 theme_reventilation *args:
     PYTHONPATH=. uv run python -m metadata_editor.theme_reventilation "$@"
 
