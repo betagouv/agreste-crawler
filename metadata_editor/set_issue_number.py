@@ -3,12 +3,16 @@
 Set PublicationPage ``issue_number`` from Disaron ``disaron:Numerotation``.
 
 Reads Nuxeo Disaron documents from ``--input-file`` (default
-``2026-05-18_Disarons.json``). Keeps entries with ``DISAR-PUBLIC`` in
-``disaron:communaute_restit`` and a non-empty ``disaron:Numerotation``.
+``2026-05-18_Disarons.json``). Keeps every entry with a non-empty
+``disaron:Numerotation`` (does not filter on
+``disaron:communaute_restit``).
 
 Maps each ``disaron:nom`` to the CMS ``disaron_id`` via
-``disaron_mapper`` (``--disaron-mapping-files``), looks up the matching
-``PublicationPage`` under any ``PublicationIndexPage``, and sets
+``disaron_mapper`` (``--disaron-mapping-files``). Before page lookup,
+``disaron_finder.classify_disaron`` skips curated upload exceptions,
+non-public (``DISAR-PUBLIC`` missing from ``disaron:communaute_restit``),
+and post-cutoff noms. Remaining noms look up the matching
+``PublicationPage`` under any ``PublicationIndexPage`` and set
 ``issue_number`` (save revision + re-publish if live).
 
 Identical values are noops. Missing/duplicate pages and conflicting
@@ -19,9 +23,12 @@ numerotations for the same mapped nom are logged as failures.
 Defaults:
 - ``--input-file``: ``2026-05-18_Disarons.json``
 - ``--disaron-mapping-files``: inventaire + ``2026-10-28_data_disaron_old_new_mapping.csv``
+- ``--will-not-upload-file``: ``2026-10-28_will_not_upload.csv``
+- ``--not-uploaded-yet-file``: ``2026-10-28_not_uploaded_yet.csv``
 - ``--failures-file``: ``metadata_editor/output/<YYYY-MM-DD_HH-MM-SS>_issue_number_failures.csv``
 - ``--successes-file``: ``metadata_editor/output/<YYYY-MM-DD_HH-MM-SS>_issue_number_successes.csv``
 - ``--noops-file``: ``metadata_editor/output/<YYYY-MM-DD_HH-MM-SS>_issue_number_noops.csv``
+- ``--skipped-file``: ``metadata_editor/output/<YYYY-MM-DD_HH-MM-SS>_issue_number_skipped.csv``
 
 Usage:
     just set_issue_number \\
@@ -48,6 +55,16 @@ from publications.models import (  # noqa: E402
     PublicationPage,
 )
 
+from disaron_finder import (  # noqa: E402
+    DEFAULT_NOT_UPLOADED_YET_FILE,
+    DEFAULT_WILL_NOT_UPLOAD_FILE,
+    DisaronMeta,
+    classify_disaron,
+    classify_missing_by_cutoff,
+    load_disaron_meta,
+    load_upload_exception_reasons,
+    missing_page_before_cutoff_error,
+)
 from disaron_mapper import (  # noqa: E402
     DEFAULT_DISARON_MAPPING_FILES,
     load_disaron_nom_map,
@@ -63,7 +80,6 @@ from metadata_editor.set_metadata import (  # noqa: E402
     resolve_successes_file,
 )
 
-DISAR_PUBLIC = "DISAR-PUBLIC"
 DEFAULT_INPUT_FILE = "2026-05-18_Disarons.json"
 
 SUCCESS_FIELDNAMES = [
@@ -75,6 +91,7 @@ SUCCESS_FIELDNAMES = [
 ]
 FAILURE_FIELDNAMES = ["pageId", "disaron_nom", "error"]
 NOOP_FIELDNAMES = ["pageId", "disaron_nom", "info"]
+SKIP_FIELDNAMES = ["pageId", "disaron_nom", "reason"]
 
 
 def _make_parent_id_optional(parser: argparse.ArgumentParser) -> None:
@@ -102,12 +119,6 @@ def _make_data_file_optional(parser: argparse.ArgumentParser) -> None:
     raise RuntimeError("--data-file argument not found on parser")
 
 
-def _is_public(communaute_restit: object) -> bool:
-    if not isinstance(communaute_restit, list):
-        return False
-    return DISAR_PUBLIC in communaute_restit
-
-
 def _numerotation(value: object) -> str:
     if value is None:
         return ""
@@ -123,8 +134,10 @@ def load_issue_numbers_by_nom(
     """
     Return (issue_number_by_mapped_nom, conflict_failures).
 
-    ``conflict_failures`` is a list of ``(disaron_nom, error)`` for mapped
-    noms that appear with more than one distinct Numerotation.
+    Includes every document with a non-empty ``disaron:Numerotation``;
+    restit / public filtering is left to ``disaron_finder``.
+    ``conflict_failures`` lists mapped noms that appear with more than one
+    distinct Numerotation.
     """
     by_nom: dict[str, str] = {}
     conflicts: dict[str, set[str]] = {}
@@ -138,8 +151,6 @@ def load_issue_numbers_by_nom(
 
         nom_old = props.get("disaron:nom")
         if not isinstance(nom_old, str) or not nom_old.strip():
-            continue
-        if not _is_public(props.get("disaron:communaute_restit")):
             continue
         numerotation = _numerotation(props.get("disaron:Numerotation"))
         if not numerotation:
@@ -163,6 +174,17 @@ def load_issue_numbers_by_nom(
             )
         )
     return by_nom, conflict_failures
+
+
+def remap_disaron_meta(
+    meta_by_old_nom: dict[str, DisaronMeta],
+    mapping: dict[str, str],
+) -> dict[str, DisaronMeta]:
+    """Re-key Disaron meta by mapped ``disaron:nom`` (later old noms win)."""
+    out: dict[str, DisaronMeta] = {}
+    for old_nom, meta in meta_by_old_nom.items():
+        out[resolve_disaron_nom(old_nom, mapping)] = meta
+    return out
 
 
 def resolve_all_publication_pages_qs():
@@ -212,9 +234,13 @@ def run_update(
     conflict_failures: list[tuple[str, str]],
     pages_by_nom: dict[str, PublicationPage],
     duplicate_noms: set[str],
+    meta_by_nom: dict[str, DisaronMeta],
+    will_not_upload: dict[str, str],
+    not_uploaded_yet: dict[str, str],
     failures_file: str,
     successes_file: str,
     noops_file: str,
+    skipped_file: str,
     dry_run: bool,
 ) -> int:
     noms = sorted(by_nom.keys())
@@ -232,6 +258,7 @@ def run_update(
     updated = 0
     noop_count = 0
     failures_count = 0
+    skipped_count = 0
 
     failures_path = Path(failures_file)
     failures_path.parent.mkdir(parents=True, exist_ok=True)
@@ -239,6 +266,8 @@ def run_update(
     successes_path.parent.mkdir(parents=True, exist_ok=True)
     noops_path = Path(noops_file)
     noops_path.parent.mkdir(parents=True, exist_ok=True)
+    skipped_path = Path(skipped_file)
+    skipped_path.parent.mkdir(parents=True, exist_ok=True)
 
     with (
         failures_path.open(
@@ -250,6 +279,9 @@ def run_update(
         noops_path.open(
             "w", encoding="utf-8", newline="", buffering=1
         ) as noops_f,
+        skipped_path.open(
+            "w", encoding="utf-8", newline="", buffering=1
+        ) as skipped_f,
     ):
         failures_writer = csv.DictWriter(
             failures_f, fieldnames=FAILURE_FIELDNAMES
@@ -267,6 +299,10 @@ def run_update(
         noops_writer.writeheader()
         _flush_failures_file(noops_f)
 
+        skipped_writer = csv.DictWriter(skipped_f, fieldnames=SKIP_FIELDNAMES)
+        skipped_writer.writeheader()
+        _flush_failures_file(skipped_f)
+
         def _fail(page_id: str, disaron_nom: str, error: str) -> None:
             nonlocal failures_count
             failures_count += 1
@@ -279,8 +315,25 @@ def run_update(
             )
             _flush_failures_file(failures_f)
             print(
-                f"[{updated + noop_count + failures_count}/{total}] "
-                f"Skipped id={page_id}: {error}",
+                f"[{updated + noop_count + skipped_count + failures_count}/{total}] "
+                f"Failed id={page_id}: {error}",
+                flush=True,
+            )
+
+        def _skip(disaron_nom: str, reason: str) -> None:
+            nonlocal skipped_count
+            skipped_count += 1
+            skipped_writer.writerow(
+                {
+                    "pageId": "",
+                    "disaron_nom": disaron_nom,
+                    "reason": reason,
+                }
+            )
+            _flush_failures_file(skipped_f)
+            print(
+                f"[{updated + noop_count + skipped_count + failures_count}/{total}] "
+                f"Skipped disaron_nom={disaron_nom!r}: {reason}",
                 flush=True,
             )
 
@@ -296,7 +349,7 @@ def run_update(
             )
             _flush_failures_file(noops_f)
             print(
-                f"[{updated + noop_count + failures_count}/{total}] "
+                f"[{updated + noop_count + skipped_count + failures_count}/{total}] "
                 f"Noop id={page_id} disaron_nom={disaron_nom!r}: {info}",
                 flush=True,
             )
@@ -305,6 +358,16 @@ def run_update(
             _fail("", disaron_nom, error)
 
         for disaron_nom in noms:
+            classification = classify_disaron(
+                disaron_nom,
+                meta_by_nom=meta_by_nom,
+                will_not_upload=will_not_upload,
+                not_uploaded_yet=not_uploaded_yet,
+            )
+            if classification.kind != "other":
+                _skip(disaron_nom, classification.reason)
+                continue
+
             if disaron_nom in duplicate_noms:
                 _fail(
                     "",
@@ -315,7 +378,24 @@ def run_update(
 
             page = pages_by_nom.get(disaron_nom)
             if page is None:
-                _fail("", disaron_nom, "no PublicationPage with this disaron_id")
+                cutoff_kind = classify_missing_by_cutoff(
+                    disaron_nom, meta_by_nom
+                )
+                if cutoff_kind == "error_unidentified":
+                    _fail(
+                        "",
+                        disaron_nom,
+                        "cannot identify as publication or data "
+                        f"in Disarons JSON for disaron_id={disaron_nom!r}",
+                    )
+                else:
+                    _fail(
+                        "",
+                        disaron_nom,
+                        missing_page_before_cutoff_error(
+                            disaron_nom, meta_by_nom
+                        ),
+                    )
                 continue
 
             try:
@@ -345,7 +425,7 @@ def run_update(
             _flush_failures_file(successes_f)
             action = "Would update" if dry_run else "Updated"
             print(
-                f"[{updated + noop_count + failures_count}/{total}] "
+                f"[{updated + noop_count + skipped_count + failures_count}/{total}] "
                 f"{action} id={page.id} disaron_nom={disaron_nom!r} "
                 f"issue_number={result.get('value')!r} title={page.title!r}",
                 flush=True,
@@ -354,10 +434,12 @@ def run_update(
     print(f"Wrote {failures_count} failure row(s) to {failures_file}.")
     print(f"Wrote {updated} success row(s) to {successes_file}.")
     print(f"Wrote {noop_count} noop row(s) to {noops_file}.")
+    print(f"Wrote {skipped_count} skipped row(s) to {skipped_file}.")
     summary_action = "Would update" if dry_run else "Updated"
     print(
         f"{summary_action} {updated} PublicationPage object(s); "
-        f"noop {noop_count}; skipped {failures_count}."
+        f"noop {noop_count}; skipped {skipped_count}; "
+        f"failed {failures_count}."
     )
     return 0
 
@@ -382,6 +464,33 @@ def main() -> int:
             f"(default: {DEFAULT_DISARON_MAPPING_FILES!r})."
         ),
     )
+    parser.add_argument(
+        "--will-not-upload-file",
+        type=str,
+        default=DEFAULT_WILL_NOT_UPLOAD_FILE,
+        help=(
+            "CSV of disaron:nom values that will not be uploaded "
+            f"(default: {DEFAULT_WILL_NOT_UPLOAD_FILE!r})."
+        ),
+    )
+    parser.add_argument(
+        "--not-uploaded-yet-file",
+        type=str,
+        default=DEFAULT_NOT_UPLOADED_YET_FILE,
+        help=(
+            "CSV of disaron:nom values not uploaded yet "
+            f"(default: {DEFAULT_NOT_UPLOADED_YET_FILE!r})."
+        ),
+    )
+    parser.add_argument(
+        "--skipped-file",
+        type=str,
+        default="",
+        help=(
+            "Path to CSV output for skipped rows (upload exceptions, "
+            "non-public, or post-cutoff; columns: pageId, disaron_nom, reason)."
+        ),
+    )
     args = parser.parse_args()
 
     input_file = Path(args.input_file)
@@ -403,7 +512,7 @@ def main() -> int:
         mapping,
     )
     print(
-        f"Loaded {len(by_nom)} public Numerotation value(s) "
+        f"Loaded {len(by_nom)} Numerotation value(s) "
         f"from {input_file.name}"
         + (
             f" ({len(conflict_failures)} conflicting nom(s))"
@@ -411,6 +520,12 @@ def main() -> int:
             else ""
         )
         + "."
+    )
+
+    meta_by_nom = remap_disaron_meta(load_disaron_meta(input_file), mapping)
+    will_not_upload = load_upload_exception_reasons(args.will_not_upload_file)
+    not_uploaded_yet = load_upload_exception_reasons(
+        args.not_uploaded_yet_file
     )
 
     pages_by_nom: dict[str, PublicationPage] = {}
@@ -434,15 +549,22 @@ def main() -> int:
         args.successes_file, "issue_number_successes"
     )
     noops_file = resolve_noops_file(args.noops_file, "issue_number_noops")
+    skipped_file = resolve_successes_file(
+        args.skipped_file, "issue_number_skipped"
+    )
 
     return run_update(
         by_nom=by_nom,
         conflict_failures=conflict_failures,
         pages_by_nom=pages_by_nom,
         duplicate_noms=duplicate_noms,
+        meta_by_nom=meta_by_nom,
+        will_not_upload=will_not_upload,
+        not_uploaded_yet=not_uploaded_yet,
         failures_file=failures_file,
         successes_file=successes_file,
         noops_file=noops_file,
+        skipped_file=skipped_file,
         dry_run=args.dry_run,
     )
 
