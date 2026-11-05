@@ -10,6 +10,9 @@ clear_blog_entries *args:
 remove_unused_documents *args:
     PYTHONPATH=. uv run python -m page_creator.remove_unused_documents "$@"
 
+bugfix_document_size *args:
+    PYTHONPATH=. uv run python -m page_creator.bugfix_document_size "$@"
+
 author_lister *args:
     PYTHONPATH=. uv run python -m metadata_editor.author_lister "$@"
 
