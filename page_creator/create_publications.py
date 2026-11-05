@@ -298,6 +298,7 @@ def _create_wagtail_document(
             file=doc_file,
             collection=collection,
         )
+        doc._set_document_file_metadata()
         doc.save()
     return doc
 
