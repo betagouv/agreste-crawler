@@ -1,4 +1,29 @@
-"""Load and resolve ``disaron:nom_old`` → ``disaron:nom`` mappings."""
+"""Load and resolve ``disaron:nom_old`` → ``disaron:nom`` mappings.
+
+Nuxeo Disaron dumps and older extracts often identify documents by an old
+identifier (``disaron:nom_old`` / the JSON ``disaron:nom`` at dump time). The
+CMS and inventaire use a cleaned identifier (``disaron:nom``). This module
+builds that old→new map from one or more CSVs and resolves a nom for callers.
+
+Default sources (``DEFAULT_DISARON_MAPPING_FILES``), merged in order so later
+files override earlier ones for the same ``nom_old``:
+
+1. Inventaire Nuxeo (``Garder/Exclure``-aware) — primary curated mapping.
+2. ``2026-10-28_data_disaron_old_new_mapping.csv`` — extra renames not in
+   inventaire.
+
+CSV rules (``load_old_new_nom_map``):
+
+- Requires columns ``disaron:nom_old`` and ``disaron:nom`` (values stripped).
+- Rows with a blank old or new nom are ignored.
+- If ``Garder/Exclure`` is present, ``Garder`` rows are preferred for a given
+  old; if none are ``Garder``, all candidates are considered.
+- More than one distinct new nom for the same old after that filter raises
+  ``AmbiguousNomError``.
+
+``resolve_disaron_nom`` returns the mapped nom, or the stripped input when
+there is no mapping entry (identity fallback).
+"""
 
 from __future__ import annotations
 
@@ -8,7 +33,7 @@ from collections.abc import Sequence
 from pathlib import Path
 
 DEFAULT_DISARON_MAPPING_FILES = [
-    "2026-06-02_Inventaire-Nuxeo-v18.csv",
+    "2026-11-05_Inventaire-Nuxeo-v19.csv",
     "2026-10-28_data_disaron_old_new_mapping.csv",
 ]
 

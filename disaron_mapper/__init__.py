@@ -1,4 +1,8 @@
-"""Map ``disaron:nom_old`` to ``disaron:nom`` from inventaire / mapping CSVs."""
+"""Map ``disaron:nom_old`` to ``disaron:nom`` from inventaire / mapping CSVs.
+
+See ``disaron_mapper.mapping`` for merge order, Garder/Exclure rules, and
+defaults (Inventaire v19 + old/new mapping CSV).
+"""
 
 from disaron_mapper.mapping import (
     DEFAULT_DISARON_MAPPING_FILES,

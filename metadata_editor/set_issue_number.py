@@ -22,7 +22,7 @@ numerotations for the same mapped nom are logged as failures.
 
 Defaults:
 - ``--input-file``: ``2026-05-18_Disarons.json``
-- ``--disaron-mapping-files``: inventaire + ``2026-10-28_data_disaron_old_new_mapping.csv``
+- ``--disaron-mapping-files``: Inventaire v19 + ``2026-10-28_data_disaron_old_new_mapping.csv``
 - ``--will-not-upload-file``: ``2026-10-28_will_not_upload.csv``
 - ``--not-uploaded-yet-file``: ``2026-10-28_not_uploaded_yet.csv``
 - ``--failures-file``: ``metadata_editor/output/<YYYY-MM-DD_HH-MM-SS>_issue_number_failures.csv``

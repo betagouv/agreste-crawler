@@ -28,7 +28,7 @@ updated later.
 
 Defaults:
 - ``--input-file``: ``metadata_editor/data/2026-05-18_Disarons_raw_text_fields.csv``
-- ``--inventaire-file``: ``2026-06-02_Inventaire-Nuxeo-v18.csv``
+- ``--inventaire-file``: ``2026-11-05_Inventaire-Nuxeo-v19.csv``
 - ``--output-file``: ``metadata_editor/output/<YYYY-MM-DD_HH-MM-SS>_clean_text_fields.csv``
 - ``--log-file``: ``metadata_editor/output/<YYYY-MM-DD_HH-MM-SS>_clean_text_fields_log.csv``
 
@@ -236,7 +236,7 @@ def main() -> int:
     )
     parser.add_argument(
         "--inventaire-file",
-        default="2026-06-02_Inventaire-Nuxeo-v18.csv",
+        default="2026-11-05_Inventaire-Nuxeo-v19.csv",
         help="Inventaire CSV used to resolve disaron:nom.",
     )
     parser.add_argument(
