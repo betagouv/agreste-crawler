@@ -34,7 +34,7 @@ order: ``1,2,…,9,10`` and ``1.9,1.10``). CRLF endings.
 Defaults:
 - ``--input-file``: ``metadata_editor/data/2026-05-18_Disarons_modalities.csv``
 - ``--l0018-override-file``: ``metadata_editor/data/2026-05-18_Disarons_modalities_hierarchized_L_0018.csv``
-- ``--disaron-mapping-files``: Inventaire v19 + ``2026-10-28_data_disaron_old_new_mapping.csv``
+- ``--disaron-mapping-files``: Inventaire v20 + ``2026-10-28_data_disaron_old_new_mapping.csv``
 - ``--output-file``: ``metadata_editor/data/2026-05-18_Disarons_modalities_hierarchized.csv``
 
 Usage:

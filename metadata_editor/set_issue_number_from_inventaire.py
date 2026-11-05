@@ -2,7 +2,7 @@
 """
 Set PublicationPage ``issue_number`` from Inventaire ``disaron:Numerotation``.
 
-Reads an inventaire CSV (default ``2026-11-05_Inventaire-Nuxeo-v19.csv``).
+Reads an inventaire CSV (default ``2026-11-05_Inventaire-Nuxeo-v20.csv``).
 Keeps rows with ``Garder/Exclure == Garder`` and a nonempty
 ``disaron:Numerotation``. Looks up each page by ``disaron:nom``
 (``PublicationPage.disaron_id`` under any ``PublicationIndexPage``) and sets
@@ -14,7 +14,7 @@ Numerotation for the same ``disaron:nom`` are logged as failures.
 ``--parent-id`` and ``--data-file`` from shared args are unused.
 
 Defaults:
-- ``--input-file``: ``2026-11-05_Inventaire-Nuxeo-v19.csv``
+- ``--input-file``: ``2026-11-05_Inventaire-Nuxeo-v20.csv``
 - ``--failures-file``: ``metadata_editor/output/<YYYY-MM-DD_HH-MM-SS>_issue_number_inventaire_failures.csv``
 - ``--successes-file``: ``metadata_editor/output/<YYYY-MM-DD_HH-MM-SS>_issue_number_inventaire_successes.csv``
 - ``--noops-file``: ``metadata_editor/output/<YYYY-MM-DD_HH-MM-SS>_issue_number_inventaire_noops.csv``
@@ -52,7 +52,7 @@ from metadata_editor.set_metadata import (  # noqa: E402
     resolve_successes_file,
 )
 
-DEFAULT_INPUT_FILE = "2026-11-05_Inventaire-Nuxeo-v19.csv"
+DEFAULT_INPUT_FILE = "2026-11-05_Inventaire-Nuxeo-v20.csv"
 GARDER_VALUE = "Garder"
 
 SUCCESS_FIELDNAMES = [

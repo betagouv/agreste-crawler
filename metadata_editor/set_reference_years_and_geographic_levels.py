@@ -29,7 +29,7 @@ Defaults:
 - ``--data-files``:
   - ``2026-09-30_dump_tableaux_de_colin_publies.csv``
   - ``2026-10-12_series_longues.csv``
-  - ``2026-11-05_Inventaire-Nuxeo-v19.csv``
+  - ``2026-11-05_Inventaire-Nuxeo-v20.csv``
 - ``--geo-labels-file``: ``metadata_editor/data/2026-10-30_niveaux_geographiques.csv``
 - ``--failures-file``: ``metadata_editor/output/<YYYY-MM-DD_HH-MM-SS>_ref_years_geo_failures.csv``
 - ``--successes-file``: ``metadata_editor/output/<YYYY-MM-DD_HH-MM-SS>_ref_years_geo_successes.csv``
@@ -79,7 +79,7 @@ GEO_LABEL_COLUMN = "label"
 DEFAULT_DATA_FILES = [
     "2026-09-30_dump_tableaux_de_colin_publies.csv",
     "2026-10-12_series_longues.csv",
-    "2026-11-05_Inventaire-Nuxeo-v19.csv",
+    "2026-11-05_Inventaire-Nuxeo-v20.csv",
 ]
 DEFAULT_GEO_LABELS_FILE = (
     "metadata_editor/data/2026-10-30_niveaux_geographiques.csv"

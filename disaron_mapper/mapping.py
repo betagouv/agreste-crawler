@@ -33,7 +33,7 @@ from collections.abc import Sequence
 from pathlib import Path
 
 DEFAULT_DISARON_MAPPING_FILES = [
-    "2026-11-05_Inventaire-Nuxeo-v19.csv",
+    "2026-11-05_Inventaire-Nuxeo-v20.csv",
     "2026-10-28_data_disaron_old_new_mapping.csv",
 ]
 
