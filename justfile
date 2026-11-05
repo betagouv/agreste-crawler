@@ -40,6 +40,9 @@ set_nomenclatures *args:
 set_issue_number *args:
     PYTHONPATH=. uv run python -m metadata_editor.set_issue_number "$@"
 
+set_issue_number_from_inventaire *args:
+    PYTHONPATH=. uv run python -m metadata_editor.set_issue_number_from_inventaire "$@"
+
 theme_reventilation *args:
     PYTHONPATH=. uv run python -m metadata_editor.theme_reventilation "$@"
 
