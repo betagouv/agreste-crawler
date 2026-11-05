@@ -18,14 +18,14 @@ Only rows with at least one non-empty of ``html_principal``,
 ``html_secondaire``, or ``notes`` are written. Records use CRLF line endings.
 
 Defaults:
-- ``--input-file``: ``2026-10-08_Disarons_tableaux_publies.json``
+- ``--input-file``: ``2026-05-18_Disarons.json``
 - ``--output-file``: ``metadata_editor/output/<YYYY-MM-DD_HH-MM-SS>_raw_text_fields.csv``
 
 Usage:
     just get_raw_text_fields
 
     just get_raw_text_fields \\
-        --input-file 2026-05-18_Disarons.json \\
+        --input-file 2026-10-08_Disarons_tableaux_publies.json \\
         --output-file metadata_editor/output/raw_text_fields.csv
 """
 
@@ -126,7 +126,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--input-file",
-        default="2026-10-08_Disarons_tableaux_publies.json",
+        default="2026-05-18_Disarons.json",
         help="Raw Disarons JSON dump.",
     )
     parser.add_argument(
