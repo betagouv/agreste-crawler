@@ -11,8 +11,10 @@ Flags with examples:
             Parent page id (`PublicationIndexPage`) (required).
     --wagtail-project-root ../agreste
             Path to Django/Wagtail project root.
-    --scalingo-env-file /path/to/.env.scalingo
-            Env file loaded before Django setup (remote DB).
+    --scalingo-app agreste-test
+            Scalingo app: set DATABASE_URL via SSH tunnel (remote DB).
+    --database-port 10001
+            Local SSH tunnel port for DATABASE_URL (default: 10001).
     --data-file path/to/publications.csv
             CSV of pages to create (required).
     --documents-file path/to/documents.csv
@@ -49,7 +51,7 @@ Expected CSV columns:
 
 Page Collections from `disaron:categorie`:
 - `CHDET` → "Données", "Chiffres détaillés"
-- `SERIES` → "Données", "Séries longues conjoncturelles"
+- `SERIES` → "Données", "Séries conjoncturelles"
 - `SERIESLONG` → "Données", "Séries longues"
 
 Subtitle/summary come from `disaron:Complement_titre` / `disaron:chapeau`
@@ -73,9 +75,18 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
+from scalingo_env_setup import (
+    DEFAULT_DATABASE_PORT,
+    configure_database_url,
+    ensure_ssh_tunnel,
+)
+
+configure_database_url()
+
 from django_setup import setup_django
 
 setup_django(__file__)
+ensure_ssh_tunnel()
 
 from django.core.files.base import File  # noqa: E402
 from django.utils import timezone  # noqa: E402
@@ -96,7 +107,7 @@ DOCUMENTS_COLLECTION_NAME = "Données"
 
 CATEGORIE_TO_PAGE_COLLECTION_NAMES: dict[str, tuple[str, ...]] = {
     "CHDET": ("Données", "Chiffres détaillés"),
-    "SERIES": ("Données", "Séries longues conjoncturelles"),
+    "SERIES": ("Données", "Séries conjoncturelles"),
     "SERIESLONG": ("Données", "Séries longues"),
 }
 
@@ -344,10 +355,22 @@ def main() -> int:
         help="Root directory of the Wagtail/Django project (contains config/settings.py).",
     )
     parser.add_argument(
-        "--scalingo-env-file",
+        "--scalingo-app",
         type=str,
         default="",
-        help="Load environment values from this env file before Django setup.",
+        help=(
+            "Scalingo app name: fetch SCALINGO_POSTGRESQL_URL, set "
+            "DATABASE_URL to 127.0.0.1:<database-port>, and open an SSH tunnel."
+        ),
+    )
+    parser.add_argument(
+        "--database-port",
+        type=int,
+        default=DEFAULT_DATABASE_PORT,
+        help=(
+            "Local SSH tunnel port used in DATABASE_URL "
+            f"(default: {DEFAULT_DATABASE_PORT})."
+        ),
     )
     parser.add_argument(
         "--data-file",
@@ -397,6 +420,7 @@ def main() -> int:
         help="Skip confirmation prompt before creating pages.",
     )
     args = parser.parse_args()
+    _ = (args.scalingo_app, args.database_port)  # consumed via sys.argv earlier
 
     def _append_csv_row(path: Path, fieldnames: list[str], row: dict[str, str]) -> None:
         with path.open("a", encoding="utf-8", newline="") as f:

@@ -1,4 +1,4 @@
-"""Fetch Scalingo Postgres URL, rewrite for a local SSH tunnel, open the tunnel."""
+"""Fetch Scalingo env (DB + S3), rewrite DATABASE_URL for a local SSH tunnel."""
 
 from __future__ import annotations
 
@@ -14,6 +14,15 @@ from urllib.parse import urlparse, urlunparse
 DEFAULT_DATABASE_PORT = 10001
 SCALINGO_SSH_HOST = "ssh.osc-fr1.scalingo.com"
 SCALINGO_SSH_PORT = "22"
+
+REQUIRED_S3_ENV_KEYS = (
+    "S3_BUCKET_NAME",
+    "S3_BUCKET_REGION",
+    "S3_HOST",
+    "S3_KEY_ID",
+    "S3_KEY_SECRET",
+    "S3_LOCATION",
+)
 
 # Survive django_setup re-exec (os.execve copies os.environ).
 _ENV_APP = "SCALINGO_DB_TUNNEL_APP"
@@ -59,7 +68,7 @@ def _get_database_port_arg() -> int:
     return port
 
 
-def _fetch_scalingo_postgresql_url(app: str) -> str:
+def _fetch_scalingo_env(app: str) -> dict[str, str]:
     try:
         result = subprocess.run(
             ["scalingo", "--app", app, "env"],
@@ -78,12 +87,21 @@ def _fetch_scalingo_postgresql_url(app: str) -> str:
             + (f": {stderr}" if stderr else ".")
         ) from exc
 
+    env: dict[str, str] = {}
     for line in result.stdout.splitlines():
-        if line.startswith("SCALINGO_POSTGRESQL_URL="):
-            return line.split("=", 1)[1].strip()
-    raise RuntimeError(
-        f"SCALINGO_POSTGRESQL_URL not found in scalingo --app {app} env output."
-    )
+        if not line or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        env[key] = value
+    return env
+
+
+def _require_env_value(env: dict[str, str], key: str, app: str) -> str:
+    if key not in env:
+        raise RuntimeError(
+            f"{key} not found in scalingo --app {app} env output."
+        )
+    return env[key]
 
 
 def _parse_postgres_url(url: str) -> tuple[str, int]:
@@ -120,8 +138,12 @@ def _rewrite_url_for_tunnel(url: str, local_port: int) -> str:
 
 def configure_database_url() -> None:
     """
-    If ``--scalingo-app`` is set, fetch Postgres URL and set ``DATABASE_URL``
-    to ``127.0.0.1:<--database-port>`` (default 10001).
+    If ``--scalingo-app`` is set, fetch Scalingo env once and set:
+
+    - ``DATABASE_URL`` rewritten to ``127.0.0.1:<--database-port>``
+      (default 10001)
+    - S3 vars: ``S3_BUCKET_NAME``, ``S3_BUCKET_REGION``, ``S3_HOST``,
+      ``S3_KEY_ID``, ``S3_KEY_SECRET``, ``S3_LOCATION``
 
     No-op when ``--scalingo-app`` is absent. Safe to call before
     ``setup_django`` (survives venv re-exec via environ).
@@ -131,7 +153,8 @@ def configure_database_url() -> None:
         return
 
     local_port = _get_database_port_arg()
-    remote_url = _fetch_scalingo_postgresql_url(app)
+    scalingo_env = _fetch_scalingo_env(app)
+    remote_url = _require_env_value(scalingo_env, "SCALINGO_POSTGRESQL_URL", app)
     remote_host, remote_port = _parse_postgres_url(remote_url)
     tunnel_url = _rewrite_url_for_tunnel(remote_url, local_port)
 
@@ -141,9 +164,16 @@ def configure_database_url() -> None:
     os.environ[_ENV_REMOTE_HOST] = remote_host
     os.environ[_ENV_REMOTE_PORT] = str(remote_port)
 
+    for key in REQUIRED_S3_ENV_KEYS:
+        os.environ[key] = _require_env_value(scalingo_env, key, app)
+
     print(
-        f"Configured DATABASE_URL via Scalingo app {app!r} "
-        f"(local tunnel port {local_port}).",
+        f"Configured database connection via Scalingo app {app!r}.",
+        flush=True,
+    )
+    print(
+        f"Loaded S3 env vars from Scalingo app {app!r}: "
+        f"{', '.join(REQUIRED_S3_ENV_KEYS)}.",
         flush=True,
     )
 
@@ -172,25 +202,11 @@ def _port_is_open(port: int, timeout_s: float = 0.5) -> bool:
         return False
 
 
-def _ssh_stderr_text(proc: subprocess.Popen[bytes]) -> str:
-    if proc.stderr is None:
-        return ""
-    try:
-        raw = proc.stderr.read()
-    except OSError:
-        return ""
-    if not raw:
-        return ""
-    return raw.decode("utf-8", errors="replace").strip()
-
-
 def _raise_ssh_failed(app: str, proc: subprocess.Popen[bytes]) -> None:
-    stderr = _ssh_stderr_text(proc)
-    detail = f" (code {proc.returncode})"
-    if stderr:
-        detail = f"{detail}: {stderr}"
+    # Do not include ssh stderr: it often contains host/port details.
     raise RuntimeError(
-        f"SSH tunnel to Scalingo app {app!r} failed{detail}."
+        f"SSH tunnel to Scalingo app {app!r} failed "
+        f"(code {proc.returncode})."
     )
 
 
@@ -212,15 +228,15 @@ def _wait_for_tunnel_port(
     if proc.poll() is not None:
         _raise_ssh_failed(app, proc)
     raise RuntimeError(
-        f"SSH tunnel did not open 127.0.0.1:{port} within {timeout_s:.0f}s."
+        f"SSH tunnel did not open within {timeout_s:.0f}s."
     )
 
 
 def _ensure_local_port_free(port: int) -> None:
     if _port_is_open(port):
         raise RuntimeError(
-            f"Local port 127.0.0.1:{port} is already in use. "
-            f"Free it or pass a different --database-port."
+            "Local database tunnel port is already in use. "
+            "Free it or pass a different --database-port."
         )
 
 
@@ -291,7 +307,6 @@ def ensure_ssh_tunnel() -> None:
             pass
 
     print(
-        f"SSH tunnel ready: 127.0.0.1:{local_port} -> "
-        f"{remote_host}:{remote_port} (app {app!r}).",
+        f"SSH tunnel ready for Scalingo app {app!r}.",
         flush=True,
     )
