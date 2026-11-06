@@ -1,24 +1,26 @@
 #!/usr/bin/env python
 """
-Delete all direct child pages under a given parent page.
+Delete direct child ``BlogEntryPage`` / ``PublicationPage`` pages under a parent.
 
 Usage:
-    uv run python -m page_creator.clear_blog_entries \
+    uv run python -m page_creator.clear_child_page \
         --wagtail-project-root ../agreste --parent-id 30
-    uv run python -m page_creator.clear_blog_entries \
+    uv run python -m page_creator.clear_child_page \
         --wagtail-project-root ../agreste --parent-id 30 --no-confirmation
-    uv run python -m page_creator.clear_blog_entries \
+    uv run python -m page_creator.clear_child_page \
         --wagtail-project-root ../agreste --parent-id 30 --dry-run
-    uv run python -m page_creator.clear_blog_entries \
+    uv run python -m page_creator.clear_child_page \
         --wagtail-project-root ../agreste --parent-id 30 --dry-run --no-confirmation
-    uv run python -m page_creator.clear_blog_entries \
+    uv run python -m page_creator.clear_child_page \
         --wagtail-project-root ../agreste \
         --scalingo-app agreste-test --parent-id 30 --dry-run
-    uv run python -m page_creator.clear_blog_entries \
+    uv run python -m page_creator.clear_child_page \
         --wagtail-project-root ../agreste \
         --scalingo-app agreste-test \
         --parent-id 30 --no-confirmation
 """
+
+from __future__ import annotations
 
 import argparse
 
@@ -38,6 +40,11 @@ ensure_ssh_tunnel()
 from django.db import transaction  # noqa: E402
 from wagtail.models import Page  # noqa: E402
 
+from publications.models import PublicationPage  # noqa: E402
+from sites_conformes.blog.models import BlogEntryPage  # noqa: E402
+
+DELETABLE_CHILD_TYPES = (BlogEntryPage, PublicationPage)
+
 
 def main() -> int:
     parser = argparse.ArgumentParser(
@@ -48,7 +55,7 @@ def main() -> int:
         "--parent-id",
         type=int,
         required=True,
-        help="ID of the parent page",
+        help="ID of the parent page (e.g. BlogIndexPage or PublicationIndexPage)",
     )
     parser.add_argument(
         "--wagtail-project-root",
@@ -74,7 +81,11 @@ def main() -> int:
     _ = (args.scalingo_app, args.database_port)  # consumed via sys.argv earlier
 
     parent_page = Page.objects.get(id=args.parent_id).specific
-    children = list(parent_page.get_children().specific())
+    children = [
+        child
+        for child in parent_page.get_children().specific()
+        if isinstance(child, DELETABLE_CHILD_TYPES)
+    ]
 
     def _run_fix_tree() -> None:
         # Always repair/check tree metadata, even when nothing is deleted.
@@ -82,7 +93,10 @@ def main() -> int:
         print("Ran Page.fix_tree(destructive=False).")
 
     if not children:
-        print(f"No child pages found under parent id={args.parent_id}.")
+        print(
+            f"No BlogEntryPage/PublicationPage children found "
+            f"under parent id={args.parent_id}."
+        )
         _run_fix_tree()
         return 0
 
@@ -90,6 +104,7 @@ def main() -> int:
     if not args.no_confirmation:
         answer = input(
             f"About to delete {total} child page(s) "
+            f"(BlogEntryPage/PublicationPage) "
             f"under parent id={args.parent_id}. "
             "Type 'yes' to confirm: "
         ).strip()
@@ -100,7 +115,10 @@ def main() -> int:
 
     if args.dry_run:
         for child in children:
-            print(f"DRY RUN : not deleting page id={child.id}")
+            print(
+                f"DRY RUN : not deleting {type(child).__name__} "
+                f"id={child.id} title={child.title!r}"
+            )
     else:
         # Keep the whole operation atomic so we don't leave
         # a half-deleted subtree.
@@ -108,9 +126,10 @@ def main() -> int:
             for i, child in enumerate(children, start=1):
                 title = child.title
                 child_id = child.id
+                child_type = type(child).__name__
                 child.delete()
                 print(
-                    f"[{i}/{total}] Deleted child page id={child_id} "
+                    f"[{i}/{total}] Deleted {child_type} id={child_id} "
                     f"title={title!r}"
                 )
 
@@ -135,4 +154,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

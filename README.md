@@ -17,7 +17,7 @@ uv sync
 You can run the main scripts via `just` with snake_case recipe names:
 
 ```bash
-just clear_blog_entries --wagtail-project-root ../agreste --parent-id 30 --dry-run
+just clear_child_page --wagtail-project-root ../agreste --parent-id 30 --dry-run
 just create_blog_entry --wagtail-project-root ../agreste --parent-id 30 --title "My post"
 just author_lister --input-csv infos-rapides.csv --output-csv authors.csv
 just set_publication_date --wagtail-project-root ../agreste --parent-id 30 --data-file infos-rapides.csv
@@ -69,30 +69,30 @@ Connect via Scalingo app (SSH tunnel):
 just create_blog_entry --wagtail-project-root ../agreste --scalingo-app agreste-test --parent-id 30 --title "My post"
 ```
 
-### Clear Blog Entries
+### Clear Child Pages
 
-Delete direct children under a parent page:
+Delete direct ``BlogEntryPage`` / ``PublicationPage`` children under a parent:
 
 ```bash
-just clear_blog_entries --wagtail-project-root ../agreste --parent-id 30
+just clear_child_page --wagtail-project-root ../agreste --parent-id 30
 ```
 
 Dry run:
 
 ```bash
-just clear_blog_entries --wagtail-project-root ../agreste --parent-id 30 --dry-run
+just clear_child_page --wagtail-project-root ../agreste --parent-id 30 --dry-run
 ```
 
 Skip confirmation:
 
 ```bash
-just clear_blog_entries --wagtail-project-root ../agreste --parent-id 30 --no-confirmation
+just clear_child_page --wagtail-project-root ../agreste --parent-id 30 --no-confirmation
 ```
 
 Connect via Scalingo app (SSH tunnel):
 
 ```bash
-just clear_blog_entries --wagtail-project-root ../agreste --scalingo-app agreste-test --parent-id 30 --dry-run
+just clear_child_page --wagtail-project-root ../agreste --scalingo-app agreste-test --parent-id 30 --dry-run
 ```
 
 ### Author Lister
@@ -131,6 +131,6 @@ just disaron_fixer --wagtail-project-root ../agreste --parent-id 30
 ## Notes
 
 - `create_blog_entry.py` validates draft/publish state and raises an error if the resulting `live` state is not what was requested.
-- `clear_blog_entries.py` runs `Page.fix_tree(destructive=False)` to repair Wagtail tree metadata after operations.
+- `clear_child_page.py` runs `Page.fix_tree(destructive=False)` to repair Wagtail tree metadata after operations.
 - `--wagtail-project-root` is required for page-creator scripts and must point to the Django project root (`config/settings.py`).
 - Per-project READMEs are available in `my-downloader/`, `my-data-finder/`, and `my-crawler/`.

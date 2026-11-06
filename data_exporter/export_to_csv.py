@@ -25,7 +25,7 @@ Exported columns
   sorted A→Z by code)
 
 Theme code lookup uses ``--correspondence-file`` (default:
-``20260324-Correspondance-Thmatiques-OLD-NEW-v2.csv``). Every theme on a page
+``old_data/20260324-Correspondance-Thmatiques-OLD-NEW-v2.csv``). Every theme on a page
 must resolve to a code; otherwise the row is skipped, an error is printed, a
 ``<output>_failures.csv`` file is written, and the process exits with code 1.
 
@@ -40,7 +40,7 @@ Usage::
         --wagtail-project-root ../agreste \\
         --parent-id 18 \\
         --output-file data_exporter/output/export.csv \\
-        --correspondence-file 20260324-Correspondance-Thmatiques-OLD-NEW-v2.csv
+        --correspondence-file old_data/20260324-Correspondance-Thmatiques-OLD-NEW-v2.csv
 """
 
 import argparse
@@ -73,7 +73,7 @@ from sites_conformes.blog.models import BlogEntryPage, BlogIndexPage  # noqa: E4
 COLLECTIONS_ROOT_NAME = "Collections"
 THEMATIQUES_ROOT_NAME = "Thématiques"
 DEFAULT_CORRESPONDENCE_FILE = (
-    "20260324-Correspondance-Thmatiques-OLD-NEW-v2.csv"
+    "old_data/20260324-Correspondance-Thmatiques-OLD-NEW-v2.csv"
 )
 
 

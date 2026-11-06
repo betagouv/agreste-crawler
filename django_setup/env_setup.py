@@ -43,6 +43,11 @@ def _resolve_django_project_root(current_file: str) -> Path:
 
 
 def _crawler_root(current_file: str) -> Path:
+    """Repo root (directory that contains the ``django_setup`` package)."""
+    here = Path(current_file).resolve().parent
+    for candidate in (here, *here.parents):
+        if (candidate / "django_setup").is_dir():
+            return candidate
     return Path(current_file).resolve().parents[1]
 
 

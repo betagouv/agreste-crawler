@@ -1,6 +1,6 @@
 """
 Shared core for metadata-update scripts
-(set_publication_date, set_collection, ...).
+(set_themes, set_source, set_text_fields, ...).
 
 Each script builds a `values_by_disaron_nom` mapping, an `apply_value`
 callable that mutates a page object, and delegates the full update loop

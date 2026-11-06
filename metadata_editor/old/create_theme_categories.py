@@ -15,12 +15,12 @@ Usage:
     just create_theme_categories \
         --wagtail-project-root ../agreste \
         --scalingo-app agreste-test \
-        --data-file 20260324-Correspondance-Thmatiques-OLD-NEW-v2.csv
+        --data-file old_data/20260324-Correspondance-Thmatiques-OLD-NEW-v2.csv
 
     just create_theme_categories \
         --wagtail-project-root ../agreste \
         --scalingo-app agreste-test \
-        --data-file 20260324-Correspondance-Thmatiques-OLD-NEW-v2.csv \
+        --data-file old_data/20260324-Correspondance-Thmatiques-OLD-NEW-v2.csv \
         --dry-run
 """
 

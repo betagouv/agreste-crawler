@@ -2,25 +2,25 @@ set shell := ["bash", "-cu"]
 set positional-arguments := true
 
 create_blog_entry *args:
-    PYTHONPATH=. uv run python -m page_creator.create_blog_entry "$@"
+    PYTHONPATH=. uv run python -m page_creator.old.create_blog_entry "$@"
 
-clear_blog_entries *args:
-    PYTHONPATH=. uv run python -m page_creator.clear_blog_entries "$@"
+clear_child_page *args:
+    PYTHONPATH=. uv run python -m page_creator.clear_child_page "$@"
 
 remove_unused_documents *args:
     PYTHONPATH=. uv run python -m page_creator.remove_unused_documents "$@"
 
 bugfix_document_size *args:
-    PYTHONPATH=. uv run python -m page_creator.bugfix_document_size "$@"
+    PYTHONPATH=. uv run python -m page_creator.old.bugfix_document_size "$@"
 
 author_lister *args:
     PYTHONPATH=. uv run python -m metadata_editor.author_lister "$@"
 
 set_publication_date *args:
-    PYTHONPATH=. uv run python -m metadata_editor.set_publication_date "$@"
+    PYTHONPATH=. uv run python -m metadata_editor.old.set_publication_date "$@"
 
 set_collection *args:
-    PYTHONPATH=. uv run python -m metadata_editor.set_collection "$@"
+    PYTHONPATH=. uv run python -m metadata_editor.old.set_collection "$@"
 
 set_themes *args:
     PYTHONPATH=. uv run python -m metadata_editor.set_themes "$@"
@@ -29,7 +29,7 @@ set_source *args:
     PYTHONPATH=. uv run python -m metadata_editor.set_source "$@"
 
 remove_source_from_subtitle *args:
-    PYTHONPATH=. uv run python -m metadata_editor.remove_source_from_subtitle "$@"
+    PYTHONPATH=. uv run python -m metadata_editor.old.remove_source_from_subtitle "$@"
 
 set_reference_years_and_geographic_levels *args:
     PYTHONPATH=. uv run python -m metadata_editor.set_reference_years_and_geographic_levels "$@"
@@ -44,28 +44,28 @@ set_issue_number_from_inventaire *args:
     PYTHONPATH=. uv run python -m metadata_editor.set_issue_number_from_inventaire "$@"
 
 theme_reventilation *args:
-    PYTHONPATH=. uv run python -m metadata_editor.theme_reventilation "$@"
+    PYTHONPATH=. uv run python -m metadata_editor.old.theme_reventilation "$@"
 
 set_html *args:
-    PYTHONPATH=. uv run python -m metadata_editor.set_html "$@"
+    PYTHONPATH=. uv run python -m metadata_editor.old.set_html "$@"
 
 set_text_fields *args:
     PYTHONPATH=. uv run python -m metadata_editor.set_text_fields "$@"
 
 create_theme_categories *args:
-    PYTHONPATH=. uv run python -m metadata_editor.create_theme_categories "$@"
+    PYTHONPATH=. uv run python -m metadata_editor.old.create_theme_categories "$@"
 
 reformat_disaron *args:
-    PYTHONPATH=. uv run python -m metadata_editor.reformat_disaron "$@"
+    PYTHONPATH=. uv run python -m metadata_editor.old.reformat_disaron "$@"
 
 add_ids_to_pages *args:
-    PYTHONPATH=. uv run python -m metadata_editor.add_ids_to_pages "$@"
+    PYTHONPATH=. uv run python -m metadata_editor.old.add_ids_to_pages "$@"
 
 wrap_chapeau *args:
-    PYTHONPATH=. uv run python -m metadata_editor.wrap_chapeau "$@"
+    PYTHONPATH=. uv run python -m metadata_editor.old.wrap_chapeau "$@"
 
 disaron_fixer *args:
-    PYTHONPATH=. uv run python -m metadata_editor.disaron_fixer "$@"
+    PYTHONPATH=. uv run python -m metadata_editor.old.disaron_fixer "$@"
 
 export_to_csv *args:
     PYTHONPATH=. uv run python -m data_exporter.export_to_csv "$@"

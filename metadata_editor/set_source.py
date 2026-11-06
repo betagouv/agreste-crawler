@@ -19,7 +19,7 @@ Also writes pages listed in the input CSV with an empty
 
 Defaults:
 - ``--data-file``: ``2026-09-30_dump_tableaux_de_colin_publies.csv``
-- ``--labels-file``: ``2026-10-08_libelles_source_signature_L025.csv``
+- ``--labels-file``: ``metadata_editor/data/2026-10-08_libelles_source_signature_L025.csv``
 - ``--missing-file``: ``metadata_editor/output/<YYYY-MM-DD_HH-MM-SS>_missing_source.csv``
 - ``--failures-file``: ``metadata_editor/output/<YYYY-MM-DD_HH-MM-SS>_source_failures.csv``
 - ``--successes-file``: ``metadata_editor/output/<YYYY-MM-DD_HH-MM-SS>_source_successes.csv``
@@ -69,7 +69,9 @@ from metadata_editor.set_metadata import (  # noqa: E402
 
 SOURCE_SIGNATURE_COLUMN = "disaron:source_signature"
 DEFAULT_DATA_FILE = "2026-09-30_dump_tableaux_de_colin_publies.csv"
-DEFAULT_LABELS_FILE = "2026-10-08_libelles_source_signature_L025.csv"
+DEFAULT_LABELS_FILE = (
+    "metadata_editor/data/2026-10-08_libelles_source_signature_L025.csv"
+)
 MISSING_FIELDNAMES = ["pageId", "disaron_nom", "title"]
 
 
