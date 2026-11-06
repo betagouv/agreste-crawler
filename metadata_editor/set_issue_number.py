@@ -76,7 +76,7 @@ from disaron_mapper import (  # noqa: E402
     load_disaron_nom_map,
     resolve_disaron_nom,
 )
-from metadata_editor.get_raw_text_fields import load_docs  # noqa: E402
+from metadata_editor.html.get_raw_text_fields import load_docs  # noqa: E402
 from metadata_editor.set_metadata import (  # noqa: E402
     _flush_failures_file,
     add_common_args,

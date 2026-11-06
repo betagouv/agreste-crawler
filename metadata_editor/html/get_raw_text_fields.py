@@ -38,7 +38,7 @@ from collections.abc import Iterable
 from datetime import datetime
 from pathlib import Path
 
-from metadata_editor.extract_disaron_links import _iter_disaron_docs
+from metadata_editor.html.extract_disaron_links import _iter_disaron_docs
 
 
 FIELDNAMES = [

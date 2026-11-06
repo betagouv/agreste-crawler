@@ -2,7 +2,8 @@
 """
 Add Disaron HTML bodies to BlogEntryPage first-column content.
 
-Reads `2026-05-25_Disarons_with_html_clean.csv` (or any CSV with the same
+Reads `metadata_editor/html/data/2026-05-25_Disarons_with_html_clean.csv`
+(or any CSV with the same
 columns). Rows without HTML are ignored. For each BlogEntryPage under
 --parent-id, matching on <div id="disaron-nom">:
 
@@ -17,7 +18,7 @@ Usage:
     just set_html \
         --wagtail-project-root ../agreste \
         --parent-id 30 \
-        --data-file 2026-05-25_Disarons_with_html_clean.csv
+        --data-file metadata_editor/html/data/2026-05-25_Disarons_with_html_clean.csv
 """
 
 from __future__ import annotations

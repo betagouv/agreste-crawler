@@ -35,7 +35,7 @@ import csv
 from collections.abc import Iterable
 from pathlib import Path
 
-from metadata_editor.get_raw_text_fields import load_docs
+from metadata_editor.html.get_raw_text_fields import load_docs
 
 DISAR_PUBLIC = "DISAR-PUBLIC"
 
