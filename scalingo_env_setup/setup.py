@@ -164,17 +164,64 @@ def _stop_ssh_tunnel() -> None:
         proc.wait(timeout=5)
 
 
-def _wait_for_local_port(port: int, timeout_s: float = 15.0) -> None:
+def _port_is_open(port: int, timeout_s: float = 0.5) -> bool:
+    try:
+        with socket.create_connection(("127.0.0.1", port), timeout=timeout_s):
+            return True
+    except OSError:
+        return False
+
+
+def _ssh_stderr_text(proc: subprocess.Popen[bytes]) -> str:
+    if proc.stderr is None:
+        return ""
+    try:
+        raw = proc.stderr.read()
+    except OSError:
+        return ""
+    if not raw:
+        return ""
+    return raw.decode("utf-8", errors="replace").strip()
+
+
+def _raise_ssh_failed(app: str, proc: subprocess.Popen[bytes]) -> None:
+    stderr = _ssh_stderr_text(proc)
+    detail = f" (code {proc.returncode})"
+    if stderr:
+        detail = f"{detail}: {stderr}"
+    raise RuntimeError(
+        f"SSH tunnel to Scalingo app {app!r} failed{detail}."
+    )
+
+
+def _wait_for_tunnel_port(
+    port: int,
+    proc: subprocess.Popen[bytes],
+    app: str,
+    timeout_s: float = 15.0,
+) -> None:
     deadline = time.monotonic() + timeout_s
     while time.monotonic() < deadline:
-        try:
-            with socket.create_connection(("127.0.0.1", port), timeout=0.5):
-                return
-        except OSError:
-            time.sleep(0.2)
+        if proc.poll() is not None:
+            _raise_ssh_failed(app, proc)
+        if _port_is_open(port):
+            if proc.poll() is not None:
+                _raise_ssh_failed(app, proc)
+            return
+        time.sleep(0.2)
+    if proc.poll() is not None:
+        _raise_ssh_failed(app, proc)
     raise RuntimeError(
         f"SSH tunnel did not open 127.0.0.1:{port} within {timeout_s:.0f}s."
     )
+
+
+def _ensure_local_port_free(port: int) -> None:
+    if _port_is_open(port):
+        raise RuntimeError(
+            f"Local port 127.0.0.1:{port} is already in use. "
+            f"Free it or pass a different --database-port."
+        )
 
 
 def ensure_ssh_tunnel() -> None:
@@ -197,6 +244,8 @@ def ensure_ssh_tunnel() -> None:
     remote_port = os.environ[_ENV_REMOTE_PORT]
     forward = f"{local_port}:{remote_host}:{remote_port}"
 
+    _ensure_local_port_free(local_port)
+
     try:
         _ssh_process = subprocess.Popen(
             [
@@ -212,12 +261,20 @@ def ensure_ssh_tunnel() -> None:
                 "-o",
                 "ServerAliveInterval=30",
             ],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.PIPE,
         )
     except FileNotFoundError as exc:
         raise RuntimeError(
             "ssh not found on PATH. Install an OpenSSH client to use "
             "--scalingo-app."
         ) from exc
+
+    try:
+        _wait_for_tunnel_port(local_port, _ssh_process, app)
+    except Exception:
+        _stop_ssh_tunnel()
+        raise
 
     _tunnel_started = True
     atexit.register(_stop_ssh_tunnel)
@@ -233,13 +290,6 @@ def ensure_ssh_tunnel() -> None:
         except (ValueError, OSError):
             pass
 
-    if _ssh_process.poll() is not None:
-        raise RuntimeError(
-            f"SSH tunnel to Scalingo app {app!r} exited immediately "
-            f"(code {_ssh_process.returncode})."
-        )
-
-    _wait_for_local_port(local_port)
     print(
         f"SSH tunnel ready: 127.0.0.1:{local_port} -> "
         f"{remote_host}:{remote_port} (app {app!r}).",

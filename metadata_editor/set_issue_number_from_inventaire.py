@@ -42,7 +42,7 @@ import argparse
 import csv
 from pathlib import Path
 
-from scalingo_db import (
+from scalingo_env_setup import (
     DEFAULT_DATABASE_PORT,
     configure_database_url,
     ensure_ssh_tunnel,
