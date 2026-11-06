@@ -34,7 +34,7 @@ Usage::
     just export_to_csv \\
         --wagtail-project-root ../agreste \\
         --parent-id 18 \\
-        --scalingo-env-file .env.test
+        --scalingo-app agreste-test
 
     just export_to_csv \\
         --wagtail-project-root ../agreste \\
@@ -51,9 +51,18 @@ from html import unescape
 from pathlib import Path
 from typing import Any
 
+from scalingo_env_setup import (
+    add_scalingo_app_args,
+    configure_database_url,
+    ensure_ssh_tunnel,
+)
+
+configure_database_url()
+
 from django_setup import setup_django
 
 setup_django(__file__)
+ensure_ssh_tunnel()
 
 from django.utils import timezone  # noqa: E402
 from wagtail.documents.models import Document  # noqa: E402
@@ -289,12 +298,7 @@ def main() -> int:
         default="",
         help="Root directory of the Wagtail/Django project (contains config/settings.py).",
     )
-    parser.add_argument(
-        "--scalingo-env-file",
-        type=str,
-        default="",
-        help="Load environment values from this env file before Django setup.",
-    )
+    add_scalingo_app_args(parser)
     parser.add_argument(
         "--parent-id",
         type=int,
@@ -320,6 +324,7 @@ def main() -> int:
         ),
     )
     args = parser.parse_args()
+    _ = (args.scalingo_app, args.database_port)  # consumed via sys.argv earlier
 
     correspondence_path = Path(args.correspondence_file).expanduser()
     if not correspondence_path.is_absolute():

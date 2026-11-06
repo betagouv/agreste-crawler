@@ -31,6 +31,7 @@ Usage:
 
     just set_source \\
         --wagtail-project-root ../agreste \\
+        --scalingo-app agreste-test \\
         --dry-run
 """
 
@@ -40,9 +41,14 @@ import argparse
 import csv
 from pathlib import Path
 
+from scalingo_env_setup import configure_database_url, ensure_ssh_tunnel
+
+configure_database_url()
+
 from django_setup import setup_django
 
 setup_django(__file__)
+ensure_ssh_tunnel()
 
 from django.utils import timezone  # noqa: E402
 
@@ -324,6 +330,7 @@ def main() -> int:
         ),
     )
     args = parser.parse_args()
+    _ = (args.scalingo_app, args.database_port)  # consumed via sys.argv earlier
 
     labels = _load_labels(args.labels_file)
     codes_by_disaron_nom, empty_signature_noms = load_source_signatures(

@@ -28,9 +28,18 @@ from collections import OrderedDict
 from dataclasses import dataclass
 from pathlib import Path
 
+from scalingo_env_setup import (
+    add_scalingo_app_args,
+    configure_database_url,
+    ensure_ssh_tunnel,
+)
+
+configure_database_url()
+
 from django_setup import setup_django
 
 setup_django(__file__)
+ensure_ssh_tunnel()
 
 from sites_conformes.blog.models import (  # noqa: E402
     BlogEntryPage,
@@ -275,12 +284,7 @@ def main() -> int:
             "(contains config/settings.py)."
         ),
     )
-    parser.add_argument(
-        "--scalingo-env-file",
-        type=str,
-        default="",
-        help="Load environment values from this env file before Django setup.",
-    )
+    add_scalingo_app_args(parser)
     parser.add_argument(
         "--dry-run",
         action="store_true",
@@ -317,6 +321,7 @@ def main() -> int:
         help="Path to CSV output for successful rows.",
     )
     args = parser.parse_args()
+    _ = (args.scalingo_app, args.database_port)  # consumed via sys.argv earlier
 
     failures_file = resolve_failures_file(
         args.failures_file, "theme_reventilation_failures"

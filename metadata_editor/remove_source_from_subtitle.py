@@ -32,9 +32,14 @@ import csv
 from pathlib import Path
 from typing import Any
 
+from scalingo_env_setup import configure_database_url, ensure_ssh_tunnel
+
+configure_database_url()
+
 from django_setup import setup_django
 
 setup_django(__file__)
+ensure_ssh_tunnel()
 
 from publications.models import (  # noqa: E402
     Collection,
@@ -296,6 +301,7 @@ def main() -> int:
     _make_parent_id_optional(parser)
     _make_data_file_optional(parser)
     args = parser.parse_args()
+    _ = (args.scalingo_app, args.database_port)  # consumed via sys.argv earlier
 
     failures_file = resolve_failures_file(
         args.failures_file, "remove_source_subtitle_failures"

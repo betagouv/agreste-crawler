@@ -35,6 +35,8 @@ NOOP = object()
 
 def add_common_args(parser: argparse.ArgumentParser) -> None:
     """Add arguments shared by all metadata-update scripts."""
+    from scalingo_env_setup import add_scalingo_app_args
+
     parser.add_argument(
         "--wagtail-project-root",
         type=str,
@@ -44,12 +46,7 @@ def add_common_args(parser: argparse.ArgumentParser) -> None:
             "(contains config/settings.py)."
         ),
     )
-    parser.add_argument(
-        "--scalingo-env-file",
-        type=str,
-        default="",
-        help="Load environment values from this env file before Django setup.",
-    )
+    add_scalingo_app_args(parser)
     parser.add_argument(
         "--dry-run",
         action="store_true",

@@ -30,9 +30,14 @@ from collections import OrderedDict
 from pathlib import Path
 from typing import Iterable
 
+from scalingo_env_setup import configure_database_url, ensure_ssh_tunnel
+
+configure_database_url()
+
 from django_setup import setup_django
 
 setup_django(__file__)
+ensure_ssh_tunnel()
 
 from wagtail.models import Page  # noqa: E402
 
@@ -167,6 +172,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     add_common_args(parser)
     args = parser.parse_args()
+    _ = (args.scalingo_app, args.database_port)  # consumed via sys.argv earlier
 
     failures_file = resolve_failures_file(
         args.failures_file, "themes_failures"

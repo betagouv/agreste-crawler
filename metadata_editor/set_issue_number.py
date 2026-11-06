@@ -36,6 +36,7 @@ Usage:
 
     just set_issue_number \\
         --wagtail-project-root ../agreste \\
+        --scalingo-app agreste-test \\
         --dry-run
 """
 
@@ -46,9 +47,14 @@ import csv
 from collections.abc import Iterable
 from pathlib import Path
 
+from scalingo_env_setup import configure_database_url, ensure_ssh_tunnel
+
+configure_database_url()
+
 from django_setup import setup_django
 
 setup_django(__file__)
+ensure_ssh_tunnel()
 
 from publications.models import (  # noqa: E402
     PublicationIndexPage,
@@ -492,6 +498,7 @@ def main() -> int:
         ),
     )
     args = parser.parse_args()
+    _ = (args.scalingo_app, args.database_port)  # consumed via sys.argv earlier
 
     input_file = Path(args.input_file)
     if not input_file.is_absolute():

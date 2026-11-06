@@ -16,7 +16,8 @@ Usage:
     uv run python -m page_creator.bugfix_document_size \\
         --wagtail-project-root ../agreste --dry-run
     uv run python -m page_creator.bugfix_document_size \\
-        --wagtail-project-root ../agreste
+        --wagtail-project-root ../agreste \\
+        --scalingo-app agreste-test
     just bugfix_document_size --wagtail-project-root ../agreste \\
         --parent-id 42 --no-confirmation
 """
@@ -28,9 +29,18 @@ import csv
 import os
 from pathlib import Path
 
+from scalingo_env_setup import (
+    add_scalingo_app_args,
+    configure_database_url,
+    ensure_ssh_tunnel,
+)
+
+configure_database_url()
+
 from django_setup import setup_django
 
 setup_django(__file__)
+ensure_ssh_tunnel()
 
 from django.contrib.contenttypes.models import ContentType  # noqa: E402
 from django.utils import timezone  # noqa: E402
@@ -95,12 +105,7 @@ def main() -> int:
             "(contains config/settings.py)."
         ),
     )
-    parser.add_argument(
-        "--scalingo-env-file",
-        type=str,
-        default="",
-        help="Load environment values from this env file before Django setup.",
-    )
+    add_scalingo_app_args(parser)
     parser.add_argument(
         "--parent-id",
         type=int,
@@ -139,6 +144,7 @@ def main() -> int:
         help="List documents that would be updated without writing.",
     )
     args = parser.parse_args()
+    _ = (args.scalingo_app, args.database_port)  # consumed via sys.argv earlier
 
     Document = get_document_model()
     if args.parent_id is None:

@@ -7,7 +7,7 @@ Flags with examples:
             Parent page id (`BlogIndexPage`) (required).
     --wagtail-project-root ../agreste
             Path to Django/Wagtail project root.
-    --scalingo-env-file /path/to/.env.scalingo
+    --scalingo-app agreste-test
             Env file loaded before Django setup.
     --title "My post"
             Page title (single-page mode).
@@ -76,9 +76,18 @@ from datetime import datetime
 from html import escape
 from pathlib import Path
 
+from scalingo_env_setup import (
+    add_scalingo_app_args,
+    configure_database_url,
+    ensure_ssh_tunnel,
+)
+
+configure_database_url()
+
 from django_setup import setup_django
 
 setup_django(__file__)
+ensure_ssh_tunnel()
 
 from django.core.files.base import File  # noqa: E402
 from django.utils import timezone  # noqa: E402
@@ -347,12 +356,7 @@ def main() -> int:
         default="",
         help="Root directory of the Wagtail/Django project (contains config/settings.py).",
     )
-    parser.add_argument(
-        "--scalingo-env-file",
-        type=str,
-        default="",
-        help="Load environment values from this env file before Django setup.",
-    )
+    add_scalingo_app_args(parser)
     parser.add_argument("--title", type=str, default="", help="Page title")
     parser.add_argument(
         "--slug",
@@ -402,6 +406,7 @@ def main() -> int:
         help="Skip confirmation prompt before creating pages.",
     )
     args = parser.parse_args()
+    _ = (args.scalingo_app, args.database_port)  # consumed via sys.argv earlier
 
     data_file_rows: list[dict[str, str]] = []
     data_file_fieldnames: list[str] = []

@@ -76,7 +76,7 @@ from datetime import datetime
 from pathlib import Path
 
 from scalingo_env_setup import (
-    DEFAULT_DATABASE_PORT,
+    add_scalingo_app_args,
     configure_database_url,
     ensure_ssh_tunnel,
 )
@@ -354,24 +354,7 @@ def main() -> int:
         default="",
         help="Root directory of the Wagtail/Django project (contains config/settings.py).",
     )
-    parser.add_argument(
-        "--scalingo-app",
-        type=str,
-        default="",
-        help=(
-            "Scalingo app name: fetch SCALINGO_POSTGRESQL_URL, set "
-            "DATABASE_URL to 127.0.0.1:<database-port>, and open an SSH tunnel."
-        ),
-    )
-    parser.add_argument(
-        "--database-port",
-        type=int,
-        default=DEFAULT_DATABASE_PORT,
-        help=(
-            "Local SSH tunnel port used in DATABASE_URL "
-            f"(default: {DEFAULT_DATABASE_PORT})."
-        ),
-    )
+    add_scalingo_app_args(parser)
     parser.add_argument(
         "--data-file",
         type=str,

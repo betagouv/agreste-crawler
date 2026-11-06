@@ -42,45 +42,6 @@ def _resolve_django_project_root(current_file: str) -> Path:
     )
 
 
-def _get_scalingo_env_file_arg() -> str | None:
-    for i, arg in enumerate(sys.argv):
-        if arg == "--scalingo-env-file":
-            if i + 1 >= len(sys.argv):
-                raise ValueError(
-                    "--scalingo-env-file requires a file path argument."
-                )
-            return sys.argv[i + 1]
-        if arg.startswith("--scalingo-env-file="):
-            value = arg.split("=", 1)[1]
-            if not value:
-                raise ValueError(
-                    "--scalingo-env-file requires a non-empty file path."
-                )
-            return value
-    return None
-
-
-def _load_requested_env_file(project_root: Path) -> None:
-    env_file_arg = _get_scalingo_env_file_arg()
-    if not env_file_arg:
-        return
-
-    env_path = Path(env_file_arg).expanduser()
-    if not env_path.is_absolute():
-        env_path = (Path.cwd() / env_path).resolve()
-    if not env_path.exists():
-        raise FileNotFoundError(
-            f"--scalingo-env-file was provided but file not found: {env_path}"
-        )
-
-    from dotenv import load_dotenv
-
-    # Preload variables before Django imports settings.py
-    # (which calls load_dotenv()). Because of override=False,
-    # these variables will not be overridden by later calls.
-    load_dotenv(dotenv_path=env_path, override=False)
-
-
 def _crawler_root(current_file: str) -> Path:
     return Path(current_file).resolve().parents[1]
 
@@ -126,8 +87,6 @@ def setup_django(current_file: str) -> None:
     if str(project_root) not in sys.path:
         sys.path.insert(0, str(project_root))
 
-    _load_requested_env_file(project_root)
-
     if importlib.util.find_spec("django") is None:
         project_python = project_root / ".venv" / "bin" / "python"
         if project_python.exists():
@@ -141,4 +100,3 @@ def setup_django(current_file: str) -> None:
 
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
     django.setup()
-

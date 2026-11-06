@@ -63,10 +63,10 @@ just create_blog_entry \
   --documents-dir my-downloader/downloads
 ```
 
-Use `.env.scalingo` environment values:
+Connect via Scalingo app (SSH tunnel):
 
 ```bash
-just create_blog_entry --wagtail-project-root ../agreste --scalingo-env-file /path/to/.env.scalingo --parent-id 30 --title "My post"
+just create_blog_entry --wagtail-project-root ../agreste --scalingo-app agreste-test --parent-id 30 --title "My post"
 ```
 
 ### Clear Blog Entries
@@ -89,10 +89,10 @@ Skip confirmation:
 just clear_blog_entries --wagtail-project-root ../agreste --parent-id 30 --no-confirmation
 ```
 
-Use `.env.scalingo`:
+Connect via Scalingo app (SSH tunnel):
 
 ```bash
-just clear_blog_entries --wagtail-project-root ../agreste --scalingo-env-file /path/to/.env.scalingo --parent-id 30 --dry-run
+just clear_blog_entries --wagtail-project-root ../agreste --scalingo-app agreste-test --parent-id 30 --dry-run
 ```
 
 ### Author Lister

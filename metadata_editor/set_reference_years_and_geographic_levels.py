@@ -41,6 +41,7 @@ Usage:
 
     just set_reference_years_and_geographic_levels \\
         --wagtail-project-root ../agreste \\
+        --scalingo-app agreste-test \\
         --dry-run
 """
 
@@ -52,9 +53,14 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from scalingo_env_setup import configure_database_url, ensure_ssh_tunnel
+
+configure_database_url()
+
 from django_setup import setup_django
 
 setup_django(__file__)
+ensure_ssh_tunnel()
 
 from publications.models import (  # noqa: E402
     GeographicLevel,
@@ -571,6 +577,7 @@ def main() -> int:
         ),
     )
     args = parser.parse_args()
+    _ = (args.scalingo_app, args.database_port)  # consumed via sys.argv earlier
 
     by_nom, duplicate_noms = load_input_files(args.data_files)
     geo_labels = _load_geo_labels(args.geo_labels_file)

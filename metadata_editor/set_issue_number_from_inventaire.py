@@ -11,9 +11,9 @@ Keeps rows with ``Garder/Exclure == Garder`` and a nonempty
 Identical values are noops. Missing/duplicate pages and conflicting
 Numerotation for the same ``disaron:nom`` are logged as failures.
 
-``--parent-id``, ``--data-file``, and ``--scalingo-env-file`` from shared
-args are unused. Use ``--scalingo-app`` (and optional ``--database-port``,
-default 10001) to fetch Scalingo Postgres credentials and open an SSH tunnel.
+``--parent-id`` and ``--data-file`` from shared args are unused.
+Use ``--scalingo-app`` (and optional ``--database-port``, default 10001)
+to fetch Scalingo credentials and open an SSH tunnel.
 
 Defaults:
 - ``--input-file``: ``2026-11-05_Inventaire-Nuxeo-v20.csv``
@@ -42,11 +42,7 @@ import argparse
 import csv
 from pathlib import Path
 
-from scalingo_env_setup import (
-    DEFAULT_DATABASE_PORT,
-    configure_database_url,
-    ensure_ssh_tunnel,
-)
+from scalingo_env_setup import configure_database_url, ensure_ssh_tunnel
 
 configure_database_url()
 
@@ -106,17 +102,6 @@ def _make_data_file_optional(parser: argparse.ArgumentParser) -> None:
             )
             return
     raise RuntimeError("--data-file argument not found on parser")
-
-
-def _disable_scalingo_env_file(parser: argparse.ArgumentParser) -> None:
-    for action in parser._actions:
-        if "--scalingo-env-file" in getattr(action, "option_strings", []):
-            action.help = (
-                "Unused by this script; use --scalingo-app "
-                "(and optional --database-port) instead."
-            )
-            return
-    raise RuntimeError("--scalingo-env-file argument not found on parser")
 
 
 def _numerotation(value: object) -> str:
@@ -387,25 +372,6 @@ def main() -> int:
     add_common_args(parser)
     _make_parent_id_optional(parser)
     _make_data_file_optional(parser)
-    _disable_scalingo_env_file(parser)
-    parser.add_argument(
-        "--scalingo-app",
-        type=str,
-        default="",
-        help=(
-            "Scalingo app name: fetch SCALINGO_POSTGRESQL_URL, set "
-            "DATABASE_URL to 127.0.0.1:<database-port>, and open an SSH tunnel."
-        ),
-    )
-    parser.add_argument(
-        "--database-port",
-        type=int,
-        default=DEFAULT_DATABASE_PORT,
-        help=(
-            "Local SSH tunnel port used in DATABASE_URL "
-            f"(default: {DEFAULT_DATABASE_PORT})."
-        ),
-    )
     parser.add_argument(
         "--input-file",
         type=str,

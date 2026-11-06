@@ -13,18 +13,27 @@ Usage:
         --wagtail-project-root ../agreste --parent-id 30 --dry-run --no-confirmation
     uv run python -m page_creator.clear_blog_entries \
         --wagtail-project-root ../agreste \
-        --scalingo-env-file /path/to/.env.scalingo --parent-id 30 --dry-run
+        --scalingo-app agreste-test --parent-id 30 --dry-run
     uv run python -m page_creator.clear_blog_entries \
         --wagtail-project-root ../agreste \
-        --scalingo-env-file /path/to/.env.scalingo \
+        --scalingo-app agreste-test \
         --parent-id 30 --no-confirmation
 """
 
 import argparse
 
+from scalingo_env_setup import (
+    add_scalingo_app_args,
+    configure_database_url,
+    ensure_ssh_tunnel,
+)
+
+configure_database_url()
+
 from django_setup import setup_django
 
 setup_django(__file__)
+ensure_ssh_tunnel()
 
 from django.db import transaction  # noqa: E402
 from wagtail.models import Page  # noqa: E402
@@ -50,12 +59,7 @@ def main() -> int:
             "(contains config/settings.py)."
         ),
     )
-    parser.add_argument(
-        "--scalingo-env-file",
-        type=str,
-        default="",
-        help="Load environment values from this env file before Django setup.",
-    )
+    add_scalingo_app_args(parser)
     parser.add_argument(
         "--no-confirmation",
         action="store_true",
@@ -67,6 +71,7 @@ def main() -> int:
         help="Preview deletions without deleting pages.",
     )
     args = parser.parse_args()
+    _ = (args.scalingo_app, args.database_port)  # consumed via sys.argv earlier
 
     parent_page = Page.objects.get(id=args.parent_id).specific
     children = list(parent_page.get_children().specific())

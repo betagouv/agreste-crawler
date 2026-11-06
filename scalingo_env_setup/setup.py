@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import atexit
 import os
 import signal
@@ -51,6 +52,28 @@ def _get_cli_arg(name: str) -> str | None:
 
 def _get_scalingo_app_arg() -> str | None:
     return _get_cli_arg("scalingo-app")
+
+
+def add_scalingo_app_args(parser: argparse.ArgumentParser) -> None:
+    """Register ``--scalingo-app`` and ``--database-port`` on ``parser``."""
+    parser.add_argument(
+        "--scalingo-app",
+        type=str,
+        default="",
+        help=(
+            "Scalingo app name: fetch SCALINGO_POSTGRESQL_URL, set "
+            "DATABASE_URL to 127.0.0.1:<database-port>, and open an SSH tunnel."
+        ),
+    )
+    parser.add_argument(
+        "--database-port",
+        type=int,
+        default=DEFAULT_DATABASE_PORT,
+        help=(
+            "Local SSH tunnel port used in DATABASE_URL "
+            f"(default: {DEFAULT_DATABASE_PORT})."
+        ),
+    )
 
 
 def _get_database_port_arg() -> int:

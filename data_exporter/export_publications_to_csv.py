@@ -34,7 +34,7 @@ Usage::
     just export_publications_to_csv \\
         --wagtail-project-root ../agreste \\
         --output-file data_exporter/output/publications.csv \\
-        --scalingo-env-file .env.test
+        --scalingo-app agreste-test
 """
 
 from __future__ import annotations
@@ -45,9 +45,18 @@ import json
 from pathlib import Path
 from typing import Any
 
+from scalingo_env_setup import (
+    add_scalingo_app_args,
+    configure_database_url,
+    ensure_ssh_tunnel,
+)
+
+configure_database_url()
+
 from django_setup import setup_django
 
 setup_django(__file__)
+ensure_ssh_tunnel()
 
 from django.utils import timezone  # noqa: E402
 from wagtail.documents.models import Document  # noqa: E402
@@ -240,12 +249,7 @@ def main() -> int:
             "(contains config/settings.py)."
         ),
     )
-    parser.add_argument(
-        "--scalingo-env-file",
-        type=str,
-        default="",
-        help="Load environment values from this env file before Django setup.",
-    )
+    add_scalingo_app_args(parser)
     parser.add_argument(
         "--output-file",
         type=str,
@@ -256,6 +260,7 @@ def main() -> int:
         ),
     )
     args = parser.parse_args()
+    _ = (args.scalingo_app, args.database_port)  # consumed via sys.argv earlier
 
     pages = resolve_all_publication_pages()
     timestamp = timezone.localtime().strftime("%Y-%m-%d_%H-%M-%S")

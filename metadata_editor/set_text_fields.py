@@ -42,6 +42,7 @@ Usage:
 
     just set_text_fields \\
         --wagtail-project-root ../agreste \\
+        --scalingo-app agreste-test \\
         --clean-text-file path/to/content.csv
 """
 
@@ -55,9 +56,14 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from scalingo_env_setup import configure_database_url, ensure_ssh_tunnel
+
+configure_database_url()
+
 from django_setup import setup_django
 
 setup_django(__file__)
+ensure_ssh_tunnel()
 
 from django.utils import timezone  # noqa: E402
 
@@ -548,6 +554,7 @@ def main() -> int:
         ),
     )
     args = parser.parse_args()
+    _ = (args.scalingo_app, args.database_port)  # consumed via sys.argv earlier
 
     failures_file = resolve_failures_file(
         args.failures_file, "text_fields_failures"
