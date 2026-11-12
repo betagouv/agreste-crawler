@@ -29,8 +29,8 @@ updated later.
 Defaults:
 - ``--input-file``: ``metadata_editor/html/data/2026-05-18_Disarons_raw_text_fields.csv``
 - ``--inventaire-file``: ``2026-11-05_Inventaire-Nuxeo-v20.csv``
-- ``--output-file``: ``metadata_editor/output/<YYYY-MM-DD_HH-MM-SS>_clean_text_fields.csv``
-- ``--log-file``: ``metadata_editor/output/<YYYY-MM-DD_HH-MM-SS>_clean_text_fields_log.csv``
+- ``--output-file``: ``metadata_editor/html/output/<YYYY-MM-DD_HH-MM-SS>_clean_text_fields.csv``
+- ``--log-file``: ``metadata_editor/html/output/<YYYY-MM-DD_HH-MM-SS>_clean_text_fields_log.csv``
 
 Usage:
     just clean_text_fields
@@ -244,7 +244,7 @@ def main() -> int:
         default=None,
         help=(
             "Output CSV path. Default: "
-            "metadata_editor/output/<timestamp>_clean_text_fields.csv"
+            "metadata_editor/html/output/<timestamp>_clean_text_fields.csv"
         ),
     )
     parser.add_argument(
@@ -252,7 +252,7 @@ def main() -> int:
         default=None,
         help=(
             "Change log CSV path. Default: "
-            "metadata_editor/output/<timestamp>_clean_text_fields_log.csv"
+            "metadata_editor/html/output/<timestamp>_clean_text_fields_log.csv"
         ),
     )
     args = parser.parse_args()
@@ -269,14 +269,14 @@ def main() -> int:
         output_file = Path(args.output_file).resolve()
     else:
         output_file = (
-            Path("metadata_editor/output").resolve()
+            Path("metadata_editor/html/output").resolve()
             / f"{prefix}_clean_text_fields.csv"
         )
     if args.log_file:
         log_file = Path(args.log_file).resolve()
     else:
         log_file = (
-            Path("metadata_editor/output").resolve()
+            Path("metadata_editor/html/output").resolve()
             / f"{prefix}_clean_text_fields_log.csv"
         )
 
