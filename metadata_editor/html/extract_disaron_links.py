@@ -3,7 +3,7 @@
 Generate timestamped Disaron links CSV files from a raw Disarons JSON dump.
 
 Default output directory:
-- metadata_editor/output
+- metadata_editor/html/output
 
 Outputs:
 - <timestamp>_Disarons_links.csv
@@ -19,8 +19,8 @@ Usage:
     just extract_disaron_links
 
     just extract_disaron_links \
-        --input-file data/2026-05-18_Disarons.json \
-        --output-dir metadata_editor/output
+        --input-file 2026-05-18_Disarons.json \
+        --output-dir metadata_editor/html/output
 """
 
 from __future__ import annotations
@@ -36,6 +36,8 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 from bs4 import BeautifulSoup
+
+from json_parser import loads_disaron_object
 
 
 HTML_FIELDS = (
@@ -176,10 +178,10 @@ def _iter_disaron_docs(input_file: Path):
                         started = False
                         buffer = []
                         try:
-                            doc = json.loads(raw_obj)
+                            doc = loads_disaron_object(raw_obj)
                         except json.JSONDecodeError:
-                            # Tolerant fallback for malformed objects
-                            # (typically unescaped newlines in HTML strings).
+                            # Last-resort fallback for objects that remain
+                            # invalid after escaping control chars in strings.
                             props: dict[str, str] = {}
                             nom_match = DISARON_NOM_RE.search(raw_obj)
                             if nom_match:
@@ -196,20 +198,19 @@ def _iter_disaron_docs(input_file: Path):
                             if props.get("disaron:nom"):
                                 yield {"properties": props}
                             continue
-                        if isinstance(doc, dict):
-                            yield doc
+                        yield doc
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--input-file",
-        default="data/2026-05-18_Disarons.json",
+        default="2026-05-18_Disarons.json",
         help="Raw Disarons JSON dump.",
     )
     parser.add_argument(
         "--output-dir",
-        default="metadata_editor/output",
+        default="metadata_editor/html/output",
         help="Directory for generated CSV files.",
     )
     args = parser.parse_args()

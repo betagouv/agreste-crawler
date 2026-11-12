@@ -19,14 +19,14 @@ Only rows with at least one non-empty of ``html_principal``,
 
 Defaults:
 - ``--input-file``: ``2026-05-18_Disarons.json``
-- ``--output-file``: ``metadata_editor/output/<YYYY-MM-DD_HH-MM-SS>_raw_text_fields.csv``
+- ``--output-file``: ``metadata_editor/html/output/<YYYY-MM-DD_HH-MM-SS>_raw_text_fields.csv``
 
 Usage:
     just get_raw_text_fields
 
     just get_raw_text_fields \\
         --input-file 2026-10-08_Disarons_tableaux_publies.json \\
-        --output-file metadata_editor/output/raw_text_fields.csv
+        --output-file metadata_editor/html/output/raw_text_fields.csv
 """
 
 from __future__ import annotations
@@ -69,20 +69,8 @@ def _bool_cell(flag: bool) -> str:
 
 
 def load_docs(input_file: Path) -> Iterable[object]:
-    """Load docs from a JSON array or a concatenated object dump."""
-    try:
-        with input_file.open(encoding="utf-8") as f:
-            data = json.load(f)
-    except json.JSONDecodeError:
-        return _iter_disaron_docs(input_file)
-
-    if isinstance(data, list):
-        return data
-    if isinstance(data, dict):
-        return [data]
-    raise ValueError(
-        f"Expected a JSON list or object of documents, got {type(data).__name__}"
-    )
+    """Load docs via tolerant Disaron dump parsing (``loads_disaron_object``)."""
+    return _iter_disaron_docs(input_file)
 
 
 def extract_rows(docs: Iterable[object]) -> list[dict[str, str]]:
@@ -134,7 +122,7 @@ def main() -> int:
         default=None,
         help=(
             "Output CSV path. Default: "
-            "metadata_editor/output/<timestamp>_raw_text_fields.csv"
+            "metadata_editor/html/output/<timestamp>_raw_text_fields.csv"
         ),
     )
     args = parser.parse_args()
@@ -148,7 +136,7 @@ def main() -> int:
     else:
         prefix = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         output_file = (
-            Path("metadata_editor/output").resolve()
+            Path("metadata_editor/html/output").resolve()
             / f"{prefix}_raw_text_fields.csv"
         )
     output_file.parent.mkdir(parents=True, exist_ok=True)

@@ -27,7 +27,7 @@ TODO: links and images still point at old Agreste content and should be
 updated later.
 
 Defaults:
-- ``--input-file``: ``metadata_editor/data/2026-05-18_Disarons_raw_text_fields.csv``
+- ``--input-file``: ``metadata_editor/html/data/2026-05-18_Disarons_raw_text_fields.csv``
 - ``--inventaire-file``: ``2026-11-05_Inventaire-Nuxeo-v20.csv``
 - ``--output-file``: ``metadata_editor/output/<YYYY-MM-DD_HH-MM-SS>_clean_text_fields.csv``
 - ``--log-file``: ``metadata_editor/output/<YYYY-MM-DD_HH-MM-SS>_clean_text_fields_log.csv``
@@ -36,7 +36,7 @@ Usage:
     just clean_text_fields
 
     just clean_text_fields \\
-        --input-file metadata_editor/data/2026-05-18_Disarons_raw_text_fields.csv
+        --input-file metadata_editor/html/data/2026-05-18_Disarons_raw_text_fields.csv
 """
 
 from __future__ import annotations
@@ -231,7 +231,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--input-file",
-        default="metadata_editor/data/2026-05-18_Disarons_raw_text_fields.csv",
+        default="metadata_editor/html/data/2026-05-18_Disarons_raw_text_fields.csv",
         help="Raw text-fields CSV from get_raw_text_fields.",
     )
     parser.add_argument(

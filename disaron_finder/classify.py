@@ -10,6 +10,8 @@ from datetime import date, datetime
 from pathlib import Path
 from typing import Literal
 
+from json_parser import loads_disaron_object
+
 PUBLICATION_CUTOFF = date(2026, 3, 1)
 DATA_CUTOFF = date(2026, 9, 30)
 SKIP_REASON_PUBLICATION_CUTOFF = "Publication published after 2026-03-01"
@@ -168,10 +170,10 @@ def _iter_disaron_json_docs(path: Path):
                         started = False
                         buffer = []
                         try:
-                            doc = json.loads(raw_obj)
+                            doc = loads_disaron_object(raw_obj)
                         except json.JSONDecodeError:
-                            # Malformed objects still expose nom/type/date as
-                            # plain strings; recover those for cutoff checks.
+                            # Last-resort fallback for objects that remain
+                            # invalid after escaping control chars in strings.
                             nom_m = _DISARON_NOM_RE.search(raw_obj)
                             if not nom_m:
                                 continue
@@ -198,8 +200,7 @@ def _iter_disaron_json_docs(path: Path):
                                 }
                             }
                             continue
-                        if isinstance(doc, dict):
-                            yield doc
+                        yield doc
 
 
 def load_disaron_meta(disarons_json: str | Path) -> dict[str, DisaronMeta]:
