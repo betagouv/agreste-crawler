@@ -31,7 +31,7 @@ On success, saves a revision and re-publishes if the page was live.
 ``--parent-id`` from shared args is not used by this script.
 
 Defaults:
-- ``--clean-text-file``: ``metadata_editor/html/data/2026-05-18_Disarons_clean_text_fields.csv``
+- ``--data-file``: ``metadata_editor/html/data/2026-05-18_Disarons_clean_text_fields.csv``
 - ``--disarons-json``: ``2026-05-18_Disarons.json``
 - ``--will-not-upload-file``: ``2026-10-28_will_not_upload.csv``
 - ``--not-uploaded-yet-file``: ``2026-10-28_not_uploaded_yet.csv``
@@ -43,7 +43,7 @@ Usage:
     just set_text_fields \\
         --wagtail-project-root ../agreste \\
         --scalingo-app agreste-test \\
-        --clean-text-file path/to/content.csv
+        --data-file path/to/content.csv
 """
 
 from __future__ import annotations
@@ -93,7 +93,7 @@ from metadata_editor.set_metadata import (  # noqa: E402
 NOTES_COLUMNS = ("notes", "disaron:notes")
 STANDARD_PUBLICATION_TYPE = "standard_publication"
 
-_DEFAULT_CLEAN_TEXT_FILE = (
+_DEFAULT_DATA_FILE = (
     "metadata_editor/html/data/2026-05-18_Disarons_clean_text_fields.csv"
 )
 _DEFAULT_DISARONS_JSON = "2026-05-18_Disarons.json"
@@ -471,14 +471,10 @@ def run_content_update(
     return 0
 
 
-def _replace_data_file_with_clean_text_file(
-    parser: argparse.ArgumentParser, default: str
-) -> None:
-    """Rename shared ``--data-file`` to ``--clean-text-file`` for this script."""
+def _configure_data_file(parser: argparse.ArgumentParser, default: str) -> None:
+    """Make shared ``--data-file`` optional with this script's default CSV."""
     for action in parser._actions:
         if "--data-file" in getattr(action, "option_strings", []):
-            action.option_strings = ["--clean-text-file"]
-            action.dest = "clean_text_file"
             action.required = False
             action.default = default
             action.help = (
@@ -505,7 +501,7 @@ def _make_parent_id_optional(parser: argparse.ArgumentParser) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     add_common_args(parser)
-    _replace_data_file_with_clean_text_file(parser, _DEFAULT_CLEAN_TEXT_FILE)
+    _configure_data_file(parser, _DEFAULT_DATA_FILE)
     _make_parent_id_optional(parser)
     parser.add_argument(
         "--disarons-json",
@@ -567,7 +563,7 @@ def main() -> int:
     )
     pages = resolve_all_publication_pages()
     pages_by_nom = pages_by_disaron_nom(pages)
-    content_by_disaron_nom = load_content_by_disaron_nom(args.clean_text_file)
+    content_by_disaron_nom = load_content_by_disaron_nom(args.data_file)
     meta_by_nom = load_disaron_meta(args.disarons_json)
     will_not_upload = load_upload_exception_reasons(args.will_not_upload_file)
     not_uploaded_yet = load_upload_exception_reasons(
@@ -586,7 +582,7 @@ def main() -> int:
         dry_run=args.dry_run,
         confirmation_message=(
             f"About to process {len(content_by_disaron_nom)} CSV row(s) "
-            f"with content from {args.clean_text_file} "
+            f"with content from {args.data_file} "
             f"against {len(pages_by_nom)} PublicationPage(s) "
             f"under all PublicationIndexPages."
         ),
