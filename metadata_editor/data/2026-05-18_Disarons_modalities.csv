@@ -106,6 +106,470 @@ COMEXABVIV,Période Somme A_M,0.09,Septembre
 COMEXABVIV,Période Somme A_M,0.10,Octobre
 COMEXABVIV,Période Somme A_M,0.11,Novembre
 COMEXABVIV,Période Somme A_M,0.12,Décembre
+COMEXCOP,Années de référence,25,2025
+COMEXCOP,Années de référence,26,2024
+COMEXCOP,Années de référence,27,2023
+COMEXCOP,Années de référence,28,2022
+COMEXCOP,Années de référence,29,2021
+COMEXCOP,Années de référence,30,2020
+COMEXCOP,Années de référence,31,2019
+COMEXCOP,Années de référence,32,2018
+COMEXCOP,Années de référence,33,2017
+COMEXCOP,Années de référence,34,2016
+COMEXCOP,Années de référence,35,2015
+COMEXCOP,Années de référence,36,2014
+COMEXCOP,Années de référence,37,2013
+COMEXCOP,Années de référence,38,2012
+COMEXCOP,Années de référence,39,2011
+COMEXCOP,Années de référence,40,2010
+COMEXCOP,Années de référence,41,2009
+COMEXCOP,Années de référence,42,2008
+COMEXCOP,Années de référence,43,2007
+COMEXCOP,Années de référence,44,2006
+COMEXCOP,Années de référence,45,2005
+COMEXCOP,Années de référence,46,2004
+COMEXCOP,Années de référence,47,2003
+COMEXCOP,Années de référence,48,2002
+COMEXCOP,Années de référence,49,2001
+COMEXCOP,Années de référence,50,2000
+COMEXCOP,Années de référence,51,1999
+COMEXCOP,Années de référence,52,1998
+COMEXCOP,Années de référence,53,1997
+COMEXCOP,Géographie d'échanges,001,MONDE
+COMEXCOP,Géographie d'échanges,002,_UE
+COMEXCOP,Géographie d'échanges,003,__UE 15
+COMEXCOP,Géographie d'échanges,004,___Autriche
+COMEXCOP,Géographie d'échanges,005,___Allemagne
+COMEXCOP,Géographie d'échanges,006,___Danemark
+COMEXCOP,Géographie d'échanges,007,___Espagne (y compris Canaries)
+COMEXCOP,Géographie d'échanges,008,___Finlande
+COMEXCOP,Géographie d'échanges,009,___Grèce
+COMEXCOP,Géographie d'échanges,010,___Irlande
+COMEXCOP,Géographie d'échanges,011,___Italie
+COMEXCOP,Géographie d'échanges,012,___Pays-Bas
+COMEXCOP,Géographie d'échanges,013,___Portugal
+COMEXCOP,Géographie d'échanges,014,___Royaume-Uni
+COMEXCOP,Géographie d'échanges,015,___Suède
+COMEXCOP,Géographie d'échanges,016,___Belgique-Luxembourg
+COMEXCOP,Géographie d'échanges,017,____Belgique
+COMEXCOP,Géographie d'échanges,018,____Luxembourg
+COMEXCOP,Géographie d'échanges,019,__Nouveaux membres (à partir de 2004)
+COMEXCOP,Géographie d'échanges,020,___Chypre
+COMEXCOP,Géographie d'échanges,021,___Estonie
+COMEXCOP,Géographie d'échanges,022,___Hongrie
+COMEXCOP,Géographie d'échanges,023,___Lettonie
+COMEXCOP,Géographie d'échanges,024,___Lituanie
+COMEXCOP,Géographie d'échanges,025,___Malte
+COMEXCOP,Géographie d'échanges,026,___Pologne
+COMEXCOP,Géographie d'échanges,027,___République tchèque
+COMEXCOP,Géographie d'échanges,028,___Slovaquie
+COMEXCOP,Géographie d'échanges,029,___Slovénie
+COMEXCOP,Géographie d'échanges,030,___Bulgarie
+COMEXCOP,Géographie d'échanges,031,___Roumanie
+COMEXCOP,Géographie d'échanges,032,___Croatie
+COMEXCOP,Géographie d'échanges,033,_PAYS TIERS
+COMEXCOP,Géographie d'échanges,034,__Turquie
+COMEXCOP,Géographie d'échanges,035,__CEI
+COMEXCOP,Géographie d'échanges,036,___Russie
+COMEXCOP,Géographie d'échanges,037,___Ukraine
+COMEXCOP,Géographie d'échanges,038,__Afrique du Nord
+COMEXCOP,Géographie d'échanges,039,___Algérie
+COMEXCOP,Géographie d'échanges,040,___Egypte
+COMEXCOP,Géographie d'échanges,041,___Libye
+COMEXCOP,Géographie d'échanges,042,___Maroc
+COMEXCOP,Géographie d'échanges,043,___Tunisie
+COMEXCOP,Géographie d'échanges,044,__ Afrique sub-saharienne
+COMEXCOP,Géographie d'échanges,045,__Amérique du Nord
+COMEXCOP,Géographie d'échanges,046,___Canada
+COMEXCOP,Géographie d'échanges,047,___E.U.A.N
+COMEXCOP,Géographie d'échanges,048,__Amérique centrale hors Caraïbes
+COMEXCOP,Géographie d'échanges,049,___Mexique
+COMEXCOP,Géographie d'échanges,050,__Amérique du Sud
+COMEXCOP,Géographie d'échanges,051,___Argentine
+COMEXCOP,Géographie d'échanges,052,___Brésil
+COMEXCOP,Géographie d'échanges,053,___Chili
+COMEXCOP,Géographie d'échanges,054,___Uruguay
+COMEXCOP,Géographie d'échanges,055,__Proche-Orient
+COMEXCOP,Géographie d'échanges,056,__Moyen-Orient
+COMEXCOP,Géographie d'échanges,057,__Inde
+COMEXCOP,Géographie d'échanges,058,__Corée Du Nord
+COMEXCOP,Géographie d'échanges,059,__Corée Du Sud
+COMEXCOP,Géographie d'échanges,060,__Japon
+COMEXCOP,Géographie d'échanges,061,__République populaire de Chine
+COMEXCOP,Géographie d'échanges,062,__Australie
+COMEXCOP,Géographie d'échanges,063,__Alena
+COMEXCOP,Géographie d'échanges,064,__Mercosur
+COMEXCOP,Indicateur,001,Exportations en valeur (1000 euros)
+COMEXCOP,Indicateur,002,Importations en valeur (1000 euros)
+COMEXCOP,Produit,001,CEREALES
+COMEXCOP,Produit,002,Blé tendre
+COMEXCOP,Produit,003,Blé dur
+COMEXCOP,Produit,004,Seigle
+COMEXCOP,Produit,005,Orge
+COMEXCOP,Produit,006,Avoine
+COMEXCOP,Produit,007,Maïs (grain et semences)
+COMEXCOP,Produit,008,Sorgho
+COMEXCOP,Produit,009,Triticale
+COMEXCOP,Produit,010,Autres céréales
+COMEXCOP,Produit,011,Riz
+COMEXCOP,Produit,012,OLEAGINEUX
+COMEXCOP,Produit,013,Colza
+COMEXCOP,Produit,014,Tournesol
+COMEXCOP,Produit,015,Soja
+COMEXCOP,Produit,016,Lin oléagineux
+COMEXCOP,Produit,017,Autres oléagineux
+COMEXCOP,Produit,019,PROTEAGINEUX
+COMEXCOP,Produit,020,Féveroles
+COMEXCOP,Produit,021,Pois protéagineux
+COMEXCOP,Produit,022,Lupin doux
+COMEXCOP,Périodicité,001,Janvier
+COMEXCOP,Périodicité,002,Février
+COMEXCOP,Périodicité,003,Mars
+COMEXCOP,Périodicité,004,Avril
+COMEXCOP,Périodicité,005,Mai
+COMEXCOP,Périodicité,006,Juin
+COMEXCOP,Périodicité,007,Juillet
+COMEXCOP,Périodicité,008,Août
+COMEXCOP,Périodicité,009,Septembre
+COMEXCOP,Périodicité,010,Octobre
+COMEXCOP,Périodicité,011,Novembre
+COMEXCOP,Périodicité,012,Décembre
+COMEXCOP,Périodicité,013,Total annuel
+COMEXIAA,Années de référence,25,2025
+COMEXIAA,Années de référence,26,2024
+COMEXIAA,Années de référence,27,2023
+COMEXIAA,Années de référence,28,2022
+COMEXIAA,Années de référence,29,2021
+COMEXIAA,Années de référence,30,2020
+COMEXIAA,Années de référence,31,2019
+COMEXIAA,Années de référence,32,2018
+COMEXIAA,Années de référence,33,2017
+COMEXIAA,Années de référence,34,2016
+COMEXIAA,Années de référence,35,2015
+COMEXIAA,Années de référence,36,2014
+COMEXIAA,Années de référence,37,2013
+COMEXIAA,Années de référence,38,2012
+COMEXIAA,Années de référence,39,2011
+COMEXIAA,Années de référence,40,2010
+COMEXIAA,Années de référence,41,2009
+COMEXIAA,Années de référence,42,2008
+COMEXIAA,Années de référence,43,2007
+COMEXIAA,Années de référence,44,2006
+COMEXIAA,Années de référence,45,2005
+COMEXIAA,Années de référence,46,2004
+COMEXIAA,Années de référence,47,2003
+COMEXIAA,Années de référence,48,2002
+COMEXIAA,Années de référence,49,2001
+COMEXIAA,Années de référence,50,2000
+COMEXIAA,Géographie d'échanges,001,Monde
+COMEXIAA,Géographie d'échanges,002,_UE
+COMEXIAA,Géographie d'échanges,003,__UE 15
+COMEXIAA,Géographie d'échanges,004,_PAYS TIERS
+COMEXIAA,Géographie d'échanges,005,___Alena
+COMEXIAA,Géographie d'échanges,006,___Proche et Moyen-Orient
+COMEXIAA,Géographie d'échanges,007,___CEI
+COMEXIAA,Géographie d'échanges,008,___Afrique du Nord
+COMEXIAA,Géographie d'échanges,009,___Afrique Sub-Saharienne
+COMEXIAA,Géographie d'échanges,010,___Afrique australe
+COMEXIAA,Géographie d'échanges,011,___Asie du Sud Est
+COMEXIAA,Géographie d'échanges,012,___Asie du Nord
+COMEXIAA,Géographie d'échanges,013,___Océanie
+COMEXIAA,Géographie d'échanges,014,___Mercosur
+COMEXIAA,Géographie d'échanges,015,___ACP
+COMEXIAA,Indicateur,001,Solde des échanges extérieurs en valeur (1000 d'euros)
+COMEXIAA,Indicateur,002,Exportations en valeur (1000 d'euros)
+COMEXIAA,Indicateur,003,Importations en valeur (1000 d'euros)
+COMEXIAA,Produit,001,PRODUITS DES INDUSTRIES ALIMENTAIRES
+COMEXIAA,Produit,002,_VIANDES ET PRODUITS A BASE DE VIANDE
+COMEXIAA,Produit,003,__Viandes de boucherie et produits d'abattage
+COMEXIAA,Produit,004,__Viandes de volailles
+COMEXIAA,Produit,005,__Produits à base de viandes
+COMEXIAA,Produit,006,_PREPARATIONS ET CONSERVES A BASE DE POISSON ET DE PRODUITS DE LA PECHE
+COMEXIAA,Produit,007,_PRODUITS A BASE DE FRUITS ET LEGUMES
+COMEXIAA,Produit,008,__Préparations et conserves à base de pommes de terre
+COMEXIAA,Produit,009,__Jus de fruits et légumes
+COMEXIAA,Produit,010,__Autres préparations et conserves à base de fruits et légumes
+COMEXIAA,Produit,011,_HUILES ET GRAISSES VEGETALES ET ANIMALES
+COMEXIAA,Produit,012,__Huiles et graisses
+COMEXIAA,Produit,013,__Margarine
+COMEXIAA,Produit,014,_PRODUITS LAITIERS
+COMEXIAA,Produit,015,__Produits laitiers et fromages (hors glaces et sorbets)
+COMEXIAA,Produit,016,___Lait liquide
+COMEXIAA,Produit,017,___Crème de lait
+COMEXIAA,Produit,018,"___Produits frais : yaourts, desserts lactés frais"
+COMEXIAA,Produit,019,___Beurre conditionné GMS
+COMEXIAA,Produit,020,___Fromages
+COMEXIAA,Produit,021,__Glaces et sorbets
+COMEXIAA,Produit,022,_PRODUITS DU TRAVAIL DES GRAINS ET PRODUITS AMYLACES
+COMEXIAA,Produit,023,__Produits du travail des grains
+COMEXIAA,Produit,024,__Produits amylacés
+COMEXIAA,Produit,025,_PRODUITS DE LA BOULANGERIE-PÂTISSERIE ET PÂTES ALIMENTAIRES
+COMEXIAA,Produit,026,"__Pain, pâtisseries et viennoiseries fraîches"
+COMEXIAA,Produit,027,"__Biscuits, biscottes, pâtisseries de conservation"
+COMEXIAA,Produit,028,__Pâtes alimentaires
+COMEXIAA,Produit,029,_AUTRES PRODUITS ALIMENTAIRES
+COMEXIAA,Produit,030,__Sucre
+COMEXIAA,Produit,031,"__Cacao, chocolat et produits de confiserie"
+COMEXIAA,Produit,032,__Café et thé transformés
+COMEXIAA,Produit,033,__Condiments et assaisonnements
+COMEXIAA,Produit,034,__Plats préparés
+COMEXIAA,Produit,035,__Aliments adaptés à l'enfant et diététiques
+COMEXIAA,Produit,036,__Autres produits alimentaires n.c.a.
+COMEXIAA,Produit,037,_ALIMENTS POUR ANIMAUX
+COMEXIAA,Produit,038,__Aliments  pour animaux de ferme
+COMEXIAA,Produit,039,__Aliments pour  animaux d'agrément
+COMEXIAA,Produit,040,BOISSONS
+COMEXIAA,Produit,041,_BOISSONS ALCOOLIQUES DISTILLEES
+COMEXIAA,Produit,042,_VINS DE RAISIN
+COMEXIAA,Produit,043,__Vins de raisin - Champagne et mousseux
+COMEXIAA,Produit,044,__Vins de raisin - Vins
+COMEXIAA,Produit,045,_CIDRE ET AUTRES VINS DE FRUITS
+COMEXIAA,Produit,046,_AUTRES BOISSONS FERMENTEES NON DISTILLEES
+COMEXIAA,Produit,047,_BIERE
+COMEXIAA,Produit,048,_MALT
+COMEXIAA,Produit,049,"_BOISSONS RAFRAICHISSANTES, EAUX MINERALES ET AUTRES EAUX EN BOUTEILLE"
+COMEXIAA,Produit,050,__Boissons rafraîchissantes
+COMEXIAA,Produit,051,__Eaux de table
+COMEXIAA,Produit,052,PRODUITS A BASE DE TABAC
+COMEXIAA,Périodicité,001,Janvier
+COMEXIAA,Périodicité,002,Février
+COMEXIAA,Périodicité,003,Mars
+COMEXIAA,Périodicité,004,Trimestre 1
+COMEXIAA,Périodicité,005,Avril
+COMEXIAA,Périodicité,006,Mai
+COMEXIAA,Périodicité,007,Juin
+COMEXIAA,Périodicité,008,Trimestre 2
+COMEXIAA,Périodicité,009,Juillet
+COMEXIAA,Périodicité,010,Août
+COMEXIAA,Périodicité,011,Septembre
+COMEXIAA,Périodicité,012,Trimestre 3
+COMEXIAA,Périodicité,013,Octobre
+COMEXIAA,Périodicité,014,Novembre
+COMEXIAA,Périodicité,015,Décembre
+COMEXIAA,Périodicité,016,Trimestre 4
+COMEXIAA,Périodicité,017,Total annuel
+COMEXLAIT,Années de référence,25,2025
+COMEXLAIT,Années de référence,26,2024
+COMEXLAIT,Années de référence,27,2023
+COMEXLAIT,Années de référence,28,2022
+COMEXLAIT,Années de référence,29,2021
+COMEXLAIT,Années de référence,30,2020
+COMEXLAIT,Années de référence,31,2019
+COMEXLAIT,Années de référence,32,2018
+COMEXLAIT,Années de référence,33,2017
+COMEXLAIT,Années de référence,34,2016
+COMEXLAIT,Années de référence,35,2015
+COMEXLAIT,Années de référence,36,2014
+COMEXLAIT,Années de référence,37,2013
+COMEXLAIT,Années de référence,38,2012
+COMEXLAIT,Années de référence,39,2011
+COMEXLAIT,Années de référence,40,2010
+COMEXLAIT,Années de référence,41,2009
+COMEXLAIT,Années de référence,42,2008
+COMEXLAIT,Années de référence,43,2007
+COMEXLAIT,Années de référence,44,2006
+COMEXLAIT,Années de référence,45,2005
+COMEXLAIT,Années de référence,46,2004
+COMEXLAIT,Années de référence,47,2003
+COMEXLAIT,Années de référence,48,2002
+COMEXLAIT,Années de référence,49,2001
+COMEXLAIT,Années de référence,50,2000
+COMEXLAIT,Années de référence,51,1999
+COMEXLAIT,Années de référence,52,1998
+COMEXLAIT,Années de référence,53,1997
+COMEXLAIT,Années de référence,54,1996
+COMEXLAIT,Géographie d'échanges,001,Monde
+COMEXLAIT,Géographie d'échanges,002,UE
+COMEXLAIT,Géographie d'échanges,003,Pays tiers
+COMEXLAIT,Indicateur,001,Exportations en volume (tonnes)
+COMEXLAIT,Indicateur,002,Importations en volume (tonnes)
+COMEXLAIT,Indicateur,003,Solde en volume (tonnes)
+COMEXLAIT,Indicateur,004,Exportations en valeur (1000 d'euros)
+COMEXLAIT,Indicateur,005,Importations en valeur (1000 d'euros)
+COMEXLAIT,Indicateur,006,Solde en valeur (1000 d'euros)
+COMEXLAIT,Produit,001,"Ensemble lait, produits laitiers et dérivés"
+COMEXLAIT,Produit,002,Ensemble des produits laitiers
+COMEXLAIT,Produit,003,Laits conditionnés (tous laits)
+COMEXLAIT,Produit,004,_Laits liquides de consommation
+COMEXLAIT,Produit,005,__Lait entier
+COMEXLAIT,Produit,006,__Lait demi-écrémé
+COMEXLAIT,Produit,007,__Lait écrémé
+COMEXLAIT,Produit,008,_Lait aromatisé
+COMEXLAIT,Produit,009,Yaourts et desserts lactés
+COMEXLAIT,Produit,010,_Yaourts et desserts lactés frais
+COMEXLAIT,Produit,011,__Yaourts et laits fermentés
+COMEXLAIT,Produit,012,"___Laits fermentés natures, même sucrés"
+COMEXLAIT,Produit,013,___Laits fermentés aromatisés ou aux fruits
+COMEXLAIT,Produit,014,__Desserts lactés frais
+COMEXLAIT,Produit,015,_Desserts lactés de conserve ou thermisés
+COMEXLAIT,Produit,016,Crème conditionnée
+COMEXLAIT,Produit,017,Matières grasses (équivalent beurre)
+COMEXLAIT,Produit,018,_Beurre (vrac ou conditionné)
+COMEXLAIT,Produit,019,_Beurre anhydre de crème (MGLA) en équivalent Beurre
+COMEXLAIT,Produit,020,_Spécialités à tartiner (équivalent Beurre)
+COMEXLAIT,Produit,021,_Beurre anhydre de beurre (Butter-Oil) en équivalent Beurre
+COMEXLAIT,Produit,022,Séchage de poudres de lait
+COMEXLAIT,Produit,023,_Séchage de poudre de lait écrémé
+COMEXLAIT,Produit,024,_Séchage de poudre de lait entier
+COMEXLAIT,Produit,025,"__Poudres de 1,5 à moins de 26% de mg"
+COMEXLAIT,Produit,026,__Poudres 26% de mg et plus
+COMEXLAIT,Produit,027,Conditionnement de poudres
+COMEXLAIT,Produit,028,_Conditionnement de poudres infantiles
+COMEXLAIT,Produit,029,_Conditionnement d'autres poudres
+COMEXLAIT,Produit,030,__Conditionnement de poudre de lait écrémé
+COMEXLAIT,Produit,031,__Conditionnement de poudre de lait non écrémé
+COMEXLAIT,Produit,032,Laits concentrés conditionnés
+COMEXLAIT,Produit,033,_Lait concentré sucré
+COMEXLAIT,Produit,034,_Lait concentré non sucré
+COMEXLAIT,Produit,035,Fromages (tous laits)
+COMEXLAIT,Produit,036,_Fromages (tous laits) hors fondus
+COMEXLAIT,Produit,037,__Fromages frais (tous laits)
+COMEXLAIT,Produit,038,__Fromages à pâte molle (tous laits)
+COMEXLAIT,Produit,039,___dont Camembert
+COMEXLAIT,Produit,040,___dont Brie
+COMEXLAIT,Produit,041,_Fromages à pâte pressée non cuite ou demi cuite (tous laits)
+COMEXLAIT,Produit,042,"__dont Edam, Gouda, Fontal"
+COMEXLAIT,Produit,043,"__dont Cantal, Cheddar"
+COMEXLAIT,Produit,044,"__dont Saint- Paulin, Saint Nectaire"
+COMEXLAIT,Produit,045,_Fromages à pâte pressée cuite (tous laits)
+COMEXLAIT,Produit,046,__dont Gruyères
+COMEXLAIT,Produit,047,_Fromages à pâte persillée (tous laits)
+COMEXLAIT,Produit,048,__dont Roquefort
+COMEXLAIT,Produit,049,_Autres fromages (tous laits)
+COMEXLAIT,Produit,050,_Fromages fondus (tous laits)
+COMEXLAIT,Produit,051,Caséines et caséinates
+COMEXLAIT,Produit,052,Poudre de babeurre
+COMEXLAIT,Produit,054,Poudre de lactosérum
+COMEXLAIT,Produit,055,Lactose
+COMEXLAIT,Produit,056,Autres composants naturels du lait
+COMEXLAIT,Produit,057,Laits liquides en vrac
+COMEXLAIT,Produit,058,_Lait liquide écrémé en vrac (MG inf ou egal 1 %)
+COMEXLAIT,Produit,059,_Lait liquide demi-écrémé en vrac (1 % inf MG inf ou egal 3 %)
+COMEXLAIT,Produit,060,_Lait liquide entier en vrac (3 % inf MG inf ou egal 6 %)
+COMEXLAIT,Produit,061,Crème en vrac
+COMEXLAIT,Produit,062,_Crème en vrac (6 % inf MG inf ou egal 21 %)
+COMEXLAIT,Produit,063,_Crème en vrac (21 % inf MG inf ou egal 45 %)
+COMEXLAIT,Produit,064,_Crème en vrac (MG sup 45 %)
+COMEXLAIT,Produit,065,Pâtes à tartiner laitières (M.G sup ou egal 39% mais  inf60%)
+COMEXLAIT,Produit,066,Pâtes à tartiner (M.G inf ou egal60% mais inf ou egal75%)
+COMEXLAIT,Produit,067,Pâtes à tartiner (M.G sup 75% mais inf 80%)
+COMEXLAIT,Produit,068,Laits concentrés en vrac
+COMEXLAIT,Produit,069,Poudre de lait industrielle en vrac (total)
+COMEXLAIT,Produit,070,_Poudre de lait écrémé en vrac
+COMEXLAIT,Produit,071,_Poudre de lait non écrémé en vrac
+COMEXLAIT,Produit,072,Lactosérum liquide
+COMEXLAIT,Produit,073,Aliments veaux
+COMEXLAIT,Périodicité,001,Janvier
+COMEXLAIT,Périodicité,002,Février
+COMEXLAIT,Périodicité,003,Mars
+COMEXLAIT,Périodicité,004,Avril
+COMEXLAIT,Périodicité,005,Mai
+COMEXLAIT,Périodicité,006,Juin
+COMEXLAIT,Périodicité,007,Juillet
+COMEXLAIT,Périodicité,008,Août
+COMEXLAIT,Périodicité,009,Septembre
+COMEXLAIT,Périodicité,010,Octobre
+COMEXLAIT,Périodicité,011,Novembre
+COMEXLAIT,Périodicité,012,Décembre
+COMEXLAIT,Périodicité,013,Total annuel
+COMEXLEG,Années de référence,25,2025
+COMEXLEG,Années de référence,26,2024
+COMEXLEG,Années de référence,27,2023
+COMEXLEG,Années de référence,28,2022
+COMEXLEG,Années de référence,29,2021
+COMEXLEG,Années de référence,30,2020
+COMEXLEG,Années de référence,31,2019
+COMEXLEG,Années de référence,32,2018
+COMEXLEG,Années de référence,33,2017
+COMEXLEG,Années de référence,34,2016
+COMEXLEG,Années de référence,35,2015
+COMEXLEG,Années de référence,36,2014
+COMEXLEG,Années de référence,37,2013
+COMEXLEG,Années de référence,38,2012
+COMEXLEG,Années de référence,39,2011
+COMEXLEG,Années de référence,40,2010
+COMEXLEG,Années de référence,41,2009
+COMEXLEG,Années de référence,42,2008
+COMEXLEG,Années de référence,43,2007
+COMEXLEG,Années de référence,44,2006
+COMEXLEG,Années de référence,45,2005
+COMEXLEG,Années de référence,46,2004
+COMEXLEG,Années de référence,47,2003
+COMEXLEG,Années de référence,48,2002
+COMEXLEG,Années de référence,49,2001
+COMEXLEG,Années de référence,50,2000
+COMEXLEG,Années de référence,51,1999
+COMEXLEG,Géographie d'échanges,001,MONDE
+COMEXLEG,Géographie d'échanges,002,_UE
+COMEXLEG,Géographie d'échanges,003,__UE (à 15)
+COMEXLEG,Géographie d'échanges,004,___Autriche
+COMEXLEG,Géographie d'échanges,005,___Allemagne
+COMEXLEG,Géographie d'échanges,006,___Danemark
+COMEXLEG,Géographie d'échanges,007,___Espagne (y compris Canaries)
+COMEXLEG,Géographie d'échanges,008,___Finlande
+COMEXLEG,Géographie d'échanges,009,___Grèce
+COMEXLEG,Géographie d'échanges,010,___Irlande
+COMEXLEG,Géographie d'échanges,011,___Italie
+COMEXLEG,Géographie d'échanges,012,___Pays-Bas
+COMEXLEG,Géographie d'échanges,013,___Portugal
+COMEXLEG,Géographie d'échanges,014,___Royaume-Uni
+COMEXLEG,Géographie d'échanges,015,___Suède
+COMEXLEG,Géographie d'échanges,016,___UEBL
+COMEXLEG,Géographie d'échanges,017,____Belgique
+COMEXLEG,Géographie d'échanges,018,____Luxembourg
+COMEXLEG,Géographie d'échanges,019,__Nouveaux membres (à partir de 2004)
+COMEXLEG,Géographie d'échanges,020,___Chypre
+COMEXLEG,Géographie d'échanges,021,___Estonie
+COMEXLEG,Géographie d'échanges,022,___Hongrie
+COMEXLEG,Géographie d'échanges,023,___Lettonie
+COMEXLEG,Géographie d'échanges,024,___Lituanie
+COMEXLEG,Géographie d'échanges,025,___Malte
+COMEXLEG,Géographie d'échanges,026,___Pologne
+COMEXLEG,Géographie d'échanges,027,___République tchèque
+COMEXLEG,Géographie d'échanges,028,___Slovaquie
+COMEXLEG,Géographie d'échanges,029,___Slovénie
+COMEXLEG,Géographie d'échanges,030,___Bulgarie
+COMEXLEG,Géographie d'échanges,031,___Roumanie
+COMEXLEG,Géographie d'échanges,032,___Croatie
+COMEXLEG,Géographie d'échanges,033,_Total des Pays tiers
+COMEXLEG,Géographie d'échanges,034,___Maroc
+COMEXLEG,Géographie d'échanges,035,___Suisse
+COMEXLEG,Géographie d'échanges,036,___Norvège
+COMEXLEG,Géographie d'échanges,037,___Turquie
+COMEXLEG,Indicateur,001,Solde des échanges en quantité (t)
+COMEXLEG,Indicateur,002,Exportations en quantité (t)
+COMEXLEG,Indicateur,003,Importations en quantité (t)
+COMEXLEG,Indicateur,004,Solde des échanges en valeur (1000 d'euros)
+COMEXLEG,Indicateur,005,Exportations en valeur (1000 d'euros)
+COMEXLEG,Indicateur,006,Importations en valeur (1000 d'euros)
+COMEXLEG,Produit,001,Ensemble de légumes frais (1)
+COMEXLEG,Produit,002,Carotte et navet
+COMEXLEG,Produit,003,Chicorée et Laitue
+COMEXLEG,Produit,004,__Chicorée
+COMEXLEG,Produit,005,__Laitue toutes variétés
+COMEXLEG,Produit,006,___Laitue pommée
+COMEXLEG,Produit,007,___Laitue romaine
+COMEXLEG,Produit,008,Chou-fleur et brocoli
+COMEXLEG,Produit,009,Concombre
+COMEXLEG,Produit,010,Courgette
+COMEXLEG,Produit,011,Endive chicon
+COMEXLEG,Produit,012,Fraise
+COMEXLEG,Produit,013,Melon
+COMEXLEG,Produit,014,Poireau et autres légumes alliacés (2)
+COMEXLEG,Produit,015,Tomate
+COMEXLEG,Périodicité,001,Janvier
+COMEXLEG,Périodicité,002,Février
+COMEXLEG,Périodicité,003,Mars
+COMEXLEG,Périodicité,004,Avril
+COMEXLEG,Périodicité,005,Mai
+COMEXLEG,Périodicité,006,Juin
+COMEXLEG,Périodicité,007,Juillet
+COMEXLEG,Périodicité,008,Août
+COMEXLEG,Périodicité,009,Septembre
+COMEXLEG,Périodicité,010,Octobre
+COMEXLEG,Périodicité,011,Novembre
+COMEXLEG,Périodicité,012,Décembre
+COMEXLEG,Périodicité,013,Total annuel
 COMEXOEUFS,Années de référence,25,2025
 COMEXOEUFS,Années de référence,26,2024
 COMEXOEUFS,Années de référence,27,2023
@@ -229,6 +693,239 @@ COMEXOEUFS,Période Somme A_M,0.09,Septembre
 COMEXOEUFS,Période Somme A_M,0.10,Octobre
 COMEXOEUFS,Période Somme A_M,0.11,Novembre
 COMEXOEUFS,Période Somme A_M,0.12,Décembre
+COMEXTBOIS,Années de référence,25,2025
+COMEXTBOIS,Années de référence,26,2024
+COMEXTBOIS,Années de référence,27,2023
+COMEXTBOIS,Années de référence,28,2022
+COMEXTBOIS,Années de référence,29,2021
+COMEXTBOIS,Années de référence,30,2020
+COMEXTBOIS,Années de référence,31,2019
+COMEXTBOIS,Années de référence,32,2018
+COMEXTBOIS,Années de référence,33,2017
+COMEXTBOIS,Années de référence,34,2016
+COMEXTBOIS,Années de référence,35,2015
+COMEXTBOIS,Années de référence,36,2014
+COMEXTBOIS,Années de référence,37,2013
+COMEXTBOIS,Commerce extérieur des produits bois,0,Produits
+COMEXTBOIS,Commerce extérieur des produits bois,0.1,Produits d'exploitation forestière et de scierie
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11,Bois ronds
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.1,Bois ronds conifères
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.1.11,Sapin-épicéa
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.1.11.1,Sapin-épicéa grumes
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.1.11.2,Sapin-épicéa trituration
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.1.12,Pins
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.1.12.1,Pins grumes
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.1.12.2,Pins trituration
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.1.13,Autres conifères
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.1.13.1,Autres conifères grumes
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.1.13.2,Autres conifères trituration
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.2,Bois ronds feuillus tempérés
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.2.11,Chêne
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.2.11.1,Chêne grumes
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.2.11.2,Chêne trituration
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.2.11.9,Chêne n.c.a
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.2.12,Hêtre
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.2.12.1,Hêtre grumes
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.2.12.2,Hêtre trituration
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.2.12.9,Hêtre n.c.a
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.2.13,Bouleau
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.2.13.1,Bouleau grumes
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.2.13.2,Bouleau trituration
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.2.14,Peuplier (grumes + trituration)
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.2.15,Eucalyptus (grumes + trituration)
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.2.19,Autres feuillus tempérés (grumes + trituration)
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.3,Bois ronds tropicaux
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.3.11,"Dark red meranti, light red meranti, meranti bakau"
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.3.12,"Sapelli, acajou d'Afrique, iroko"
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.3.13,Okoumé et sipo
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.3.19,Autres tropicaux
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.4,"Bois de feu en rondins, bûches"
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.4.11,Bois de feu conifères
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.4.12,Bois de feu feuillus
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.4.13,Bois de feu n.c.a
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.5,Bois bruts traités à la créosote ou autres
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.5.11,Bois bruts conifère traités à la créosote ou autres
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.5.12,Bois bruts feuillus traités à la créosote ou autres
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.11.6,Charbon de bois
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.12,"Bois en plaquettes ou en particules, sciures et déchets"
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.12.1,Bois en plaquettes ou en particules
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.12.1.11,Bois de conifères en plaquettes ou en particules
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.12.1.12,Bois de feuillus en plaquettes ou en particules
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.12.2,Sciures brutes
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.12.3,Déchets et débris de bois
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.13,Granulés de bois (pellets) et autres bois aggloméré pour énergie
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.13.1,Granulés de bois (pellets)
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.13.2,Briquette de bois
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.13.9,Autres bois aggloméré pour énergie
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14,Sciages
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.1,Sciages de conifères
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.1.11,Sciages de sapin-épicéa
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.1.11.1,Sciages rabotés de sapin-épicéa
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.1.11.2,"Sciages collés, aboutés de sapin-épicéa"
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.1.11.3,Sciages autres de sapin-épicéa
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.1.12,Sciages de pins
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.1.12.1,Sciages rabotés de pins
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.1.12.2,"Sciages collés, aboutés de pins"
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.1.12.3,Sciages autres de pins
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.1.13,Sciages autres conifères
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.1.13.1,Sciages rabotés d'autres conifères
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.1.13.2,"Sciages collés, aboutés d'autres conifères"
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.1.13.3,Sciages autres d'autres conifères
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.1.14,"Sciages d'épicéa, pin et sapin (proportions indéterminées)"
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.1.15,Sciages d'Hem-fir et sapin (proportions indéterminées)
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2,Sciages de feuillus tempérés
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.11,Sciages de chêne
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.11.1,"Sciages poncés, aboutés de chêne"
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.11.2,Sciages rabotés de chêne
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.11.2.11,"Lames et frises pour parquets, non assemblées de chêne"
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.11.2.19,Autres sciages rabotés de chêne
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.11.9,Autres sciages de chêne
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.12,Sciages de hêtre
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.13,Sciages d'autres feuillus tempérés
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.13.1,Sciages d'érable
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.13.1.11,"Sciages rabotés, aboutés d'érable"
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.13.1.12,Sciages poncés d'érable
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.13.1.19,Autres sciages d'érable
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.13.2,Sciages de cerisier
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.13.2.11,"Sciages rabotés, aboutés de cerisier"
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.13.2.12,Sciages poncés de cerisier
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.13.2.19,Autres sciages de cerisier
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.13.3,Sciages de frêne
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.13.3.11,"Sciages rabotés, aboutés de frêne"
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.13.3.12,Sciages poncés de frêne
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.13.3.19,Autres sciages de frêne
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.13.4,Sciages de peuplier
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.13.4.11,"Sciages rabotés, aboutés de peuplier"
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.13.4.12,Sciages poncés de peuplier
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.13.4.19,Autres sciages de peuplier
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.13.5,Sciages de bouleau
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.13.5.11,"Sciages rabotés, aboutés de bouleau"
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.13.5.12,Sciages poncés de bouleau
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.13.5.19,Autres sciages de bouleau
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.13.6,Sciages autres feuillus
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.13.6.11,"Sciages rabotés, aboutés d'autres feuillus"
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.13.6.12,Sciages poncés d'autres feuillus
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.2.13.6.19,Autres sciages d'autres feuillus
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.14.3,Sciages de tropicaux
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.15,Traverses
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.15.1,Traverses non imprégnées
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.15.1.11,Traverses non imprégnées de conifères
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.15.1.12,Traverses non imprégnées de feuillus
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.15.2,Traverses imprégnées
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.15.2.11,Traverses imprégnées de conifères
+COMEXTBOIS,Commerce extérieur des produits bois,0.1.15.2.12,Traverses imprégnées de feuillus
+COMEXTBOIS,Commerce extérieur des produits bois,0.2,"Produits des industries du bois, des pâtes et des papiers"
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11,"Placages, panneaux, contreplaqués"
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.1,Feuilles pour placage
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.1.11,Feuilles pour placage de conifères
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.1.12,Feuilles pour placage de feuillus
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.1.13,Feuilles pour placage de tropicaux
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.2,Contreplaqués
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.2.11,Contreplaqués de feuilles de bois
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.2.11.1,Contreplaqués de feuilles de bois conifères
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.2.11.2,Contreplaqués de feuilles de bois feuillus tempérés
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.2.11.3,Contreplaqués de feuilles de bois tropicaux
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.2.19,Autres contreplaqués
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.2.19.1,"Contreplaqués à âme panneautée, lattée ou lamellée"
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.2.19.1.11,avec au moins un pli extérieur en bois tropicaux
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.2.19.1.12,avec au moins un pli extérieur en feuillus
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.2.19.1.13,avec les 2 plis extérieurs en conifères
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.2.19.2,Bois de placage stratifié (LVL)
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.2.19.2.11,LVL avec au moins un pli extérieur en bois tropicaux
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.2.19.2.12,LVL avec au moins un pli extérieur en feuillus
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.2.19.2.13,LVL avec les 2 plis extérieurs en conifères
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.2.19.9,Autres contreplaqués
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.2.19.9.11,Autres contreplaqués avec au moins un pli extérieur en bois tropicaux
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.2.19.9.12,Autres contreplaqués avec au moins un pli extérieur en feuillus
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.2.19.9.13,Autres contreplaqués avec les 2 plis extérieurs en conifères
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.2.19.9.14,Supprimé
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.3,Panneaux de particules
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.3.11,Panneaux OSB
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.3.12,Panneaux de particules autres que OSB
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.3.12.1,Bruts ou simplement poncés
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.3.12.9,Autres panneaux de particules
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.3.19,Autres panneaux de bois
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.4,Panneaux de fibres
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.4.11,Panneaux de fibres durs
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.4.12,Panneaux MDF-HDF
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.11.4.19,Autres panneaux de fibres
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12,Autres produits du travail mécanique du bois
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.1,"Bois profilés pour parquet, baguettes, moulures"
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.1.11,Bois profilés de conifères
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.1.12,Bois profilés de feuillus
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.1.13,Bois profilés de tropicaux
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.2,Ouvrages pour emballage et transport
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.2.11,"Caisses, cageots, tambours pour câbles"
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.2.12,"Palettes, plateaux"
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.2.12.1,"Palettes simples, réhausses de palettes"
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.2.12.9,Autres plateaux
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.3,Ouvrages de tonnellerie
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.4,Ouvrages de menuiserie
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.4.11,Panneaux pour parquets
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.4.12,"Fenêtres, portes, leurs cadres et chambranles"
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.4.12.1,"Fenêtres, portes, leurs cadres et chambranles en conifères"
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.4.12.2,"Fenêtres, portes, leurs cadres et chambranles en feuillus"
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.4.12.3,"Fenêtres, portes, leurs cadres et chambranles en bois tropicaux"
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.4.13,Coffrage pour bétonnage
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.4.14,Bardeaux
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.4.15,Poutres et poteaux
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.4.15.1,Poutres en I (I Beans)
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.4.15.2,Autres poutres et poteaux
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.4.16,Bois lamellés
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.4.16.1,Bois lamelés collés (Glulam)
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.4.16.2,"Bois lamelés croisés (CLT, Xlam)"
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.4.19,Autres ouvrages de menuiserie
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.9,Autres ouvrages en bois
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.9.11,"Bois feuillards, pieux, piquets"
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.9.11.1,"Bois feuillards, pieux, piquets de conifères"
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.9.11.2,"Bois feuillards, pieux, piquets de feuillus"
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.9.12,"Laine, paille, farine de bois"
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.9.13,Ouvrages décoratifs-domestiques
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.12.9.19,Autres
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.13,"Fabrications en bois, meubles et sièges"
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.13.1,Construction préfabriquées en bois
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.13.2,Meubles et sièges en bois
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.14,Pâtes à papier
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.14.1,Pâtes mécaniques de bois ou mi-chimique
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.14.1.11,Pâtes mécaniques
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.14.1.12,Pâtes mi-chimiques de bois
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.14.2,Pâtes chimiques de bois
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.14.2.11,Pâtes chimiques au sulfate de conifères
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.14.2.12,Pâtes chimiques au sulfate de feuillus
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.14.2.13,Pâtes chimiques au bisulfite de conifères
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.14.2.14,Pâtes chimiques au bisulfite de feuillus
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.14.3,Pâtes chimiques de bois à dissoudre
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.14.9,Autres pâtes de bois
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.14.9.11,Pâtes de fibres obtenues à partir de papiers ou cartons recyclés
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.14.9.12,Pâtes de fibres autres que le bois
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.15,Papiers ou cartons à recycler
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.16,Papiers et cartons bruts
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.16.1,Papiers graphiques
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.16.2,Papiers hygiéniques et domestiques
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.16.3,Matériaux d'emballage
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.16.9,Autres papiers et cartons bruts
+COMEXTBOIS,Commerce extérieur des produits bois,0.2.17,Papiers er cartons transformés
+COMEXTBOIS,Commerce extérieur des produits bois,0.3,Produits divers d'exploitation forestière
+COMEXTBOIS,Commerce extérieur des produits bois,0.3.11,Extraits tannants végétaux
+COMEXTBOIS,Commerce extérieur des produits bois,0.3.12,"Térébenthine, colophane et dérivés"
+COMEXTBOIS,Commerce extérieur des produits bois,0.3.13,Liège et ouvrages en liège
+COMEXTBOIS,Groupe d'indicateurs,020.04,Exportation (volume)
+COMEXTBOIS,Groupe d'indicateurs,020.05,Importation (volume)
+COMEXTBOIS,Groupe d'indicateurs,030.04,Exportation (valeur)
+COMEXTBOIS,Groupe d'indicateurs,030.05,Importation (valeur)
+COMEXTBOIS,Période Somme A_M,0,Total annuel
+COMEXTBOIS,Période Somme A_M,0.01,Janvier
+COMEXTBOIS,Période Somme A_M,0.02,Février
+COMEXTBOIS,Période Somme A_M,0.03,Mars
+COMEXTBOIS,Période Somme A_M,0.04,Avril
+COMEXTBOIS,Période Somme A_M,0.05,Mai
+COMEXTBOIS,Période Somme A_M,0.06,Juin
+COMEXTBOIS,Période Somme A_M,0.07,Juillet
+COMEXTBOIS,Période Somme A_M,0.08,Août
+COMEXTBOIS,Période Somme A_M,0.09,Septembre
+COMEXTBOIS,Période Somme A_M,0.10,Octobre
+COMEXTBOIS,Période Somme A_M,0.11,Novembre
+COMEXTBOIS,Période Somme A_M,0.12,Décembre
 COMEXVIANDE,Années de référence,25,2025
 COMEXVIANDE,Années de référence,26,2024
 COMEXVIANDE,Années de référence,27,2023
@@ -354,6 +1051,380 @@ COMEXVIANDE,Viandes,1.2.2,viande de dinde
 COMEXVIANDE,Viandes,1.2.3,viande de canard
 COMEXVIANDE,Viandes,1.2.4,Viande de pintade
 COMEXVIANDE,Viandes,1.2.5,Viande d'oie
+COMPT0002_NRP,Années de référence,28,2022
+COMPT0002_NRP,Années de référence,29,2021
+COMPT0002_NRP,Années de référence,30,2020
+COMPT0002_NRP,Années de référence,31,2019
+COMPT0002_NRP,Années de référence,32,2018
+COMPT0002_NRP,Années de référence,33,2017
+COMPT0002_NRP,Années de référence,34,2016
+COMPT0002_NRP,Années de référence,35,2015
+COMPT0002_NRP,Groupe d'indicateurs,030,Valeur
+COMPT0002_NRP,Groupe d'indicateurs,080.05,Indice de valeur
+COMPT0002_NRP,Subventions d'exploitation,001,Indemnités calamités agricoles
+COMPT0002_NRP,Subventions d'exploitation,002,Prophylaxie
+COMPT0002_NRP,Subventions d'exploitation,003,Plan de soutien
+COMPT0002_NRP,Subventions d'exploitation,004,Aides diverses aux éleveurs
+COMPT0002_NRP,Subventions d'exploitation,005,Droit au paiement découplé unique
+COMPT0002_NRP,Subventions d'exploitation,006,Dont droit au paiement de base
+COMPT0002_NRP,Subventions d'exploitation,007,Dont paiement vert
+COMPT0002_NRP,Subventions d'exploitation,008,Dont paiement redistributif
+COMPT0002_NRP,Subventions d'exploitation,009,Dont paiement jeunes agriculteurs
+COMPT0002_NRP,Subventions d'exploitation,010,Aides agri-environnementales
+COMPT0002_NRP,Subventions d'exploitation,011,Prime herbagère (PHAE)
+COMPT0002_NRP,Subventions d'exploitation,012,Indemnité compensatoire de handicap naturel (ICHN)
+COMPT0002_NRP,Subventions d'exploitation,013,Assurance récolte
+COMPT0002_NRP,Subventions d'exploitation,014,Autres aides
+COMPT0002_NRP,Subventions d'exploitation,015,Total subventions d'exploitation hors CICE
+COMPT0002_NRP,Subventions d'exploitation,016,CICE
+COMPT0002_NRP,Subventions d'exploitation,017,Total subventions d'exploitation y compris CICE
+COMPT0003_ARP,Années de référence,35,2015
+COMPT0003_ARP,Années de référence,36,2014
+COMPT0003_ARP,Années de référence,37,2013
+COMPT0003_ARP,Années de référence,38,2012
+COMPT0003_ARP,Années de référence,39,2011
+COMPT0003_ARP,Années de référence,40,2010
+COMPT0003_ARP,Années de référence,41,2009
+COMPT0003_ARP,Années de référence,42,2008
+COMPT0003_ARP,Années de référence,43,2007
+COMPT0003_ARP,Années de référence,44,2006
+COMPT0003_ARP,Années de référence,45,2005
+COMPT0003_ARP,Années de référence,46,2004
+COMPT0003_ARP,Années de référence,47,2003
+COMPT0003_ARP,Années de référence,48,2002
+COMPT0003_ARP,Années de référence,49,2001
+COMPT0003_ARP,Années de référence,50,2000
+COMPT0003_ARP,Années de référence,51,1999
+COMPT0003_ARP,Années de référence,52,1998
+COMPT0003_ARP,Années de référence,53,1997
+COMPT0003_ARP,Années de référence,54,1996
+COMPT0003_ARP,Années de référence,55,1995
+COMPT0003_ARP,Années de référence,56,1994
+COMPT0003_ARP,Années de référence,57,1993
+COMPT0003_ARP,Années de référence,58,1992
+COMPT0003_ARP,Années de référence,59,1991
+COMPT0003_ARP,Années de référence,60,1990
+COMPT0003_ARP,Groupe d'indicateurs,080.01,Indice de volume
+COMPT0003_ARP,Groupe d'indicateurs,080.02,Valeur annee n aux prix n-1
+COMPT0003_ARP,Groupe d'indicateurs,080.03,Indice de prix
+COMPT0003_ARP,Groupe d'indicateurs,080.04,Valeur annee n
+COMPT0003_ARP,Groupe d'indicateurs,080.05,Indice de valeur
+COMPT0003_ARP,Production et indicateurs,001,Production au prix de base
+COMPT0003_ARP,Production et indicateurs,002,Consommations Intermédiaires
+COMPT0003_ARP,Production et indicateurs,003,Valeur ajoutée brute
+COMPT0003_ARP,Production et indicateurs,004,Subventions d'exploitation (total)
+COMPT0003_ARP,Production et indicateurs,005,Impôts fonciers
+COMPT0003_ARP,Production et indicateurs,006,Autres impôts sur la production
+COMPT0003_ARP,Production et indicateurs,007,Salaires
+COMPT0003_ARP,Production et indicateurs,008,Cotisation sociales
+COMPT0003_ARP,Production et indicateurs,009,Revenu mixte brut (ou excédent brut d'exploitation)
+COMPT0003_ARP,Production et indicateurs,010,Intérêts
+COMPT0003_ARP,Production et indicateurs,011,Charges locatives nettes
+COMPT0003_ARP,Production et indicateurs,012,Résultat brut de la branche agricole
+COMPT0003_ARP,Production et indicateurs,013,Consommation de capital fixe
+COMPT0003_ARP,Production et indicateurs,014,Valeur ajoutée nette au coût des facteurs (million d'euros)
+COMPT0003_ARP,Production et indicateurs,015,Résultat net de la branche agricole
+COMPT0003_ARP,Production et indicateurs,016,Unités de travail annuel totales (UTAT)
+COMPT0003_ARP,Production et indicateurs,017,Unités de travail annuel non salariées (UTANS)
+COMPT0003_ARP,Production et indicateurs,018,Valeur ajoutée nette au coût des facteurs par actif (millier d'euros)
+COMPT0003_ARP,Production et indicateurs,019,Résultat net de la branche agricole par UTANS (millier d'euros)
+COMPT0003_ARP,Production et indicateurs,020,Indice de prix du PIB  : évolution n/n-1- valeur de l'année n-1=100
+COMPT0003_ARP,Production et indicateurs,021,Nombre d'exploitations
+COMPT0003_ARP,Production et indicateurs,022,Surface agricole utilisée des exploitations (ha)
+COMPT0003_NRP,Années de référence,28,2022
+COMPT0003_NRP,Années de référence,29,2021
+COMPT0003_NRP,Années de référence,30,2020
+COMPT0003_NRP,Années de référence,31,2019
+COMPT0003_NRP,Années de référence,32,2018
+COMPT0003_NRP,Années de référence,33,2017
+COMPT0003_NRP,Années de référence,34,2016
+COMPT0003_NRP,Années de référence,35,2015
+COMPT0003_NRP,Années de référence,36,2014
+COMPT0003_NRP,Années de référence,37,2013
+COMPT0003_NRP,Années de référence,38,2012
+COMPT0003_NRP,Années de référence,39,2011
+COMPT0003_NRP,Années de référence,40,2010
+COMPT0003_NRP,Groupe d'indicateurs,080.01,Indice de volume
+COMPT0003_NRP,Groupe d'indicateurs,080.02,Valeur annee n aux prix n-1
+COMPT0003_NRP,Groupe d'indicateurs,080.03,Indice de prix
+COMPT0003_NRP,Groupe d'indicateurs,080.04,Valeur annee n
+COMPT0003_NRP,Groupe d'indicateurs,080.05,Indice de valeur
+COMPT0003_NRP,Production et indicateurs,001,Production au prix de base
+COMPT0003_NRP,Production et indicateurs,002,Consommations Intermédiaires
+COMPT0003_NRP,Production et indicateurs,003,Valeur ajoutée brute
+COMPT0003_NRP,Production et indicateurs,004,Subventions d'exploitation (total)
+COMPT0003_NRP,Production et indicateurs,005,Impôts fonciers
+COMPT0003_NRP,Production et indicateurs,006,Autres impôts sur la production
+COMPT0003_NRP,Production et indicateurs,007,Salaires
+COMPT0003_NRP,Production et indicateurs,008,Cotisation sociales
+COMPT0003_NRP,Production et indicateurs,009,Revenu mixte brut (ou excédent brut d'exploitation)
+COMPT0003_NRP,Production et indicateurs,010,Intérêts
+COMPT0003_NRP,Production et indicateurs,011,Charges locatives nettes
+COMPT0003_NRP,Production et indicateurs,012,Résultat brut de la branche agricole
+COMPT0003_NRP,Production et indicateurs,013,Consommation de capital fixe
+COMPT0003_NRP,Production et indicateurs,014,Valeur ajoutée nette au coût des facteurs (million d'euros)
+COMPT0003_NRP,Production et indicateurs,015,Résultat net de la branche agricole
+COMPT0003_NRP,Production et indicateurs,016,Unités de travail annuel totales (UTAT)
+COMPT0003_NRP,Production et indicateurs,017,Unités de travail annuel non salariées (UTANS)
+COMPT0003_NRP,Production et indicateurs,018,Valeur ajoutée nette au coût des facteurs par actif (millier d'euros)
+COMPT0003_NRP,Production et indicateurs,019,Résultat net de la branche agricole par UTANS (millier d'euros)
+COMPT0003_NRP,Production et indicateurs,020,Indice de prix du PIB  : évolution n/n-1- valeur de l'année n-1=100
+COMPT0003_NRP,Production et indicateurs,021,Nombre d'exploitations
+COMPT0003_NRP,Production et indicateurs,022,Surface agricole utilisée des exploitations (ha)
+COMPT0004_ARP,Années de référence,35,2015
+COMPT0004_ARP,Années de référence,36,2014
+COMPT0004_ARP,Années de référence,37,2013
+COMPT0004_ARP,Années de référence,38,2012
+COMPT0004_ARP,Années de référence,39,2011
+COMPT0004_ARP,Années de référence,40,2010
+COMPT0004_ARP,Années de référence,41,2009
+COMPT0004_ARP,Années de référence,42,2008
+COMPT0004_ARP,Années de référence,43,2007
+COMPT0004_ARP,Années de référence,44,2006
+COMPT0004_ARP,Années de référence,45,2005
+COMPT0004_ARP,Années de référence,46,2004
+COMPT0004_ARP,Années de référence,47,2003
+COMPT0004_ARP,Années de référence,48,2002
+COMPT0004_ARP,Années de référence,49,2001
+COMPT0004_ARP,Années de référence,50,2000
+COMPT0004_ARP,Années de référence,51,1999
+COMPT0004_ARP,Années de référence,52,1998
+COMPT0004_ARP,Années de référence,53,1997
+COMPT0004_ARP,Années de référence,54,1996
+COMPT0004_ARP,Années de référence,55,1995
+COMPT0004_ARP,Années de référence,56,1994
+COMPT0004_ARP,Années de référence,57,1993
+COMPT0004_ARP,Années de référence,58,1992
+COMPT0004_ARP,Années de référence,59,1991
+COMPT0004_ARP,Années de référence,60,1990
+COMPT0004_ARP,Comptes de l'Agriculture,0003,Production au prix de base
+COMPT0004_ARP,Comptes de l'Agriculture,0004,Consommations Intermédiaires
+COMPT0004_ARP,Comptes de l'Agriculture,0005,Semences et plants
+COMPT0004_ARP,Comptes de l'Agriculture,0006,Produits pétroliers
+COMPT0004_ARP,Comptes de l'Agriculture,0007,Engrais et amendements
+COMPT0004_ARP,Comptes de l'Agriculture,0008,Produits de protection des cultures
+COMPT0004_ARP,Comptes de l'Agriculture,0009,Aliments pour animaux
+COMPT0004_ARP,Comptes de l'Agriculture,0010,Dont aliments intraconsommés et fourrages
+COMPT0004_ARP,Comptes de l'Agriculture,0011,Dont aliments achetés hors de la branche
+COMPT0004_ARP,Comptes de l'Agriculture,0012,Dépenses vétérinaires
+COMPT0004_ARP,Comptes de l'Agriculture,0013,Entretien du matériel et achat de petit matériel
+COMPT0004_ARP,Comptes de l'Agriculture,0014,Entretien des bâtiments
+COMPT0004_ARP,Comptes de l'Agriculture,0015,Services de travaux agricoles
+COMPT0004_ARP,Comptes de l'Agriculture,0016,Autres services
+COMPT0004_ARP,Comptes de l'Agriculture,0017,Autres consommations intermédiaires
+COMPT0004_ARP,Comptes de l'Agriculture,0018,Valeur ajoutée brute
+COMPT0004_ARP,Groupe d'indicateurs,080.01,Indice de volume
+COMPT0004_ARP,Groupe d'indicateurs,080.02,Valeur annee n aux prix n-1
+COMPT0004_ARP,Groupe d'indicateurs,080.03,Indice de prix
+COMPT0004_ARP,Groupe d'indicateurs,080.04,Valeur annee n
+COMPT0004_ARP,Groupe d'indicateurs,080.05,Indice de valeur
+COMPT0004_NRP,Années de référence,28,2022
+COMPT0004_NRP,Années de référence,29,2021
+COMPT0004_NRP,Années de référence,30,2020
+COMPT0004_NRP,Années de référence,31,2019
+COMPT0004_NRP,Années de référence,32,2018
+COMPT0004_NRP,Années de référence,33,2017
+COMPT0004_NRP,Années de référence,34,2016
+COMPT0004_NRP,Années de référence,35,2015
+COMPT0004_NRP,Années de référence,36,2014
+COMPT0004_NRP,Années de référence,37,2013
+COMPT0004_NRP,Années de référence,38,2012
+COMPT0004_NRP,Années de référence,39,2011
+COMPT0004_NRP,Années de référence,40,2010
+COMPT0004_NRP,Comptes de l'Agriculture,0003,Production au prix de base
+COMPT0004_NRP,Comptes de l'Agriculture,0004,Consommations Intermédiaires
+COMPT0004_NRP,Comptes de l'Agriculture,0005,Semences et plants
+COMPT0004_NRP,Comptes de l'Agriculture,0006,Produits pétroliers
+COMPT0004_NRP,Comptes de l'Agriculture,0007,Engrais et amendements
+COMPT0004_NRP,Comptes de l'Agriculture,0008,Produits de protection des cultures
+COMPT0004_NRP,Comptes de l'Agriculture,0009,Aliments pour animaux
+COMPT0004_NRP,Comptes de l'Agriculture,0010,Dont aliments intraconsommés et fourrages
+COMPT0004_NRP,Comptes de l'Agriculture,0011,Dont aliments achetés hors de la branche
+COMPT0004_NRP,Comptes de l'Agriculture,0012,Dépenses vétérinaires
+COMPT0004_NRP,Comptes de l'Agriculture,0013,Entretien du matériel et achat de petit matériel
+COMPT0004_NRP,Comptes de l'Agriculture,0014,Entretien des bâtiments
+COMPT0004_NRP,Comptes de l'Agriculture,0015,Services de travaux agricoles
+COMPT0004_NRP,Comptes de l'Agriculture,0016,Autres services
+COMPT0004_NRP,Comptes de l'Agriculture,0017,Autres consommations intermédiaires
+COMPT0004_NRP,Comptes de l'Agriculture,0018,Valeur ajoutée brute
+COMPT0004_NRP,Groupe d'indicateurs,080.01,Indice de volume
+COMPT0004_NRP,Groupe d'indicateurs,080.02,Valeur annee n aux prix n-1
+COMPT0004_NRP,Groupe d'indicateurs,080.03,Indice de prix
+COMPT0004_NRP,Groupe d'indicateurs,080.04,Valeur annee n
+COMPT0004_NRP,Groupe d'indicateurs,080.05,Indice de valeur
+COMPT0005_ARP,Années de référence,35,2015
+COMPT0005_ARP,Années de référence,36,2014
+COMPT0005_ARP,Années de référence,37,2013
+COMPT0005_ARP,Années de référence,38,2012
+COMPT0005_ARP,Années de référence,39,2011
+COMPT0005_ARP,Années de référence,40,2010
+COMPT0005_ARP,Années de référence,41,2009
+COMPT0005_ARP,Années de référence,42,2008
+COMPT0005_ARP,Années de référence,43,2007
+COMPT0005_ARP,Années de référence,44,2006
+COMPT0005_ARP,Années de référence,45,2005
+COMPT0005_ARP,Années de référence,46,2004
+COMPT0005_ARP,Années de référence,47,2003
+COMPT0005_ARP,Années de référence,48,2002
+COMPT0005_ARP,Années de référence,49,2001
+COMPT0005_ARP,Années de référence,50,2000
+COMPT0005_ARP,Années de référence,51,1999
+COMPT0005_ARP,Années de référence,52,1998
+COMPT0005_ARP,Années de référence,53,1997
+COMPT0005_ARP,Années de référence,54,1996
+COMPT0005_ARP,Années de référence,55,1995
+COMPT0005_ARP,Années de référence,56,1994
+COMPT0005_ARP,Années de référence,57,1993
+COMPT0005_ARP,Années de référence,58,1992
+COMPT0005_ARP,Années de référence,59,1991
+COMPT0005_ARP,Années de référence,60,1990
+COMPT0005_ARP,Comptes de l'Agriculture,0001,Production hors subventions
+COMPT0005_ARP,Comptes de l'Agriculture,0002,Subventions sur les produits
+COMPT0005_ARP,Comptes de l'Agriculture,0003,Production au prix de base
+COMPT0005_ARP,Groupe d'indicateurs,080.01,Indice de volume
+COMPT0005_ARP,Groupe d'indicateurs,080.02,Valeur annee n aux prix n-1
+COMPT0005_ARP,Groupe d'indicateurs,080.03,Indice de prix
+COMPT0005_ARP,Groupe d'indicateurs,080.04,Valeur annee n
+COMPT0005_ARP,Groupe d'indicateurs,080.05,Indice de valeur
+COMPT0005_ARP,Produits,001,Blé dur
+COMPT0005_ARP,Produits,002,Blé tendre
+COMPT0005_ARP,Produits,003,Maïs
+COMPT0005_ARP,Produits,004,Orge
+COMPT0005_ARP,Produits,005,Autres céréales
+COMPT0005_ARP,Produits,006,TOTAL CEREALES
+COMPT0005_ARP,Produits,007,Oléagineux
+COMPT0005_ARP,Produits,008,Protéagineux
+COMPT0005_ARP,Produits,009,Tabac
+COMPT0005_ARP,Produits,010,Betteraves industrielles
+COMPT0005_ARP,Produits,011,Autres plantes industrielles
+COMPT0005_ARP,Produits,012,TOTAL PLANTES INDUSTRIELLES
+COMPT0005_ARP,Produits,013,Maïs fourrage
+COMPT0005_ARP,Produits,014,Autres fourrages
+COMPT0005_ARP,Produits,015,TOTAL PLANTES FOURRAGERES
+COMPT0005_ARP,Produits,016,Légumes frais
+COMPT0005_ARP,Produits,017,Fleurs et plantes
+COMPT0005_ARP,Produits,018,Plants de pépinières
+COMPT0005_ARP,Produits,019,FBCF plantations
+COMPT0005_ARP,Produits,020,TOTAL PROD.MARAICHERS ET HORTICOLES
+COMPT0005_ARP,Produits,021,Pommes de terre
+COMPT0005_ARP,Produits,022,Fruits
+COMPT0005_ARP,Produits,023,Vins de Champagne
+COMPT0005_ARP,Produits,024,_dont Champagne
+COMPT0005_ARP,Produits,025,Autres vins d'appellation
+COMPT0005_ARP,Produits,026,TOTAL VINS D'APPELLATION
+COMPT0005_ARP,Produits,027,Vins pour eaux de vie
+COMPT0005_ARP,Produits,028,_dont eaux de vie
+COMPT0005_ARP,Produits,029,Autres vins de distillation
+COMPT0005_ARP,Produits,030,Vins IGP et sans IG
+COMPT0005_ARP,Produits,031,TOTAL AUTRES VINS
+COMPT0005_ARP,Produits,032,TOTAL PRODUITS VEGETAUX BRUTS ET TRANSFORMES
+COMPT0005_ARP,Produits,033,Gros bovins
+COMPT0005_ARP,Produits,034,Veaux
+COMPT0005_ARP,Produits,035,Ovins
+COMPT0005_ARP,Produits,036,Caprins
+COMPT0005_ARP,Produits,037,Equidés
+COMPT0005_ARP,Produits,038,Porcins
+COMPT0005_ARP,Produits,039,TOTAL BETAIL
+COMPT0005_ARP,Produits,040,Volailles
+COMPT0005_ARP,Produits,041,Oeufs
+COMPT0005_ARP,Produits,042,TOTAL PRODUITS AVICOLES
+COMPT0005_ARP,Produits,043,Lait et produits laitiers de vache
+COMPT0005_ARP,Produits,044,_dont produits laitiers de vache transformés
+COMPT0005_ARP,Produits,045,Lait et produits laitiers de brebis
+COMPT0005_ARP,Produits,046,_dont produits laitiers de brebis transformés
+COMPT0005_ARP,Produits,047,Lait et produits laitiers de chèvre
+COMPT0005_ARP,Produits,048,_dont produits laitiers de chèvre transformés
+COMPT0005_ARP,Produits,049,Total lait et produits laitiers
+COMPT0005_ARP,Produits,050,_dont produits laitiers transformés
+COMPT0005_ARP,Produits,051,Autres produits de l'élevage
+COMPT0005_ARP,Produits,052,TOTAL AUTRES PRODUITS ANIMAUX
+COMPT0005_ARP,Produits,053,TOTAL PRODUITS ANIMAUX BRUTS ET TRANSFORMES
+COMPT0005_ARP,Produits,054,TOTAL PRODUCTION DE BIENS
+COMPT0005_ARP,Produits,055,Activité principale de travaux agricoles
+COMPT0005_ARP,Produits,056,Activité secondaire de services
+COMPT0005_ARP,Produits,057,TOTAL PRODUCTION DE SERVICES
+COMPT0005_ARP,Produits,058,TOTAL PRODUCTION DE LA BRANCHE AGRICOLE
+COMPT0005_ARP,Produits,059,_dont activités secondaires
+COMPT0005_NRP,Années de référence,28,2022
+COMPT0005_NRP,Années de référence,29,2021
+COMPT0005_NRP,Années de référence,30,2020
+COMPT0005_NRP,Années de référence,31,2019
+COMPT0005_NRP,Années de référence,32,2018
+COMPT0005_NRP,Années de référence,33,2017
+COMPT0005_NRP,Années de référence,34,2016
+COMPT0005_NRP,Années de référence,35,2015
+COMPT0005_NRP,Années de référence,36,2014
+COMPT0005_NRP,Années de référence,37,2013
+COMPT0005_NRP,Années de référence,38,2012
+COMPT0005_NRP,Années de référence,39,2011
+COMPT0005_NRP,Années de référence,40,2010
+COMPT0005_NRP,Comptes de l'Agriculture,0001,Production hors subventions
+COMPT0005_NRP,Comptes de l'Agriculture,0002,Subventions sur les produits
+COMPT0005_NRP,Comptes de l'Agriculture,0003,Production au prix de base
+COMPT0005_NRP,Groupe d'indicateurs,080.01,Indice de volume
+COMPT0005_NRP,Groupe d'indicateurs,080.02,Valeur annee n aux prix n-1
+COMPT0005_NRP,Groupe d'indicateurs,080.03,Indice de prix
+COMPT0005_NRP,Groupe d'indicateurs,080.04,Valeur annee n
+COMPT0005_NRP,Groupe d'indicateurs,080.05,Indice de valeur
+COMPT0005_NRP,Produits,001,Blé dur
+COMPT0005_NRP,Produits,002,Blé tendre
+COMPT0005_NRP,Produits,003,Maïs
+COMPT0005_NRP,Produits,004,Orge
+COMPT0005_NRP,Produits,005,Autres céréales
+COMPT0005_NRP,Produits,006,TOTAL CEREALES
+COMPT0005_NRP,Produits,007,Oléagineux
+COMPT0005_NRP,Produits,008,Protéagineux
+COMPT0005_NRP,Produits,009,Tabac
+COMPT0005_NRP,Produits,010,Betteraves industrielles
+COMPT0005_NRP,Produits,011,Autres plantes industrielles
+COMPT0005_NRP,Produits,012,TOTAL PLANTES INDUSTRIELLES
+COMPT0005_NRP,Produits,013,Maïs fourrage
+COMPT0005_NRP,Produits,014,Autres fourrages
+COMPT0005_NRP,Produits,015,TOTAL PLANTES FOURRAGERES
+COMPT0005_NRP,Produits,016,Légumes frais
+COMPT0005_NRP,Produits,017,Fleurs et plantes
+COMPT0005_NRP,Produits,018,Plants de pépinières
+COMPT0005_NRP,Produits,019,FBCF plantations
+COMPT0005_NRP,Produits,020,TOTAL PROD.MARAICHERS ET HORTICOLES
+COMPT0005_NRP,Produits,021,Pommes de terre
+COMPT0005_NRP,Produits,022,Fruits
+COMPT0005_NRP,Produits,023,Vins de Champagne
+COMPT0005_NRP,Produits,024,_dont Champagne
+COMPT0005_NRP,Produits,025,Autres vins d'appellation
+COMPT0005_NRP,Produits,026,TOTAL VINS D'APPELLATION
+COMPT0005_NRP,Produits,027,Vins pour eaux de vie
+COMPT0005_NRP,Produits,028,_dont eaux de vie
+COMPT0005_NRP,Produits,029,Autres vins de distillation
+COMPT0005_NRP,Produits,030,Vins IGP et sans IG
+COMPT0005_NRP,Produits,031,TOTAL AUTRES VINS
+COMPT0005_NRP,Produits,032,TOTAL PRODUITS VEGETAUX BRUTS ET TRANSFORMES
+COMPT0005_NRP,Produits,033,Gros bovins
+COMPT0005_NRP,Produits,034,Veaux
+COMPT0005_NRP,Produits,035,Ovins
+COMPT0005_NRP,Produits,036,Caprins
+COMPT0005_NRP,Produits,037,Equidés
+COMPT0005_NRP,Produits,038,Porcins
+COMPT0005_NRP,Produits,039,TOTAL BETAIL
+COMPT0005_NRP,Produits,040,Volailles
+COMPT0005_NRP,Produits,041,Oeufs
+COMPT0005_NRP,Produits,042,TOTAL PRODUITS AVICOLES
+COMPT0005_NRP,Produits,043,Lait et produits laitiers de vache
+COMPT0005_NRP,Produits,044,_dont produits laitiers de vache transformés
+COMPT0005_NRP,Produits,045,Lait et produits laitiers de brebis
+COMPT0005_NRP,Produits,046,_dont produits laitiers de brebis transformés
+COMPT0005_NRP,Produits,047,Lait et produits laitiers de chèvre
+COMPT0005_NRP,Produits,048,_dont produits laitiers de chèvre transformés
+COMPT0005_NRP,Produits,049,Total lait et produits laitiers
+COMPT0005_NRP,Produits,050,_dont produits laitiers transformés
+COMPT0005_NRP,Produits,051,Autres produits de l'élevage
+COMPT0005_NRP,Produits,052,TOTAL AUTRES PRODUITS ANIMAUX
+COMPT0005_NRP,Produits,053,TOTAL PRODUITS ANIMAUX BRUTS ET TRANSFORMES
+COMPT0005_NRP,Produits,054,TOTAL PRODUCTION DE BIENS
+COMPT0005_NRP,Produits,055,Activité principale de travaux agricoles
+COMPT0005_NRP,Produits,056,Activité secondaire de services
+COMPT0005_NRP,Produits,057,TOTAL PRODUCTION DE SERVICES
+COMPT0005_NRP,Produits,058,TOTAL PRODUCTION DE LA BRANCHE AGRICOLE
+COMPT0005_NRP,Produits,059,_dont activités secondaires
 CONSOVIANDE,Années de référence,25,2025
 CONSOVIANDE,Années de référence,26,2024
 CONSOVIANDE,Années de référence,27,2023
@@ -413,6 +1484,131 @@ CONSOVIANDE,Viandes,1.2.3,viande de canard
 CONSOVIANDE,Viandes,1.2.4,Viande de pintade
 CONSOVIANDE,Viandes,1.2.5,Viande d'oie
 CONSOVIANDE,Viandes,1.3,Viande de lapin
+D_0015,Années de référence,25,2025
+D_0015,Années de référence,26,2024
+D_0015,Années de référence,27,2023
+D_0015,Années de référence,28,2022
+D_0015,Années de référence,29,2021
+D_0015,Années de référence,30,2020
+D_0015,Années de référence,31,2019
+D_0015,Années de référence,32,2018
+D_0015,Années de référence,33,2017
+D_0015,Années de référence,34,2016
+D_0015,Années de référence,35,2015
+D_0015,Années de référence,36,2014
+D_0015,Années de référence,37,2013
+D_0015,Années de référence,38,2012
+D_0015,Années de référence,39,2011
+D_0015,Années de référence,40,2010
+D_0015,Années de référence,41,2009
+D_0015,Années de référence,42,2008
+D_0015,Années de référence,43,2007
+D_0015,Années de référence,44,2006
+D_0015,Années de référence,45,2005
+D_0015,Années de référence,46,2004
+D_0015,Années de référence,47,2003
+D_0015,Années de référence,48,2002
+D_0015,Années de référence,49,2001
+D_0015,Années de référence,50,2000
+D_0015,Couleur,001,Total couleurs
+D_0015,Couleur,002,Blanc
+D_0015,Couleur,003,Rouge et rosé
+D_0015,Groupe d'indicateurs,020.04,Exportation (volume)
+D_0015,Groupe d'indicateurs,020.05,Importation (volume)
+D_0015,Groupe d'indicateurs,030.04,Exportation (valeur)
+D_0015,Groupe d'indicateurs,030.05,Importation (valeur)
+D_0015,Géographie d'échanges,001,MONDE
+D_0015,Géographie d'échanges,002,_UE
+D_0015,Géographie d'échanges,003,__UE (à 15)
+D_0015,Géographie d'échanges,004,___ Autriche
+D_0015,Géographie d'échanges,005,___Allemagne
+D_0015,Géographie d'échanges,006,___Danemark
+D_0015,Géographie d'échanges,007,___Espagne (y compris Canaries)
+D_0015,Géographie d'échanges,008,___Finlande
+D_0015,Géographie d'échanges,009,___Grèce
+D_0015,Géographie d'échanges,010,___Irlande
+D_0015,Géographie d'échanges,011,___Italie
+D_0015,Géographie d'échanges,012,___Pays-Bas
+D_0015,Géographie d'échanges,013,___Portugal
+D_0015,Géographie d'échanges,014,___Royaume-Uni
+D_0015,Géographie d'échanges,015,___Suède
+D_0015,Géographie d'échanges,016,___UEBL
+D_0015,Géographie d'échanges,017,____Belgique
+D_0015,Géographie d'échanges,018,____Luxembourg
+D_0015,Géographie d'échanges,019,__Nouveaux membres (à partir de 2004)
+D_0015,Géographie d'échanges,020,___Chypre
+D_0015,Géographie d'échanges,021,___Estonie
+D_0015,Géographie d'échanges,022,___Hongrie
+D_0015,Géographie d'échanges,023,___Lettonie
+D_0015,Géographie d'échanges,024,___Lituanie
+D_0015,Géographie d'échanges,025,___Malte
+D_0015,Géographie d'échanges,026,___Pologne
+D_0015,Géographie d'échanges,027,___République tchèque
+D_0015,Géographie d'échanges,028,___Slovaquie
+D_0015,Géographie d'échanges,029,___Slovénie
+D_0015,Géographie d'échanges,030,___Bulgarie
+D_0015,Géographie d'échanges,031,___Roumanie
+D_0015,Géographie d'échanges,032,___Croatie
+D_0015,Géographie d'échanges,033,_PAYS TIERS
+D_0015,Géographie d'échanges,034,___Suisse
+D_0015,Géographie d'échanges,035,___Norvège
+D_0015,Géographie d'échanges,036,___Canada
+D_0015,Géographie d'échanges,037,___E.U.A.N
+D_0015,Géographie d'échanges,038,___Argentine
+D_0015,Géographie d'échanges,039,___Chili
+D_0015,Géographie d'échanges,040,___Afrique du Sud
+D_0015,Géographie d'échanges,041,___Japon
+D_0015,Géographie d'échanges,042,___Australie
+D_0015,Géographie d'échanges,043,___Nouvelle-Zélande
+D_0015,Géographie d'échanges,044,___République populaire de Chine
+D_0015,Produit,001,Vins
+D_0015,Produit,002,__AOP tranquilles
+D_0015,Produit,003,___AOP tranquilles  <= 15°
+D_0015,Produit,004,____Alsace blanc <=  15° (1)
+D_0015,Produit,005,____Alsace blanc  < 13° (2)
+D_0015,Produit,006,____Beaujolais rouge et rosé <= 15° (1)
+D_0015,Produit,007,____Beaujolais rouge et rosé  < 13° (2)
+D_0015,Produit,008,____Bordeaux <= 15° (1)
+D_0015,Produit,009,____Bordeaux < 13° (2)
+D_0015,Produit,010,____Bourgogne <= 15° (1)
+D_0015,Produit,011,____Bourgogne < 13° (2)
+D_0015,Produit,012,____Val de Loire <= 15° (1)
+D_0015,Produit,013,____Val de Loire < 13° (2)
+D_0015,Produit,014,____Côtes du Rhône rouge et rosé <= 15° (1)
+D_0015,Produit,015,____Côtes du Rhône rouge et rosé < 13° (2)
+D_0015,Produit,016,____Languedoc-Roussillon rouge et rosé <= 15° (1)
+D_0015,Produit,017,____Languedoc-Roussillon rouge et rosé < 13° (2)
+D_0015,Produit,018,____Autres appellations tranquilles non détaillés ( <= 15°) (1)
+D_0015,Produit,019,____Autres appellations tranquilles < 13° (2)
+D_0015,Produit,020,____Appellations tranquilles  > 13° (2)
+D_0015,Produit,021,____Complément Vallée du Rhône
+D_0015,Produit,022,___AOP tranquilles  > 15° (y c. blancs)
+D_0015,Produit,023,__Champagne (y c. rosé)
+D_0015,Produit,024,__Vins IGP et sans IG tranquilles
+D_0015,Produit,025,___Vins IGP tranquilles (1)
+D_0015,Produit,026,___Vins tranquilles sans IG (1)
+D_0015,Produit,027,____Vins tranquilles sans IG avec mention du cépage (1)
+D_0015,Produit,028,____Vins tranquilles sans IG sans mention du cépage (1)
+D_0015,Produit,029,__Vins effervescents hors Champagne
+D_0015,Produit,030,___Vins Mousseux et pétillants AOP (1)
+D_0015,Produit,031,"___Vins Mousseux et pétillants non AOP et AOP, jusqu'en 2009 (2)"
+D_0015,Produit,032,___Vins Mousseux et pétillants IGP (y c. rosé) <=2L (1)
+D_0015,Produit,033,___Vins Mousseux et pétillants de cépage sans IG (y c. rosé) <=2L (1)
+D_0015,Produit,034,___Vins Mousseux et pétillants sans IG sans mention du cépage (y c. rosé)<= 2L (1)
+D_0015,Produit,035,___Pétillants > 2L (1)
+D_0015,Période Somme A_M,0,Total annuel
+D_0015,Période Somme A_M,0.01,Janvier
+D_0015,Période Somme A_M,0.02,Février
+D_0015,Période Somme A_M,0.03,Mars
+D_0015,Période Somme A_M,0.04,Avril
+D_0015,Période Somme A_M,0.05,Mai
+D_0015,Période Somme A_M,0.06,Juin
+D_0015,Période Somme A_M,0.07,Juillet
+D_0015,Période Somme A_M,0.08,Août
+D_0015,Période Somme A_M,0.09,Septembre
+D_0015,Période Somme A_M,0.10,Octobre
+D_0015,Période Somme A_M,0.11,Novembre
+D_0015,Période Somme A_M,0.12,Décembre
 ESEA16_1,Années de référence,34,2016
 ESEA16_1,Catégorie juridique,0,Toutes catégories confondues
 ESEA16_1,Catégorie juridique,0.1,Personne physique
@@ -24060,6 +25256,154 @@ IPAMPA,Périodes,010,Octobre
 IPAMPA,Périodes,011,Novembre
 IPAMPA,Périodes,012,Décembre
 IPAMPA,Périodes,013,Moyenne annuelle
+IPC,Années de référence,25,2025
+IPC,Années de référence,26,2024
+IPC,Années de référence,27,2023
+IPC,Années de référence,28,2022
+IPC,Années de référence,29,2021
+IPC,Années de référence,30,2020
+IPC,Années de référence,31,2019
+IPC,Années de référence,32,2018
+IPC,Années de référence,33,2017
+IPC,Années de référence,34,2016
+IPC,Années de référence,35,2015
+IPC,Années de référence,36,2014
+IPC,Années de référence,37,2013
+IPC,Années de référence,38,2012
+IPC,Années de référence,39,2011
+IPC,Années de référence,40,2010
+IPC,Années de référence,41,2009
+IPC,Années de référence,42,2008
+IPC,Années de référence,43,2007
+IPC,Années de référence,44,2006
+IPC,Années de référence,45,2005
+IPC,Années de référence,46,2004
+IPC,Années de référence,47,2003
+IPC,Années de référence,48,2002
+IPC,Années de référence,49,2001
+IPC,Années de référence,50,2000
+IPC,Années de référence,51,1999
+IPC,Années de référence,52,1998
+IPC,Années de référence,53,1997
+IPC,Années de référence,54,1996
+IPC,Années de référence,55,1995
+IPC,Années de référence,56,1994
+IPC,Années de référence,57,1993
+IPC,Années de référence,58,1992
+IPC,Années de référence,59,1991
+IPC,Années de référence,60,1990
+IPC,Indicateurs,001,Indice Ipc base 100 en 2015 (1)
+IPC,Indicateurs,002,Pondération IPC base 100 en 2015 (1)
+IPC,Produits,001,Ensemble des produits à la consommation
+IPC,Produits,002,_Ensemble hors tabac
+IPC,Produits,003,__Alimentation
+IPC,Produits,004,___PRODUITS ALIMENTAIRES ET BOISSONS ALCOOLISEES
+IPC,Produits,005,____PRODUITS ALIMENTAIRES
+IPC,Produits,006,_____Pain et céréales
+IPC,Produits,007,______Riz
+IPC,Produits,008,______Farines et autres céréales
+IPC,Produits,009,______Pain
+IPC,Produits,010,______Autres produits de boulangerie
+IPC,Produits,011,"______Pizzas, quiches et plats cuisinés à base de céréales"
+IPC,Produits,012,______Pâtes alimentaires et couscous
+IPC,Produits,013,______Céréales pour petit déjeuner
+IPC,Produits,014,______Autres produits à base de céréales n.c.a.
+IPC,Produits,015,_____Viande
+IPC,Produits,016,______Boeuf et veau
+IPC,Produits,017,______Porc
+IPC,Produits,018,"______Mouton, agneau et chèvre"
+IPC,Produits,019,______Volaille
+IPC,Produits,020,______Autres viandes
+IPC,Produits,021,______Abats comestibles
+IPC,Produits,022,"______Viande séchée, salée ou fumée"
+IPC,Produits,023,______Autres préparations à base de viande
+IPC,Produits,024,_____Poissons et fruits de mer
+IPC,Produits,025,______Poissons frais
+IPC,Produits,026,______Poissons surgelés
+IPC,Produits,027,______Fruits de mer frais
+IPC,Produits,028,______Fruits de mer surgelés
+IPC,Produits,031,"______Poissons et fruits de mer séchés, fumés ou salés"
+IPC,Produits,032,______Autres conserves ou préparations à base de poisson et de fruits de mer
+IPC,Produits,033,"_____Lait, fromage et oeufs"
+IPC,Produits,034,______Lait entier
+IPC,Produits,035,______Lait demi-écrémé ou écrémé
+IPC,Produits,036,"______Lait longue conservation, en poudre ou concentré"
+IPC,Produits,037,______Yaourt
+IPC,Produits,038,______Fromage et laits caillés
+IPC,Produits,039,______Autres produits laitiers
+IPC,Produits,040,______Oeufs
+IPC,Produits,041,_____Huiles et graisses
+IPC,Produits,042,______Beurre
+IPC,Produits,043,______Margarine et autres graisses végétales
+IPC,Produits,044,______Huile d'olive
+IPC,Produits,045,______Autres huiles alimentaires
+IPC,Produits,046,_____Fruits
+IPC,Produits,047,______Fruits frais
+IPC,Produits,048,______Fruits surgelés
+IPC,Produits,049,______Fruits secs et fruits à coque
+IPC,Produits,050,______Fruits en conserve et autres produits à base de fruits n.c.a.
+IPC,Produits,051,_____Légumes
+IPC,Produits,052,"______Légumes frais, hors pommes de terre et autres tubercules"
+IPC,Produits,053,"______Légumes surgelés, sauf pommes de terre et autres tubercules"
+IPC,Produits,054,"______Légumes secs, autres légumes en conserve ou transformés"
+IPC,Produits,055,______Pommes de terre
+IPC,Produits,056,______Chips
+IPC,Produits,057,______Autres tubercules et produits issus de tubercules
+IPC,Produits,058,"_____Sucre, confiture, miel, chocolat et confiserie"
+IPC,Produits,059,______Sucre
+IPC,Produits,060,"______Confitures, compotes et miel"
+IPC,Produits,061,______Chocolat
+IPC,Produits,062,______Produits de confiserie (hors chocolat)
+IPC,Produits,063,______Crèmes glacées et sorbets
+IPC,Produits,064,______Succédané de sucre (sucrettes)
+IPC,Produits,065,_____Produits alimentaires n.c.a.
+IPC,Produits,066,______Sauces et condiments
+IPC,Produits,067,"______Sel, épices et herbes culinaires"
+IPC,Produits,068,______Aliments pour bébés
+IPC,Produits,069,______Plats cuisinés n.c.a.
+IPC,Produits,070,______Autres produits alimentaires n.c.a.
+IPC,Produits,071,____BOISSONS NON ALCOOLISÉES
+IPC,Produits,072,"_____Café, thé et cacao"
+IPC,Produits,073,______Café
+IPC,Produits,074,______Thés et infusions
+IPC,Produits,075,______Cacao et chocolat en poudre
+IPC,Produits,076,"_____Eaux minérales, boissons rafraîchissantes, jus de fruits et de légumes"
+IPC,Produits,077,______Eaux minérales ou de source
+IPC,Produits,078,______Boissons rafraîchissantes
+IPC,Produits,079,______Jus de fruits et de légumes
+IPC,Produits,080,"___BOISSONS ALCOOLISÉES, TABAC ET STUPÉFIANTS"
+IPC,Produits,081,____BOISSONS ALCOOLISEES
+IPC,Produits,082,_____Alcools de bouche
+IPC,Produits,083,______Spiritueux et liqueurs
+IPC,Produits,084,_____Vin et boissons fermentées
+IPC,Produits,085,______Vin
+IPC,Produits,086,______Boissons fermentées à base d'autres fruits
+IPC,Produits,087,______Vins enrichis en alcool
+IPC,Produits,088,______Boissons à base de vin
+IPC,Produits,089,_____Bières
+IPC,Produits,093,______Bières à basse fermentation
+IPC,Produits,094,______Autres bières alcoolisées
+IPC,Produits,095,____TABAC
+IPC,Produits,096,______Cigarettes
+IPC,Produits,097,______Cigares
+IPC,Produits,098,______Autres produits du tabac
+IPC,Produits,099,__Énergie
+IPC,Produits,100,___Produits pétroliers
+IPC,Produits,101,__Services
+IPC,Produits,102,__Produits manufacturés
+IPC,Périodes,001,Janvier
+IPC,Périodes,002,Fevrier
+IPC,Périodes,003,Mars
+IPC,Périodes,004,Avril
+IPC,Périodes,005,Mai
+IPC,Périodes,006,Juin
+IPC,Périodes,007,Juillet
+IPC,Périodes,008,Aout
+IPC,Périodes,009,Septembre
+IPC,Périodes,010,Octobre
+IPC,Périodes,011,Novembre
+IPC,Périodes,012,Decembre
+IPC,Périodes,013,Moyenne annuelle
 IPPAP,Années de référence,25,2025
 IPPAP,Années de référence,26,2024
 IPPAP,Années de référence,27,2023
@@ -25230,6 +26574,28 @@ Q_0011,NAF,416,12.00.19.30 Tabac à fumer (hors taxes et accises sur le tabac)
 Q_0011,QUANTITE,001,"Production commercialisée, quantité (tonnes)"
 Q_0011,QUANTITE,004,"Production commercialisée, quantité (millier d'articles)"
 Q_0011,QUANTITE,005,"Production commercialisée, valeur (millier d'euros)"
+RA2020_001,Années de référence,30,2020
+RA2020_001,Années de référence,40,2010
+RA2020_001,Classe de taille économique,0,Ensemble des exploitations
+RA2020_001,Classe de taille économique,0.1,1.Micro exploitations:PBS inférieure à 25 000 euros
+RA2020_001,Classe de taille économique,0.2,2.Petites exploitations:PBS comprise entre 25 000 et inférieure 100 000 euros
+RA2020_001,Classe de taille économique,0.3,3.Moyennes exploitations:PBS comprise entre 100 000 et inférieure à 250 000 euros
+RA2020_001,Classe de taille économique,0.4,4.Grandes exploitations:PBS supérieure ou égale à 250 000 euros
+RA2020_001,Indicateur,001,Nombre d'exploitations
+RA2020_001,Indicateur,002,Superficie agricole utilisée (SAU)(hectare)
+RA2020_001,Indicateur,003,ETP (Équivalent Temps Plein)
+RA2020_001,Indicateur,004,Production brute standard (PBS) (millier d'euros)
+RA2020_001,OTEX Coef2017,0,Toutes exploitations
+RA2020_001,OTEX Coef2017,0.11,Exploitations spécialisées en grandes cultures
+RA2020_001,OTEX Coef2017,0.12,Exploitations spécialisées en maraîchage ou horticulture
+RA2020_001,OTEX Coef2017,0.13,Exploitations spécialisées en viticulture
+RA2020_001,OTEX Coef2017,0.14,Exploitations spécialisées en cultures fruitières ou autres cultures permanentes
+RA2020_001,OTEX Coef2017,0.15,Exploitations bovines spécialisées - orientation lait
+RA2020_001,OTEX Coef2017,0.16,Exploitations bovines spécialisées - orientation élevage et viande
+RA2020_001,OTEX Coef2017,0.17,"Exploitations bovines - lait, élevage et viande combinés"
+RA2020_001,OTEX Coef2017,0.18,"Exploitations avec ovins et-ou caprins, et-ou autres herbivores"
+RA2020_001,OTEX Coef2017,0.19,Exploitations spécialisées en porcins et-ou volailles
+RA2020_001,OTEX Coef2017,0.20,Exploitations de polyculture et-ou polyélevage et exploitations non classées
 RA2020_0051,Années de référence,30,2020
 RA2020_0051,Classe de taille économique,0,Ensemble des exploitations
 RA2020_0051,Classe de taille économique,0.1,1.Micro exploitations:PBS inférieure à 25 000 euros
@@ -25324,6 +26690,263 @@ RA2020_0053,OTEX Coef2017,0.17,"Exploitations bovines - lait, élevage et viande
 RA2020_0053,OTEX Coef2017,0.18,"Exploitations avec ovins et-ou caprins, et-ou autres herbivores"
 RA2020_0053,OTEX Coef2017,0.19,Exploitations spécialisées en porcins et-ou volailles
 RA2020_0053,OTEX Coef2017,0.20,Exploitations de polyculture et-ou polyélevage et exploitations non classées
+RA2020_1013,Années de référence,30,2020
+RA2020_1013,Classe de taille économique,0,Ensemble des exploitations
+RA2020_1013,Classe de taille économique,0.1,1.Micro exploitations:PBS inférieure à 25 000 euros
+RA2020_1013,Classe de taille économique,0.2,2.Petites exploitations:PBS comprise entre 25 000 et inférieure 100 000 euros
+RA2020_1013,Classe de taille économique,0.3,3.Moyennes exploitations:PBS comprise entre 100 000 et inférieure à 250 000 euros
+RA2020_1013,Classe de taille économique,0.4,4.Grandes exploitations:PBS supérieure ou égale à 250 000 euros
+RA2020_1013,Cultures RA 2020,1,SAU
+RA2020_1013,Cultures RA 2020,1.1,Terres arables
+RA2020_1013,Cultures RA 2020,1.1.1,Céréales
+RA2020_1013,Cultures RA 2020,1.1.1.11,Blé
+RA2020_1013,Cultures RA 2020,1.1.1.11.1,Blé tendre et épeautre
+RA2020_1013,Cultures RA 2020,1.1.1.11.1.11,Blé tendre d'hiver et épeautre
+RA2020_1013,Cultures RA 2020,1.1.1.11.1.11.1,Blé tendre d'hiver
+RA2020_1013,Cultures RA 2020,1.1.1.11.1.11.2,Épeautre
+RA2020_1013,Cultures RA 2020,1.1.1.11.1.12,Blé tendre de printemps
+RA2020_1013,Cultures RA 2020,1.1.1.11.2,Blé dur
+RA2020_1013,Cultures RA 2020,1.1.1.11.2.11,Blé dur d'hiver
+RA2020_1013,Cultures RA 2020,1.1.1.11.2.12,Blé dur de printemps
+RA2020_1013,Cultures RA 2020,1.1.1.12,Orge et escourgeon
+RA2020_1013,Cultures RA 2020,1.1.1.12.1,Orge d'hiver et escourgeon
+RA2020_1013,Cultures RA 2020,1.1.1.12.2,Orge de printemps
+RA2020_1013,Cultures RA 2020,1.1.1.12.3,Sarrasin
+RA2020_1013,Cultures RA 2020,1.1.1.13,Avoine
+RA2020_1013,Cultures RA 2020,1.1.1.13.1,Avoine d'hiver
+RA2020_1013,Cultures RA 2020,1.1.1.13.2,Avoine de printemps
+RA2020_1013,Cultures RA 2020,1.1.1.14,Triticale
+RA2020_1013,Cultures RA 2020,1.1.1.15,Seigle
+RA2020_1013,Cultures RA 2020,1.1.1.16,Maïs grain et maïs semence
+RA2020_1013,Cultures RA 2020,1.1.1.17,Sorgho grain
+RA2020_1013,Cultures RA 2020,1.1.1.18,Riz
+RA2020_1013,Cultures RA 2020,1.1.1.19,Autres céréales
+RA2020_1013,Cultures RA 2020,1.1.1.19.1,Mélanges de céréales d’hiver
+RA2020_1013,Cultures RA 2020,1.1.1.19.2,Mélanges de céréales de printemps
+RA2020_1013,Cultures RA 2020,1.1.1.19.9,Autres céréales (millet alpiste quinoa…)
+RA2020_1013,Cultures RA 2020,1.1.2,Oléagineux protéagineux plantes à  fibres et cultures industrielles protéagineux
+RA2020_1013,Cultures RA 2020,1.1.2.11,Oléagineux (y c. semences)
+RA2020_1013,Cultures RA 2020,1.1.2.11.1,Colza grain et navette
+RA2020_1013,Cultures RA 2020,1.1.2.11.2,Tournesol
+RA2020_1013,Cultures RA 2020,1.1.2.11.3,Soja
+RA2020_1013,Cultures RA 2020,1.1.2.11.9,Autres oléagineux (lin oeillette ricin)
+RA2020_1013,Cultures RA 2020,1.1.2.11.9.11,Lin oléagineux
+RA2020_1013,Cultures RA 2020,1.1.2.11.9.19,Autres oléagineux nca (hors chanvre)
+RA2020_1013,Cultures RA 2020,1.1.2.12,Plantes à fibres
+RA2020_1013,Cultures RA 2020,1.1.2.12.1,Lin textile (y compris semences)
+RA2020_1013,Cultures RA 2020,1.1.2.12.9,Autres plantes à fibres
+RA2020_1013,Cultures RA 2020,1.1.2.12.9.11,Chanvre (semences non comprises)
+RA2020_1013,Cultures RA 2020,1.1.2.12.9.19,Autres plantes à fibres n.c.a* (semences non comprises)
+RA2020_1013,Cultures RA 2020,1.1.2.13,Plantes industrielles
+RA2020_1013,Cultures RA 2020,1.1.2.13.1,Betterave à sucre (semences non comprises)
+RA2020_1013,Cultures RA 2020,1.1.2.13.2,Houblon
+RA2020_1013,Cultures RA 2020,1.1.2.13.3,Tabac
+RA2020_1013,Cultures RA 2020,1.1.2.13.4,Plantes à parfum  aromatiques  médicinales et condimentaires
+RA2020_1013,Cultures RA 2020,1.1.2.13.4.11,Plantes à parfum  aromatiques  médicinales (persil basilic lavande piment...) cultivées en plein air ou sous abri bas
+RA2020_1013,Cultures RA 2020,1.1.2.13.4.12,Plantes à parfum  aromatiques  médicinales (persil basilic lavande piment...) cultivées sous serre ou abri haut
+RA2020_1013,Cultures RA 2020,1.1.2.13.7,Canne à sucre
+RA2020_1013,Cultures RA 2020,1.1.2.13.7.11,Canne à sucre pour l'industrie
+RA2020_1013,Cultures RA 2020,1.1.2.13.7.12,Canne à sucre pour le jus
+RA2020_1013,Cultures RA 2020,1.1.2.13.7.13,Canne à sucre pour alimentation du bétail
+RA2020_1013,Cultures RA 2020,1.1.2.13.8,Autres plantes industrielles
+RA2020_1013,Cultures RA 2020,1.1.2.13.8.19,Autres cultures industrielles (sauf chicorée)
+RA2020_1013,Cultures RA 2020,1.1.2.13.8.19.1,Racine d'endive
+RA2020_1013,Cultures RA 2020,1.1.2.13.9,Autres cultures industrielles (hors endives)
+RA2020_1013,Cultures RA 2020,1.1.2.14,Protéagineux et légumes secs (y c. semences)
+RA2020_1013,Cultures RA 2020,1.1.2.14.1,Pois protéagineux
+RA2020_1013,Cultures RA 2020,1.1.2.14.1.11,Pois d'hiver
+RA2020_1013,Cultures RA 2020,1.1.2.14.1.12,Pois de printemps
+RA2020_1013,Cultures RA 2020,1.1.2.14.2,Féverole
+RA2020_1013,Cultures RA 2020,1.1.2.14.3,Lupin doux
+RA2020_1013,Cultures RA 2020,1.1.2.14.4,Haricot sec
+RA2020_1013,Cultures RA 2020,1.1.2.14.5,Fève  féverole  lupin doux  lentilles
+RA2020_1013,Cultures RA 2020,1.1.2.14.5.12,Lentilles  pois chiches
+RA2020_1013,Cultures RA 2020,1.1.2.14.5.12.1,Lentille
+RA2020_1013,Cultures RA 2020,1.1.2.14.5.12.2,Pois chiche
+RA2020_1013,Cultures RA 2020,1.1.2.14.6,Mélanges de protéagineux
+RA2020_1013,Cultures RA 2020,1.1.2.14.7,Mélanges de protéagineux et de céréales
+RA2020_1013,Cultures RA 2020,1.1.2.14.8,Pois d'Angole  ambrevade
+RA2020_1013,Cultures RA 2020,1.1.2.14.9,Autres protéagineux (récoltés pour la graine : vesce…)
+RA2020_1013,Cultures RA 2020,1.1.3,Cultures fourragères
+RA2020_1013,Cultures RA 2020,1.1.3.11,Cultures fourragères
+RA2020_1013,Cultures RA 2020,1.1.3.11.1,Maïs fourrage et ensilage
+RA2020_1013,Cultures RA 2020,1.1.3.11.2,Plante sarclée fourragère (betterave  chou …)
+RA2020_1013,Cultures RA 2020,1.1.3.11.9,Autres fourrages annuels
+RA2020_1013,Cultures RA 2020,1.1.3.11.9.11,Céréales fourragères autres que le maïs (sorgho fourrager...)
+RA2020_1013,Cultures RA 2020,1.1.3.11.9.12,Autres fourrages annuels (navette  colza fourrager etc…)
+RA2020_1013,Cultures RA 2020,1.1.3.11.9.13,Légumineuse fourragère annuelle
+RA2020_1013,Cultures RA 2020,1.1.3.11.9.13.1,Légumineuse fourragère annuelle pure (hors luzerne)
+RA2020_1013,Cultures RA 2020,1.1.3.11.9.13.2,Mélanges de légumineuses fourragères annuelles
+RA2020_1013,Cultures RA 2020,1.1.3.11.9.13.3,Mélanges de légumineuses fourragères annuelles et de céréales
+RA2020_1013,Cultures RA 2020,1.1.3.12,Prairie artificielle (luzerne trèfle violet  ...)
+RA2020_1013,Cultures RA 2020,1.1.3.12.1,Luzerne déshydratée
+RA2020_1013,Cultures RA 2020,1.1.3.12.2,Luzerne (hors déshydratée)
+RA2020_1013,Cultures RA 2020,1.1.3.13,Prairies artificielles (prairie temporaire uniquement semée de légumineuses : trèfle violet…- hors luzerne)
+RA2020_1013,Cultures RA 2020,1.1.3.14,Prairies temporaires (de 5 ans ou moins)
+RA2020_1013,Cultures RA 2020,1.1.4,Pommes de terre et autres tubercules
+RA2020_1013,Cultures RA 2020,1.1.4.11,Pommes de terre
+RA2020_1013,Cultures RA 2020,1.1.4.11.1,Pommes de terre primeurs ou nouvelles
+RA2020_1013,Cultures RA 2020,1.1.4.11.2,Pommes de terre de conservation ou demi-saison
+RA2020_1013,Cultures RA 2020,1.1.4.11.3,Plants de pommes de terre
+RA2020_1013,Cultures RA 2020,1.1.4.11.4,Pommes de terre de féculerie
+RA2020_1013,Cultures RA 2020,1.1.4.12,Autres tubercules n.c.a. niv. 1
+RA2020_1013,Cultures RA 2020,1.1.4.12.1,Igname
+RA2020_1013,Cultures RA 2020,1.1.4.12.2,Taro  madère  dachine  songe
+RA2020_1013,Cultures RA 2020,1.1.4.12.3,Manioc
+RA2020_1013,Cultures RA 2020,1.1.4.12.4,Patate douce
+RA2020_1013,Cultures RA 2020,1.1.4.12.9,Autres racines ou tubercules
+RA2020_1013,Cultures RA 2020,1.1.5,Légumes frais  melons ou fraises  melons ou fraises
+RA2020_1013,Cultures RA 2020,1.1.5.11,Légumes frais  melons ou fraises  cultivés sous serre ou sous abri haut
+RA2020_1013,Cultures RA 2020,1.1.5.11.1,Légumes frais  plants de légumes  melons ou fraises (yc ail  échalote  patate douce)  cultivés abri haut
+RA2020_1013,Cultures RA 2020,1.1.5.11.2,Légumes frais  plants de légumes  melons ou fraises (yc ail  échalote  patate douce)  cultivés sous serre ou abri
+RA2020_1013,Cultures RA 2020,1.1.5.12,Légumes frais (maraîchage en plein air)  plants de légumes  melons ou fraises (yc ail  échalote  patate douce)
+RA2020_1013,Cultures RA 2020,1.1.5.13,Cultures de plein champ de légumes frais  melons ou fraises
+RA2020_1013,Cultures RA 2020,1.1.5.13.1,Cultures de plein champ destinés au marché du frais
+RA2020_1013,Cultures RA 2020,1.1.5.13.2,Cultures de plein champ destinés à la transformation
+RA2020_1013,Cultures RA 2020,1.1.6,Fleurs et plantes ornementales
+RA2020_1013,Cultures RA 2020,1.1.6.11,Fleurs et plantes ornementales cultivées en plein air ou sous abri bas
+RA2020_1013,Cultures RA 2020,1.1.6.12,Fleurs et plantes ornementales cultivées sous serre ou sous abri haut
+RA2020_1013,Cultures RA 2020,1.1.7,Autres terres arables
+RA2020_1013,Cultures RA 2020,1.1.7.11,Jachères
+RA2020_1013,Cultures RA 2020,1.1.7.12,Autres terres arables  n.c.a. niv. 1
+RA2020_1013,Cultures RA 2020,1.1.7.12.1,Semences destinées à la vente
+RA2020_1013,Cultures RA 2020,1.1.7.12.3,Bordures de champ
+RA2020_1013,Cultures RA 2020,1.2,Cultures permanentes
+RA2020_1013,Cultures RA 2020,1.2.1,Vignes et pépinières viticoles
+RA2020_1013,Cultures RA 2020,1.2.1.11,Vigne à raisin de cuve
+RA2020_1013,Cultures RA 2020,1.2.1.11.1,Vin d'appellation d'origine protégée (AOP)
+RA2020_1013,Cultures RA 2020,1.2.1.11.2,Vin avec indication géographique protégée (IGP)
+RA2020_1013,Cultures RA 2020,1.2.1.11.3,Vin sans indication géographique
+RA2020_1013,Cultures RA 2020,1.2.1.11.4,Vin apte à la production d'eau-de-vie
+RA2020_1013,Cultures RA 2020,1.2.1.12,Vigne à raisin de table
+RA2020_1013,Cultures RA 2020,1.2.1.12.1,Vigne à raisin de table en plein air
+RA2020_1013,Cultures RA 2020,1.2.1.12.2,Vigne à raisin de table sous verre ou abri haut
+RA2020_1013,Cultures RA 2020,1.2.1.13,Pépinières viticoles et vignes mères de porte-greffe
+RA2020_1013,Cultures RA 2020,1.2.1.13.1,Pépinières viticoles
+RA2020_1013,Cultures RA 2020,1.2.1.13.1.11,Pépinière viticole en plein air
+RA2020_1013,Cultures RA 2020,1.2.1.13.1.12,Pépinière viticole sous verre ou abri haut
+RA2020_1013,Cultures RA 2020,1.2.1.13.2,Vignes mères de porte-greffe
+RA2020_1013,Cultures RA 2020,1.2.2,Cultures fruitières
+RA2020_1013,Cultures RA 2020,1.2.2.11,Fruits à noyaux
+RA2020_1013,Cultures RA 2020,1.2.2.11.1,Abricotier
+RA2020_1013,Cultures RA 2020,1.2.2.11.2,Cerisier
+RA2020_1013,Cultures RA 2020,1.2.2.11.2.11,Cerisier (hors transformation)
+RA2020_1013,Cultures RA 2020,1.2.2.11.2.12,Cerisier pour la transformation (bigarreau d'industrie …)
+RA2020_1013,Cultures RA 2020,1.2.2.11.3,Pêcher (y c. à pavie) nectarinier
+RA2020_1013,Cultures RA 2020,1.2.2.11.3.11,Pêcher nectarinier (hors pêcher de Pavie)
+RA2020_1013,Cultures RA 2020,1.2.2.11.3.12,Pêcher de Pavie
+RA2020_1013,Cultures RA 2020,1.2.2.11.4,Prunier (y c. mirabellier et quetschier)
+RA2020_1013,Cultures RA 2020,1.2.2.11.4.11,Prunier (y c mirabellier et quetschier – hors prunier d'Ente pour la transformation)
+RA2020_1013,Cultures RA 2020,1.2.2.11.4.12,Prunier d'Ente pour la transformation
+RA2020_1013,Cultures RA 2020,1.2.2.11.5,Olivier
+RA2020_1013,Cultures RA 2020,1.2.2.11.9,Autres fruits à noyaux n.c.a.
+RA2020_1013,Cultures RA 2020,1.2.2.12,Fruits à pépins
+RA2020_1013,Cultures RA 2020,1.2.2.12.1,Pommier de table
+RA2020_1013,Cultures RA 2020,1.2.2.12.2,Pommier à cidre
+RA2020_1013,Cultures RA 2020,1.2.2.12.3,Poirier de table
+RA2020_1013,Cultures RA 2020,1.2.2.12.4,Poirier à poiré
+RA2020_1013,Cultures RA 2020,1.2.2.12.5,Kiwi
+RA2020_1013,Cultures RA 2020,1.2.2.12.6,Figuier
+RA2020_1013,Cultures RA 2020,1.2.2.12.8,Autres fruits à pépins
+RA2020_1013,Cultures RA 2020,1.2.2.13,Agrumes
+RA2020_1013,Cultures RA 2020,1.2.2.13.1,Mandarinier et hybrides (clémentine  tangerine..)
+RA2020_1013,Cultures RA 2020,1.2.2.13.1.11,Clémentine
+RA2020_1013,Cultures RA 2020,1.2.2.13.1.19,Autres mandariniers et hybrides
+RA2020_1013,Cultures RA 2020,1.2.2.13.2,Pamplemousse  chadèque  pomelo et hybrides
+RA2020_1013,Cultures RA 2020,1.2.2.13.3,Oranger et hybrides
+RA2020_1013,Cultures RA 2020,1.2.2.13.4,Citronnier
+RA2020_1013,Cultures RA 2020,1.2.2.13.5,Autres agrumes (yc limes  combava)
+RA2020_1013,Cultures RA 2020,1.2.2.13.9,Autres agrumes (DOM)
+RA2020_1013,Cultures RA 2020,1.2.2.13.9.11,Limes
+RA2020_1013,Cultures RA 2020,1.2.2.13.9.12,Combava
+RA2020_1013,Cultures RA 2020,1.2.2.13.9.19,Autres agrumes DOM
+RA2020_1013,Cultures RA 2020,1.2.2.14,Fruits à coque
+RA2020_1013,Cultures RA 2020,1.2.2.14.1,Noyer
+RA2020_1013,Cultures RA 2020,1.2.2.14.9,Autres fruits à coque (amandier châtaigner...) n.c.a. niv. 1
+RA2020_1013,Cultures RA 2020,1.2.2.14.9.11,Amandier
+RA2020_1013,Cultures RA 2020,1.2.2.14.9.12,Châtaignier
+RA2020_1013,Cultures RA 2020,1.2.2.14.9.13,Noisetier
+RA2020_1013,Cultures RA 2020,1.2.2.14.9.13.1,Noisetier (hors mycorhizé)
+RA2020_1013,Cultures RA 2020,1.2.2.14.9.13.2,Noisetier mycorhizé
+RA2020_1013,Cultures RA 2020,1.2.2.14.9.19,Autres fruits à coque
+RA2020_1013,Cultures RA 2020,1.2.2.15,Petits fruits
+RA2020_1013,Cultures RA 2020,1.2.2.15.1,Framboisier
+RA2020_1013,Cultures RA 2020,1.2.2.15.1.11,Framboisier en plein air
+RA2020_1013,Cultures RA 2020,1.2.2.15.1.12,Framboisier sous serre ou abri haut
+RA2020_1013,Cultures RA 2020,1.2.2.15.2,Groseillier
+RA2020_1013,Cultures RA 2020,1.2.2.15.3,Cassissier
+RA2020_1013,Cultures RA 2020,1.2.2.15.3.11,Cassissier en plein air
+RA2020_1013,Cultures RA 2020,1.2.2.15.3.12,Cassissier sous serre ou abri haut
+RA2020_1013,Cultures RA 2020,1.2.2.15.4,Myrtillier
+RA2020_1013,Cultures RA 2020,1.2.2.15.9,Autres petits fruits
+RA2020_1013,Cultures RA 2020,1.2.2.16,Fruits tropicaux et subtropicaux
+RA2020_1013,Cultures RA 2020,1.2.2.16.1,Avocat
+RA2020_1013,Cultures RA 2020,1.2.2.16.2,Bananes fruits
+RA2020_1013,Cultures RA 2020,1.2.2.16.2.11,Banane fruit pour l'export
+RA2020_1013,Cultures RA 2020,1.2.2.16.2.12,Banane fruit pour le marché local
+RA2020_1013,Cultures RA 2020,1.2.2.16.2.13,Banane légume
+RA2020_1013,Cultures RA 2020,1.2.2.16.3,Anacardiacées fruitiers
+RA2020_1013,Cultures RA 2020,1.2.2.16.3.11,Mangue
+RA2020_1013,Cultures RA 2020,1.2.2.16.3.12,Pruniers tropicaux
+RA2020_1013,Cultures RA 2020,1.2.2.16.3.12.1,Autres palmiers pour fruits prune de Cythère
+RA2020_1013,Cultures RA 2020,1.2.2.16.3.12.2,Palmier ou palmiste pour le chou
+RA2020_1013,Cultures RA 2020,1.2.2.16.4,Papaye
+RA2020_1013,Cultures RA 2020,1.2.2.16.5,Ananas
+RA2020_1013,Cultures RA 2020,1.2.2.16.6,Goyave
+RA2020_1013,Cultures RA 2020,1.2.2.16.7,Goyave (La Réunion)
+RA2020_1013,Cultures RA 2020,1.2.2.16.8,Amandier pays (badamier)
+RA2020_1013,Cultures RA 2020,1.2.2.16.9,Autres fruits tropicaux et subtropicaux
+RA2020_1013,Cultures RA 2020,1.2.2.16.9.11,Carambole
+RA2020_1013,Cultures RA 2020,1.2.2.16.9.12,Sapindacées fruitiers
+RA2020_1013,Cultures RA 2020,1.2.2.16.9.12.1,Letchi ramboutan
+RA2020_1013,Cultures RA 2020,1.2.2.16.9.12.2,Longani  longane
+RA2020_1013,Cultures RA 2020,1.2.2.16.9.13,Abricot pays ou mamey
+RA2020_1013,Cultures RA 2020,1.2.2.16.9.14,Cerise pays ou acérola
+RA2020_1013,Cultures RA 2020,1.2.2.16.9.15,Annonacées fruitiers
+RA2020_1013,Cultures RA 2020,1.2.2.16.9.15.1,Corossol ou annone
+RA2020_1013,Cultures RA 2020,1.2.2.16.9.15.2,Attier ou pomme cannelle
+RA2020_1013,Cultures RA 2020,1.2.2.16.9.16,Passiflores
+RA2020_1013,Cultures RA 2020,1.2.2.16.9.16.1,Maracudja fruit de la passion grenadille
+RA2020_1013,Cultures RA 2020,1.2.2.16.9.17,Fruits tropicaux pour la boisson
+RA2020_1013,Cultures RA 2020,1.2.2.16.9.17.1,Cacao cupucu
+RA2020_1013,Cultures RA 2020,1.2.2.16.9.17.1.1,Cacao de plein champ
+RA2020_1013,Cultures RA 2020,1.2.2.16.9.17.1.2,Cacao sous forêt naturelle
+RA2020_1013,Cultures RA 2020,1.2.2.16.9.17.2,Café
+RA2020_1013,Cultures RA 2020,1.2.2.16.9.17.2.1,Café de plein champ
+RA2020_1013,Cultures RA 2020,1.2.2.16.9.17.2.2,Café sous forêt naturelle
+RA2020_1013,Cultures RA 2020,1.2.2.16.9.17.3,Coco
+RA2020_1013,Cultures RA 2020,1.2.2.16.9.19,Autres fruits tropicaux et subtropicaux n.c.a. niv. 2
+RA2020_1013,Cultures RA 2020,1.2.2.16.9.19.1,Moracées fruitiers
+RA2020_1013,Cultures RA 2020,1.2.2.16.9.19.1.1,Fruit à pain châtaigne
+RA2020_1013,Cultures RA 2020,1.2.2.16.9.19.1.2,Jaquier
+RA2020_1013,Cultures RA 2020,1.2.2.16.9.19.1.3,Pitaya
+RA2020_1013,Cultures RA 2020,1.2.2.16.9.19.1.4,Groseille pays (gwosey bissap)
+RA2020_1013,Cultures RA 2020,1.2.2.16.9.19.9,Autres fruits tropicaux et subtropicaux n.c.a. niv. 3
+RA2020_1013,Cultures RA 2020,1.2.9,Cultures permanentes autres
+RA2020_1013,Cultures RA 2020,1.2.9.11,Arbres de Noël
+RA2020_1013,Cultures RA 2020,1.2.9.12,Pépinières ornementales fruitières et forestières (y c. rosiers)
+RA2020_1013,Cultures RA 2020,1.2.9.12.1,Pépinières ornementales
+RA2020_1013,Cultures RA 2020,1.2.9.12.1.11,Pépinière ornementale : reproduction de plantes ligneuses (y c. rosiers) en plein air
+RA2020_1013,Cultures RA 2020,1.2.9.12.1.12,Pépinière ornementale : reproduction de plantes ligneuses (y c. rosiers) sous serre ou abri haut
+RA2020_1013,Cultures RA 2020,1.2.9.12.2,Pépinières fruitières
+RA2020_1013,Cultures RA 2020,1.2.9.12.2.11,Pépinière fruitière en plein air
+RA2020_1013,Cultures RA 2020,1.2.9.12.2.12,Pépinière fruitière sous serre ou abri haut
+RA2020_1013,Cultures RA 2020,1.2.9.12.3,Pépinières forestières
+RA2020_1013,Cultures RA 2020,1.2.9.12.3.11,Pépinière forestière (y c. pépinière truffière) en plein air
+RA2020_1013,Cultures RA 2020,1.2.9.12.3.12,Pépinière forestière (y c. pépinière truffière) sous serre ou abri haut
+RA2020_1013,Cultures RA 2020,1.2.9.13,Cultures permanentes énergétiques n.c.a*(miscanthus switchgrass… - hors taillis à courte rotation)
+RA2020_1013,Cultures RA 2020,1.2.9.14,Autres cultures permanentes (jonc mûrier)
+RA2020_1013,Cultures RA 2020,1.2.9.14.1,Arbres truffiers (hors noisetiers)
+RA2020_1013,Cultures RA 2020,1.2.9.14.2,Autres cultures permanentes (jonc mûrier)
+RA2020_1013,Cultures RA 2020,1.3,Surfaces toujours en herbe (STH)
+RA2020_1013,Cultures RA 2020,1.3.1,Prairies permanentes productives (pâturages et prés)
+RA2020_1013,Cultures RA 2020,1.3.2,Prairies permanentes peu productives (pâturages pauvres) yc les parcours de volailles et porcs
+RA2020_1013,Cultures RA 2020,1.3.3,STH non productives mais ouvrant droit au versement de subventions
+RA2020_1013,Cultures RA 2020,1.3.4,Bois pâturés
+RA2020_1013,Cultures RA 2020,1.4,Jardins
+RA2020_1013,Cultures RA 2020,1.4.1,Jardins et vergers familiaux (surfaces de l'exploitation occupées par des cultures pour la consommation personnelle (ex : potagers vignes)
+RA2020_1013,Groupe d'indicateurs,010.02,Exploitations en ayant
+RA2020_1013,Groupe d'indicateurs,050.07,Superficie correspondante (hectare)
 RA2020_1013_EPCI,Années de référence,30,2020
 RA2020_1013_EPCI,Classe de taille économique,0,Ensemble des exploitations
 RA2020_1013_EPCI,Classe de taille économique,0.1,1.Micro exploitations:PBS inférieure à 25 000 euros
@@ -27482,6 +29105,110 @@ RICA_FRANCE_SOC2013,Orientation technico-économique (OTEX),013,OTEFDD 51 : Porc
 RICA_FRANCE_SOC2013,Orientation technico-économique (OTEX),014,OTEFDD 52 : Volailles
 RICA_FRANCE_SOC2013,Orientation technico-économique (OTEX),015,OTEFDD 53 + 74 : Granivores mixtes
 RICA_FRANCE_SOC2013,Orientation technico-économique (OTEX),016,"OTEFDD 61 + 73 + 83 + 84 : Polyculture, polyélevage"
+RICA_FRANCE_SOC2017,Années de référence,28,2022
+RICA_FRANCE_SOC2017,Années de référence,29,2021
+RICA_FRANCE_SOC2017,Classe de dimension économique (CDEX),001,Ensemble des moyennes et grandes exploitations
+RICA_FRANCE_SOC2017,Classe de dimension économique (CDEX),002,PBS supérieure ou égale à 25000 € et inférieure à 100000 €
+RICA_FRANCE_SOC2017,Classe de dimension économique (CDEX),003,PBS supérieure ou égale à 100000 € et inférieure à 250000 €
+RICA_FRANCE_SOC2017,Classe de dimension économique (CDEX),004,PBS supérieure ou égale à 250000 €
+RICA_FRANCE_SOC2017,Indicateur,001,Nombre d'exploitations dans échantillon
+RICA_FRANCE_SOC2017,Indicateur,002,Nombre d'exploitations représentées
+RICA_FRANCE_SOC2017,Indicateur,003,Production brute standard (€)
+RICA_FRANCE_SOC2017,Indicateur,004,Surface agricole utile (SAU) (ha)
+RICA_FRANCE_SOC2017,Indicateur,005,Surface en faire-valoir direct (ha)
+RICA_FRANCE_SOC2017,Indicateur,006,Main d'oeuvre totale (UTA)
+RICA_FRANCE_SOC2017,Indicateur,007,Main d'oeuvre non salariée (UTA)
+RICA_FRANCE_SOC2017,Indicateur,008,Age du chef d'exploitation
+RICA_FRANCE_SOC2017,Indicateur,009,Production de l'exercice (k€)
+RICA_FRANCE_SOC2017,Indicateur,010,Consommations intermédiaires (k€)
+RICA_FRANCE_SOC2017,Indicateur,011,Valeur ajoutée (VAHF) (k€)
+RICA_FRANCE_SOC2017,Indicateur,012,Excédent brut d'exploitation (k€)
+RICA_FRANCE_SOC2017,Indicateur,013,Résultat courant avant impôts (k€)
+RICA_FRANCE_SOC2017,Indicateur,014,Résultat de l'exercice (k€)
+RICA_FRANCE_SOC2017,Indicateur,015,Actif immobilisé (k€)
+RICA_FRANCE_SOC2017,Indicateur,016,Actif immobilisé - Foncier (k€)
+RICA_FRANCE_SOC2017,Indicateur,017,Actif immobilisé - Constructions (k€)
+RICA_FRANCE_SOC2017,Indicateur,018,Actif immobilisé - Matériel (k€)
+RICA_FRANCE_SOC2017,Indicateur,019,Actif immobilisé - Animx reproducteurs (k€)
+RICA_FRANCE_SOC2017,Indicateur,020,Actif immobilisé - Plantations (k€)
+RICA_FRANCE_SOC2017,Indicateur,021,Actif circulant (k€)
+RICA_FRANCE_SOC2017,Indicateur,022,Stocks et en-cours (k€)
+RICA_FRANCE_SOC2017,Indicateur,023,Valeurs réalisables (k€)
+RICA_FRANCE_SOC2017,Indicateur,024,Valeurs disponibles (k€)
+RICA_FRANCE_SOC2017,Indicateur,025,Actif (k€)
+RICA_FRANCE_SOC2017,Indicateur,026,Capitaux permanents (k€)
+RICA_FRANCE_SOC2017,Indicateur,027,Situation nette (k€)
+RICA_FRANCE_SOC2017,Indicateur,028,Subventions d'investissement (k€)
+RICA_FRANCE_SOC2017,Indicateur,029,Dettes à long ou moyen terme (LMT) (k€)
+RICA_FRANCE_SOC2017,Indicateur,030,Dettes LMT - Foncier (k€)
+RICA_FRANCE_SOC2017,Indicateur,031,Dettes LMT - Constructions (k€)
+RICA_FRANCE_SOC2017,Indicateur,032,Dettes à court terme (CT) (k€)
+RICA_FRANCE_SOC2017,Indicateur,033,Dettes CT - comptes de tiers (k€)
+RICA_FRANCE_SOC2017,Indicateur,034,Dettes CT - comptes financiers (k€)
+RICA_FRANCE_SOC2017,Indicateur,035,Passif (k€)
+RICA_FRANCE_SOC2017,Indicateur,036,Autofinancement (k€)
+RICA_FRANCE_SOC2017,Indicateur,037,Fonds de roulement net (k€)
+RICA_FRANCE_SOC2017,Indicateur,038,Besoin en fonds de roulement (k€)
+RICA_FRANCE_SOC2017,Indicateur,039,Variation de stocks de produits (k€)
+RICA_FRANCE_SOC2017,Indicateur,040,Variation de stocks approvisionnements (k€)
+RICA_FRANCE_SOC2017,Indicateur,041,Remboursement d'emprunts à LMT (k€)
+RICA_FRANCE_SOC2017,Indicateur,042,Investissement total (achat - cession) (k€)
+RICA_FRANCE_SOC2017,Indicateur,043,Investissement total - Matériel (k€)
+RICA_FRANCE_SOC2017,Indicateur,044,Investissement total - Foncier (k€)
+RICA_FRANCE_SOC2017,Indicateur,045,Investissement total - Constructions (k€)
+RICA_FRANCE_SOC2017,Indicateur,046,Investissement total net (inv - amort) (k€)
+RICA_FRANCE_SOC2017,Indicateur,047,Production brute (k€)
+RICA_FRANCE_SOC2017,Indicateur,048,Produit brut (k€)
+RICA_FRANCE_SOC2017,Indicateur,049,Ventes et prestations en nature (k€)
+RICA_FRANCE_SOC2017,Indicateur,051,Produits divers non exceptionnels (k€)
+RICA_FRANCE_SOC2017,Indicateur,052,Remboursement forfaitaire de TVA (k€)
+RICA_FRANCE_SOC2017,Indicateur,053,Subventions d'exploitation (k€)
+RICA_FRANCE_SOC2017,Indicateur,054,Primes compensatoires couplées (k€)
+RICA_FRANCE_SOC2017,Indicateur,055,"Aides découplées - DPU, DPB, paiement redistributif, paiement vert, paiement additionnel aux jeunes agriculteurs- (k€)"
+RICA_FRANCE_SOC2017,Indicateur,056,Aides diverses (k€)
+RICA_FRANCE_SOC2017,Indicateur,057,Charges d'approvisionnement (k€)
+RICA_FRANCE_SOC2017,Indicateur,058,Engrais et amendements (k€)
+RICA_FRANCE_SOC2017,Indicateur,059,Semences et plants (k€)
+RICA_FRANCE_SOC2017,Indicateur,060,Produits phytosanitaires (k€)
+RICA_FRANCE_SOC2017,Indicateur,061,Carburants et lubrifiants (k€)
+RICA_FRANCE_SOC2017,Indicateur,062,Fournitures (k€)
+RICA_FRANCE_SOC2017,Indicateur,063,Autres charges d'exploitation (k€)
+RICA_FRANCE_SOC2017,Indicateur,064,Travaux par tiers (k€)
+RICA_FRANCE_SOC2017,Indicateur,065,Entretien et réparation du matériel (k€)
+RICA_FRANCE_SOC2017,Indicateur,066,Loyers et fermages (k€)
+RICA_FRANCE_SOC2017,Indicateur,067,Assurances (k€)
+RICA_FRANCE_SOC2017,Indicateur,068,Impôts et taxes (k€)
+RICA_FRANCE_SOC2017,Indicateur,069,Charges de personnel (k€)
+RICA_FRANCE_SOC2017,Indicateur,070,Dotations aux amortissements (k€)
+RICA_FRANCE_SOC2017,Indicateur,071,Dotations aux amort. - matériel (k€)
+RICA_FRANCE_SOC2017,Indicateur,072,Dotations aux amort. - constructions (k€)
+RICA_FRANCE_SOC2017,Indicateur,073,Dotations aux amort. - plantations (k€)
+RICA_FRANCE_SOC2017,Indicateur,074,Charges financières (k€)
+RICA_FRANCE_SOC2017,Indicateur,075,Charges sociales de l'exploitant (k€)
+RICA_FRANCE_SOC2017,Indicateur,076,Production de l'exercice par hectare (k€ ha)
+RICA_FRANCE_SOC2017,Indicateur,077,Production de l'exercice par UTA (k€ UTA)
+RICA_FRANCE_SOC2017,Indicateur,078,Charges à l'hectare (k€ ha)
+RICA_FRANCE_SOC2017,Indicateur,079,RCAI par UTA non salariée (k€ UTA)
+RICA_FRANCE_SOC2017,Indicateur,080,Résultat de l'ex.   chiffre d'affaires (%)
+RICA_FRANCE_SOC2017,Indicateur,081,Endettement  chiffre d'affaires (%)
+RICA_FRANCE_SOC2017,Indicateur,082,Taux d'endettement (%)
+RICA_FRANCE_SOC2017,Indicateur,083,Indépendance financière (%)
+RICA_FRANCE_SOC2017,Orientation technico-économique (OTEX),001,Ensemble des orientations technico-économiques
+RICA_FRANCE_SOC2017,Orientation technico-économique (OTEX),002,"OTEFDD 15 : Céréales, oléagineux, protéagineux (COP)"
+RICA_FRANCE_SOC2017,Orientation technico-économique (OTEX),003,OTEFDD 16 : Cultures générales
+RICA_FRANCE_SOC2017,Orientation technico-économique (OTEX),004,OTEFDD 28  : Légumes et champignons
+RICA_FRANCE_SOC2017,Orientation technico-économique (OTEX),005,OTEFDD 29 : Fleurs et horticulture diverse
+RICA_FRANCE_SOC2017,Orientation technico-économique (OTEX),006,OTEFDD 35 : Viticulture
+RICA_FRANCE_SOC2017,Orientation technico-économique (OTEX),007,OTEFDD 39 : Arboriculture fruitière et autres cultures permanentes
+RICA_FRANCE_SOC2017,Orientation technico-économique (OTEX),008,OTEFDD 45 : Bovins lait
+RICA_FRANCE_SOC2017,Orientation technico-économique (OTEX),009,OTEFDD 46 : Bovins viande
+RICA_FRANCE_SOC2017,Orientation technico-économique (OTEX),010,OTEFDD 47 : Bovins mixtes
+RICA_FRANCE_SOC2017,Orientation technico-économique (OTEX),011,OTEFDD 481 + 482 + 483  : Ovins et caprins
+RICA_FRANCE_SOC2017,Orientation technico-économique (OTEX),012,OTEFDD 484 : Autres herbivores
+RICA_FRANCE_SOC2017,Orientation technico-économique (OTEX),013,OTEFDD 51 : Porcins
+RICA_FRANCE_SOC2017,Orientation technico-économique (OTEX),014,OTEFDD 52 : Volailles
+RICA_FRANCE_SOC2017,Orientation technico-économique (OTEX),015,OTEFDD 53 + 74 : Granivores mixtes
+RICA_FRANCE_SOC2017,Orientation technico-économique (OTEX),016,"OTEFDD 61 + 73 + 83 + 84 : Polyculture, polyélevage"
 RICA_METRO,Années de référence,33,2017
 RICA_METRO,Années de référence,34,2016
 RICA_METRO,Années de référence,35,2015
@@ -27856,6 +29583,110 @@ RICA_METRO_SOC2013,Orientation technico-économique (OTEX),013,OTEFDD 51 : Porci
 RICA_METRO_SOC2013,Orientation technico-économique (OTEX),014,OTEFDD 52 : Volailles
 RICA_METRO_SOC2013,Orientation technico-économique (OTEX),015,OTEFDD 53 + 74 : Granivores mixtes
 RICA_METRO_SOC2013,Orientation technico-économique (OTEX),016,"OTEFDD 61 + 73 + 83 + 84 : Polyculture, polyélevage"
+RICA_METRO_SOC2017,Années de référence,28,2022
+RICA_METRO_SOC2017,Années de référence,29,2021
+RICA_METRO_SOC2017,Classe de dimension économique (CDEX),001,Ensemble des moyennes et grandes exploitations
+RICA_METRO_SOC2017,Classe de dimension économique (CDEX),002,PBS supérieure ou égale à 25000 € et inférieure à 100000 €
+RICA_METRO_SOC2017,Classe de dimension économique (CDEX),003,PBS supérieure ou égale à 100000 € et inférieure à 250000 €
+RICA_METRO_SOC2017,Classe de dimension économique (CDEX),004,PBS supérieure ou égale à 250000 €
+RICA_METRO_SOC2017,Indicateur,001,Nombre d'exploitations dans échantillon
+RICA_METRO_SOC2017,Indicateur,002,Nombre d'exploitations représentées
+RICA_METRO_SOC2017,Indicateur,003,Production brute standard (€)
+RICA_METRO_SOC2017,Indicateur,004,Surface agricole utile (SAU) (ha)
+RICA_METRO_SOC2017,Indicateur,005,Surface en faire-valoir direct (ha)
+RICA_METRO_SOC2017,Indicateur,006,Main d'oeuvre totale (UTA)
+RICA_METRO_SOC2017,Indicateur,007,Main d'oeuvre non salariée (UTA)
+RICA_METRO_SOC2017,Indicateur,008,Age du chef d'exploitation
+RICA_METRO_SOC2017,Indicateur,009,Production de l'exercice (k€)
+RICA_METRO_SOC2017,Indicateur,010,Consommations intermédiaires (k€)
+RICA_METRO_SOC2017,Indicateur,011,Valeur ajoutée (VAHF) (k€)
+RICA_METRO_SOC2017,Indicateur,012,Excédent brut d'exploitation (k€)
+RICA_METRO_SOC2017,Indicateur,013,Résultat courant avant impôts (k€)
+RICA_METRO_SOC2017,Indicateur,014,Résultat de l'exercice (k€)
+RICA_METRO_SOC2017,Indicateur,015,Actif immobilisé (k€)
+RICA_METRO_SOC2017,Indicateur,016,Actif immobilisé - Foncier (k€)
+RICA_METRO_SOC2017,Indicateur,017,Actif immobilisé - Constructions (k€)
+RICA_METRO_SOC2017,Indicateur,018,Actif immobilisé - Matériel (k€)
+RICA_METRO_SOC2017,Indicateur,019,Actif immobilisé - Animx reproducteurs (k€)
+RICA_METRO_SOC2017,Indicateur,020,Actif immobilisé - Plantations (k€)
+RICA_METRO_SOC2017,Indicateur,021,Actif circulant (k€)
+RICA_METRO_SOC2017,Indicateur,022,Stocks et en-cours (k€)
+RICA_METRO_SOC2017,Indicateur,023,Valeurs réalisables (k€)
+RICA_METRO_SOC2017,Indicateur,024,Valeurs disponibles (k€)
+RICA_METRO_SOC2017,Indicateur,025,Actif (k€)
+RICA_METRO_SOC2017,Indicateur,026,Capitaux permanents (k€)
+RICA_METRO_SOC2017,Indicateur,027,Situation nette (k€)
+RICA_METRO_SOC2017,Indicateur,028,Subventions d'investissement (k€)
+RICA_METRO_SOC2017,Indicateur,029,Dettes à long ou moyen terme (LMT) (k€)
+RICA_METRO_SOC2017,Indicateur,030,Dettes LMT - Foncier (k€)
+RICA_METRO_SOC2017,Indicateur,031,Dettes LMT - Constructions (k€)
+RICA_METRO_SOC2017,Indicateur,032,Dettes à court terme (CT) (k€)
+RICA_METRO_SOC2017,Indicateur,033,Dettes CT - comptes de tiers (k€)
+RICA_METRO_SOC2017,Indicateur,034,Dettes CT - comptes financiers (k€)
+RICA_METRO_SOC2017,Indicateur,035,Passif (k€)
+RICA_METRO_SOC2017,Indicateur,036,Autofinancement (k€)
+RICA_METRO_SOC2017,Indicateur,037,Fonds de roulement net (k€)
+RICA_METRO_SOC2017,Indicateur,038,Besoin en fonds de roulement (k€)
+RICA_METRO_SOC2017,Indicateur,039,Variation de stocks de produits (k€)
+RICA_METRO_SOC2017,Indicateur,040,Variation de stocks approvisionnements (k€)
+RICA_METRO_SOC2017,Indicateur,041,Remboursement d'emprunts à LMT (k€)
+RICA_METRO_SOC2017,Indicateur,042,Investissement total (achat - cession) (k€)
+RICA_METRO_SOC2017,Indicateur,043,Investissement total - Matériel (k€)
+RICA_METRO_SOC2017,Indicateur,044,Investissement total - Foncier (k€)
+RICA_METRO_SOC2017,Indicateur,045,Investissement total - Constructions (k€)
+RICA_METRO_SOC2017,Indicateur,046,Investissement total net (inv - amort) (k€)
+RICA_METRO_SOC2017,Indicateur,047,Production brute (k€)
+RICA_METRO_SOC2017,Indicateur,048,Produit brut (k€)
+RICA_METRO_SOC2017,Indicateur,049,Ventes et prestations en nature (k€)
+RICA_METRO_SOC2017,Indicateur,051,Produits divers non exceptionnels (k€)
+RICA_METRO_SOC2017,Indicateur,052,Remboursement forfaitaire de TVA (k€)
+RICA_METRO_SOC2017,Indicateur,053,Subventions d'exploitation (k€)
+RICA_METRO_SOC2017,Indicateur,054,Primes compensatoires couplées (k€)
+RICA_METRO_SOC2017,Indicateur,055,"Aides découplées - DPU, DPB, paiement redistributif, paiement vert, paiement additionnel aux jeunes agriculteurs- (k€)"
+RICA_METRO_SOC2017,Indicateur,056,Aides diverses (k€)
+RICA_METRO_SOC2017,Indicateur,057,Charges d'approvisionnement (k€)
+RICA_METRO_SOC2017,Indicateur,058,Engrais et amendements (k€)
+RICA_METRO_SOC2017,Indicateur,059,Semences et plants (k€)
+RICA_METRO_SOC2017,Indicateur,060,Produits phytosanitaires (k€)
+RICA_METRO_SOC2017,Indicateur,061,Carburants et lubrifiants (k€)
+RICA_METRO_SOC2017,Indicateur,062,Fournitures (k€)
+RICA_METRO_SOC2017,Indicateur,063,Autres charges d'exploitation (k€)
+RICA_METRO_SOC2017,Indicateur,064,Travaux par tiers (k€)
+RICA_METRO_SOC2017,Indicateur,065,Entretien et réparation du matériel (k€)
+RICA_METRO_SOC2017,Indicateur,066,Loyers et fermages (k€)
+RICA_METRO_SOC2017,Indicateur,067,Assurances (k€)
+RICA_METRO_SOC2017,Indicateur,068,Impôts et taxes (k€)
+RICA_METRO_SOC2017,Indicateur,069,Charges de personnel (k€)
+RICA_METRO_SOC2017,Indicateur,070,Dotations aux amortissements (k€)
+RICA_METRO_SOC2017,Indicateur,071,Dotations aux amort. - matériel (k€)
+RICA_METRO_SOC2017,Indicateur,072,Dotations aux amort. - constructions (k€)
+RICA_METRO_SOC2017,Indicateur,073,Dotations aux amort. - plantations (k€)
+RICA_METRO_SOC2017,Indicateur,074,Charges financières (k€)
+RICA_METRO_SOC2017,Indicateur,075,Charges sociales de l'exploitant (k€)
+RICA_METRO_SOC2017,Indicateur,076,Production de l'exercice par hectare (k€ ha)
+RICA_METRO_SOC2017,Indicateur,077,Production de l'exercice par UTA (k€ UTA)
+RICA_METRO_SOC2017,Indicateur,078,Charges à l'hectare (k€ ha)
+RICA_METRO_SOC2017,Indicateur,079,RCAI par UTA non salariée (k€ UTA)
+RICA_METRO_SOC2017,Indicateur,080,Résultat de l'ex.   chiffre d'affaires (%)
+RICA_METRO_SOC2017,Indicateur,081,Endettement  chiffre d'affaires (%)
+RICA_METRO_SOC2017,Indicateur,082,Taux d'endettement (%)
+RICA_METRO_SOC2017,Indicateur,083,Indépendance financière (%)
+RICA_METRO_SOC2017,Orientation technico-économique (OTEX),001,Ensemble des orientations technico-économiques
+RICA_METRO_SOC2017,Orientation technico-économique (OTEX),002,"OTEFDD 15 : Céréales, oléagineux, protéagineux (COP)"
+RICA_METRO_SOC2017,Orientation technico-économique (OTEX),003,OTEFDD 16 : Cultures générales
+RICA_METRO_SOC2017,Orientation technico-économique (OTEX),004,OTEFDD 28  : Légumes et champignons
+RICA_METRO_SOC2017,Orientation technico-économique (OTEX),005,OTEFDD 29 : Fleurs et horticulture diverse
+RICA_METRO_SOC2017,Orientation technico-économique (OTEX),006,OTEFDD 35 : Viticulture
+RICA_METRO_SOC2017,Orientation technico-économique (OTEX),007,OTEFDD 39 : Arboriculture fruitière et autres cultures permanentes
+RICA_METRO_SOC2017,Orientation technico-économique (OTEX),008,OTEFDD 45 : Bovins lait
+RICA_METRO_SOC2017,Orientation technico-économique (OTEX),009,OTEFDD 46 : Bovins viande
+RICA_METRO_SOC2017,Orientation technico-économique (OTEX),010,OTEFDD 47 : Bovins mixtes
+RICA_METRO_SOC2017,Orientation technico-économique (OTEX),011,OTEFDD 481 + 482 + 483  : Ovins et caprins
+RICA_METRO_SOC2017,Orientation technico-économique (OTEX),012,OTEFDD 484 : Autres herbivores
+RICA_METRO_SOC2017,Orientation technico-économique (OTEX),013,OTEFDD 51 : Porcins
+RICA_METRO_SOC2017,Orientation technico-économique (OTEX),014,OTEFDD 52 : Volailles
+RICA_METRO_SOC2017,Orientation technico-économique (OTEX),015,OTEFDD 53 + 74 : Granivores mixtes
+RICA_METRO_SOC2017,Orientation technico-économique (OTEX),016,"OTEFDD 61 + 73 + 83 + 84 : Polyculture, polyélevage"
 RICA_REGION,Années de référence,32,2018
 RICA_REGION,Années de référence,33,2017
 RICA_REGION,Années de référence,34,2016
@@ -28204,6 +30035,110 @@ RICA_REGION_SOC2013,Orientation technico-économique (OTEX),013,OTEFDD 51 : Porc
 RICA_REGION_SOC2013,Orientation technico-économique (OTEX),014,OTEFDD 52 : Volailles
 RICA_REGION_SOC2013,Orientation technico-économique (OTEX),015,OTEFDD 53 + 74 : Granivores mixtes
 RICA_REGION_SOC2013,Orientation technico-économique (OTEX),016,"OTEFDD 61 + 73 + 83 + 84 : Polyculture, polyélevage"
+RICA_REGION_SOC2017,Années de référence,28,2022
+RICA_REGION_SOC2017,Années de référence,29,2021
+RICA_REGION_SOC2017,Classe de dimension économique (CDEX),001,Ensemble des moyennes et grandes exploitations
+RICA_REGION_SOC2017,Classe de dimension économique (CDEX),002,PBS supérieure ou égale à 25000 € et inférieure à 100000 €
+RICA_REGION_SOC2017,Classe de dimension économique (CDEX),003,PBS supérieure ou égale à 100000 € et inférieure à 250000 €
+RICA_REGION_SOC2017,Classe de dimension économique (CDEX),004,PBS supérieure ou égale à 250000 €
+RICA_REGION_SOC2017,Indicateur,001,Nombre d'exploitations dans échantillon
+RICA_REGION_SOC2017,Indicateur,002,Nombre d'exploitations représentées
+RICA_REGION_SOC2017,Indicateur,003,Production brute standard (€)
+RICA_REGION_SOC2017,Indicateur,004,Surface agricole utile (SAU) (ha)
+RICA_REGION_SOC2017,Indicateur,005,Surface en faire-valoir direct (ha)
+RICA_REGION_SOC2017,Indicateur,006,Main d'oeuvre totale (UTA)
+RICA_REGION_SOC2017,Indicateur,007,Main d'oeuvre non salariée (UTA)
+RICA_REGION_SOC2017,Indicateur,008,Age du chef d'exploitation
+RICA_REGION_SOC2017,Indicateur,009,Production de l'exercice (k€)
+RICA_REGION_SOC2017,Indicateur,010,Consommations intermédiaires (k€)
+RICA_REGION_SOC2017,Indicateur,011,Valeur ajoutée (VAHF) (k€)
+RICA_REGION_SOC2017,Indicateur,012,Excédent brut d'exploitation (k€)
+RICA_REGION_SOC2017,Indicateur,013,Résultat courant avant impôts (k€)
+RICA_REGION_SOC2017,Indicateur,014,Résultat de l'exercice (k€)
+RICA_REGION_SOC2017,Indicateur,015,Actif immobilisé (k€)
+RICA_REGION_SOC2017,Indicateur,016,Actif immobilisé - Foncier (k€)
+RICA_REGION_SOC2017,Indicateur,017,Actif immobilisé - Constructions (k€)
+RICA_REGION_SOC2017,Indicateur,018,Actif immobilisé - Matériel (k€)
+RICA_REGION_SOC2017,Indicateur,019,Actif immobilisé - Animx reproducteurs (k€)
+RICA_REGION_SOC2017,Indicateur,020,Actif immobilisé - Plantations (k€)
+RICA_REGION_SOC2017,Indicateur,021,Actif circulant (k€)
+RICA_REGION_SOC2017,Indicateur,022,Stocks et en-cours (k€)
+RICA_REGION_SOC2017,Indicateur,023,Valeurs réalisables (k€)
+RICA_REGION_SOC2017,Indicateur,024,Valeurs disponibles (k€)
+RICA_REGION_SOC2017,Indicateur,025,Actif (k€)
+RICA_REGION_SOC2017,Indicateur,026,Capitaux permanents (k€)
+RICA_REGION_SOC2017,Indicateur,027,Situation nette (k€)
+RICA_REGION_SOC2017,Indicateur,028,Subventions d'investissement (k€)
+RICA_REGION_SOC2017,Indicateur,029,Dettes à long ou moyen terme (LMT) (k€)
+RICA_REGION_SOC2017,Indicateur,030,Dettes LMT - Foncier (k€)
+RICA_REGION_SOC2017,Indicateur,031,Dettes LMT - Constructions (k€)
+RICA_REGION_SOC2017,Indicateur,032,Dettes à court terme (CT) (k€)
+RICA_REGION_SOC2017,Indicateur,033,Dettes CT - comptes de tiers (k€)
+RICA_REGION_SOC2017,Indicateur,034,Dettes CT - comptes financiers (k€)
+RICA_REGION_SOC2017,Indicateur,035,Passif (k€)
+RICA_REGION_SOC2017,Indicateur,036,Autofinancement (k€)
+RICA_REGION_SOC2017,Indicateur,037,Fonds de roulement net (k€)
+RICA_REGION_SOC2017,Indicateur,038,Besoin en fonds de roulement (k€)
+RICA_REGION_SOC2017,Indicateur,039,Variation de stocks de produits (k€)
+RICA_REGION_SOC2017,Indicateur,040,Variation de stocks approvisionnements (k€)
+RICA_REGION_SOC2017,Indicateur,041,Remboursement d'emprunts à LMT (k€)
+RICA_REGION_SOC2017,Indicateur,042,Investissement total (achat - cession) (k€)
+RICA_REGION_SOC2017,Indicateur,043,Investissement total - Matériel (k€)
+RICA_REGION_SOC2017,Indicateur,044,Investissement total - Foncier (k€)
+RICA_REGION_SOC2017,Indicateur,045,Investissement total - Constructions (k€)
+RICA_REGION_SOC2017,Indicateur,046,Investissement total net (inv - amort) (k€)
+RICA_REGION_SOC2017,Indicateur,047,Production brute (k€)
+RICA_REGION_SOC2017,Indicateur,048,Produit brut (k€)
+RICA_REGION_SOC2017,Indicateur,049,Ventes et prestations en nature (k€)
+RICA_REGION_SOC2017,Indicateur,051,Produits divers non exceptionnels (k€)
+RICA_REGION_SOC2017,Indicateur,052,Remboursement forfaitaire de TVA (k€)
+RICA_REGION_SOC2017,Indicateur,053,Subventions d'exploitation (k€)
+RICA_REGION_SOC2017,Indicateur,054,Primes compensatoires couplées (k€)
+RICA_REGION_SOC2017,Indicateur,055,"Aides découplées - DPU, DPB, paiement redistributif, paiement vert, paiement additionnel aux jeunes agriculteurs- (k€)"
+RICA_REGION_SOC2017,Indicateur,056,Aides diverses (k€)
+RICA_REGION_SOC2017,Indicateur,057,Charges d'approvisionnement (k€)
+RICA_REGION_SOC2017,Indicateur,058,Engrais et amendements (k€)
+RICA_REGION_SOC2017,Indicateur,059,Semences et plants (k€)
+RICA_REGION_SOC2017,Indicateur,060,Produits phytosanitaires (k€)
+RICA_REGION_SOC2017,Indicateur,061,Carburants et lubrifiants (k€)
+RICA_REGION_SOC2017,Indicateur,062,Fournitures (k€)
+RICA_REGION_SOC2017,Indicateur,063,Autres charges d'exploitation (k€)
+RICA_REGION_SOC2017,Indicateur,064,Travaux par tiers (k€)
+RICA_REGION_SOC2017,Indicateur,065,Entretien et réparation du matériel (k€)
+RICA_REGION_SOC2017,Indicateur,066,Loyers et fermages (k€)
+RICA_REGION_SOC2017,Indicateur,067,Assurances (k€)
+RICA_REGION_SOC2017,Indicateur,068,Impôts et taxes (k€)
+RICA_REGION_SOC2017,Indicateur,069,Charges de personnel (k€)
+RICA_REGION_SOC2017,Indicateur,070,Dotations aux amortissements (k€)
+RICA_REGION_SOC2017,Indicateur,071,Dotations aux amort. - matériel (k€)
+RICA_REGION_SOC2017,Indicateur,072,Dotations aux amort. - constructions (k€)
+RICA_REGION_SOC2017,Indicateur,073,Dotations aux amort. - plantations (k€)
+RICA_REGION_SOC2017,Indicateur,074,Charges financières (k€)
+RICA_REGION_SOC2017,Indicateur,075,Charges sociales de l'exploitant (k€)
+RICA_REGION_SOC2017,Indicateur,076,Production de l'exercice par hectare (k€ ha)
+RICA_REGION_SOC2017,Indicateur,077,Production de l'exercice par UTA (k€ UTA)
+RICA_REGION_SOC2017,Indicateur,078,Charges à l'hectare (k€ ha)
+RICA_REGION_SOC2017,Indicateur,079,RCAI par UTA non salariée (k€ UTA)
+RICA_REGION_SOC2017,Indicateur,080,Résultat de l'ex.   chiffre d'affaires (%)
+RICA_REGION_SOC2017,Indicateur,081,Endettement  chiffre d'affaires (%)
+RICA_REGION_SOC2017,Indicateur,082,Taux d'endettement (%)
+RICA_REGION_SOC2017,Indicateur,083,Indépendance financière (%)
+RICA_REGION_SOC2017,Orientation technico-économique (OTEX),001,Ensemble des orientations technico-économiques
+RICA_REGION_SOC2017,Orientation technico-économique (OTEX),002,"OTEFDD 15 : Céréales, oléagineux, protéagineux (COP)"
+RICA_REGION_SOC2017,Orientation technico-économique (OTEX),003,OTEFDD 16 : Cultures générales
+RICA_REGION_SOC2017,Orientation technico-économique (OTEX),004,OTEFDD 28  : Légumes et champignons
+RICA_REGION_SOC2017,Orientation technico-économique (OTEX),005,OTEFDD 29 : Fleurs et horticulture diverse
+RICA_REGION_SOC2017,Orientation technico-économique (OTEX),006,OTEFDD 35 : Viticulture
+RICA_REGION_SOC2017,Orientation technico-économique (OTEX),007,OTEFDD 39 : Arboriculture fruitière et autres cultures permanentes
+RICA_REGION_SOC2017,Orientation technico-économique (OTEX),008,OTEFDD 45 : Bovins lait
+RICA_REGION_SOC2017,Orientation technico-économique (OTEX),009,OTEFDD 46 : Bovins viande
+RICA_REGION_SOC2017,Orientation technico-économique (OTEX),010,OTEFDD 47 : Bovins mixtes
+RICA_REGION_SOC2017,Orientation technico-économique (OTEX),011,OTEFDD 481 + 482 + 483  : Ovins et caprins
+RICA_REGION_SOC2017,Orientation technico-économique (OTEX),012,OTEFDD 484 : Autres herbivores
+RICA_REGION_SOC2017,Orientation technico-économique (OTEX),013,OTEFDD 51 : Porcins
+RICA_REGION_SOC2017,Orientation technico-économique (OTEX),014,OTEFDD 52 : Volailles
+RICA_REGION_SOC2017,Orientation technico-économique (OTEX),015,OTEFDD 53 + 74 : Granivores mixtes
+RICA_REGION_SOC2017,Orientation technico-économique (OTEX),016,"OTEFDD 61 + 73 + 83 + 84 : Polyculture, polyélevage"
 SAAAR_DEVELOPPE_2,Années de référence,35,2015
 SAAAR_DEVELOPPE_2,Années de référence,36,2014
 SAAAR_DEVELOPPE_2,Années de référence,37,2013
@@ -28386,6 +30321,864 @@ SAAAR_DEVELOPPE_2,Cultures développées,6.17.2,Truffes
 SAAAR_DEVELOPPE_2,Groupe d'indicateurs,020.01,Production (volume)
 SAAAR_DEVELOPPE_2,Groupe d'indicateurs,050.08,Superficie développée
 SAAAR_DEVELOPPE_2,Groupe d'indicateurs,070.01,Rendement
+SAANR_1,Années de référence,30,2020
+SAANR_1,Années de référence,31,2019
+SAANR_1,Années de référence,32,2018
+SAANR_1,Années de référence,33,2017
+SAANR_1,Années de référence,34,2016
+SAANR_1,Années de référence,35,2015
+SAANR_1,Années de référence,36,2014
+SAANR_1,Années de référence,37,2013
+SAANR_1,Années de référence,38,2012
+SAANR_1,Années de référence,39,2011
+SAANR_1,Années de référence,40,2010
+SAANR_1,Années de référence,41,2009
+SAANR_1,Années de référence,42,2008
+SAANR_1,Années de référence,43,2007
+SAANR_1,Années de référence,44,2006
+SAANR_1,Années de référence,45,2005
+SAANR_1,Années de référence,46,2004
+SAANR_1,Années de référence,47,2003
+SAANR_1,Années de référence,48,2002
+SAANR_1,Années de référence,49,2001
+SAANR_1,Années de référence,50,2000
+SAANR_1,Indicateur,001,Surface (ha)
+SAANR_1,Produit,001,Céréales (y compris semences)
+SAANR_1,Produit,002,Oléagineux (y compris semences)
+SAANR_1,Produit,003,Protéagineux (y compris semences)
+SAANR_1,Produit,004,Betteraves industrielles (non compris semences)
+SAANR_1,Produit,005,Canne à sucre (DOM)
+SAANR_1,Produit,006,Plantes à fibres (y compris semences)
+SAANR_1,Produit,007,Cultures industrielles diverses (non compris semences)
+SAANR_1,Produit,008,"Plantes aromatiques, médicinales et à parfum (non compris semences)"
+SAANR_1,Produit,009,Pommes de terre (y compris plants)
+SAANR_1,Produit,010,"Tubercules, racines et bulbes d'origine tropicale (DOM)"
+SAANR_1,Produit,011,Légumes frais (non compris semences)
+SAANR_1,Produit,012,Légumes secs
+SAANR_1,Produit,013,"dont maraîchage (pommes de terre, légumes frais et secs)  (1)"
+SAANR_1,Produit,014,Fleurs et plantes ornementales
+SAANR_1,Produit,015,Semences et plants divers
+SAANR_1,Produit,016,"Choux, racines et tubercules fourragers"
+SAANR_1,Produit,017,Fourrages annuels
+SAANR_1,Produit,018,Prairies artificielles et temporaires
+SAANR_1,Produit,019,Jardins et vergers familiaux des exploitants
+SAANR_1,Produit,020,Jachères
+SAANR_1,Produit,021,TERRES ARABLES
+SAANR_1,Produit,022,"Cultures fruitières (y compris châtaigneraies, oliveraies, noyeraies)"
+SAANR_1,Produit,023,Vignes
+SAANR_1,Produit,024,Pépinières ligneuses
+SAANR_1,Produit,025,"Cultures permanentes autres (oseraies, canne de Provence)"
+SAANR_1,Produit,026,CULTURES PERMANENTES hors STH
+SAANR_1,Produit,027,Surfaces toujours en herbe des exploitations
+SAANR_1,Produit,028,SURFACE AGRICOLE UTILISÉE (SAU) DES EXPLOITATIONS
+SAANR_1,Produit,029,Jardins et vergers familiaux des non exploitants
+SAANR_1,Produit,030,Surfaces toujours en herbe (S. T. H.) hors exploitations (collectifs et hors champ)
+SAANR_1,Produit,031,SAU hors département des exploitations
+SAANR_1,Produit,032,SAU du département des exploitations
+SAANR_1,Produit,033,SURFACE AGRICOLE UTILISÉE (SAU) DU DÉPARTEMENT
+SAANR_1,Produit,034,Surfaces boisées et peupleraies en plein (yc haies et alignements d'arbres
+SAANR_1,Produit,035,"Landes (non productives, non pacagées), friches, maquis, garrigues"
+SAANR_1,Produit,036,Sols artificialisés
+SAANR_1,Produit,037,"Autres (plages, rochers, eaux intérieures...)"
+SAANR_1,Produit,038,SURFACE TOTALE DU DÉPARTEMENT
+SAANR_1,Thème,001,Utilisation du territoire
+SAANR_10,Années de référence,30,2020
+SAANR_10,Années de référence,31,2019
+SAANR_10,Années de référence,32,2018
+SAANR_10,Années de référence,33,2017
+SAANR_10,Années de référence,34,2016
+SAANR_10,Années de référence,35,2015
+SAANR_10,Années de référence,36,2014
+SAANR_10,Années de référence,37,2013
+SAANR_10,Années de référence,38,2012
+SAANR_10,Années de référence,39,2011
+SAANR_10,Années de référence,40,2010
+SAANR_10,Années de référence,41,2009
+SAANR_10,Années de référence,42,2008
+SAANR_10,Années de référence,43,2007
+SAANR_10,Années de référence,44,2006
+SAANR_10,Années de référence,45,2005
+SAANR_10,Années de référence,46,2004
+SAANR_10,Années de référence,47,2003
+SAANR_10,Années de référence,48,2002
+SAANR_10,Années de référence,49,2001
+SAANR_10,Années de référence,50,2000
+SAANR_10,Indicateur,001,Production totale (1000 têtes)
+SAANR_10,Indicateur,002,Poids moyen (kg net/1000 têtes)
+SAANR_10,Indicateur,003,Poids produit (tonne équivalent carcasse)
+SAANR_10,Produit,001,Coqs et poules de réforme
+SAANR_10,Produit,002,Poulets de chair (mâles et femelles) et coquelets
+SAANR_10,Produit,003,Canards gras
+SAANR_10,Produit,004,dont foies gras de canards
+SAANR_10,Produit,005,Canards à rôtir
+SAANR_10,Produit,006,Dindes et dindons
+SAANR_10,Produit,007,Oies grasses
+SAANR_10,Produit,008,dont foies gras d'oies
+SAANR_10,Produit,009,Oies à rôtir
+SAANR_10,Produit,010,Pintades
+SAANR_10,Produit,011,Cailles d'élevage
+SAANR_10,Produit,012,Lapins
+SAANR_10,Thème,001,Volailles et lapins
+SAANR_12,Années de référence,30,2020
+SAANR_12,Années de référence,31,2019
+SAANR_12,Années de référence,32,2018
+SAANR_12,Années de référence,33,2017
+SAANR_12,Années de référence,34,2016
+SAANR_12,Années de référence,35,2015
+SAANR_12,Années de référence,36,2014
+SAANR_12,Années de référence,37,2013
+SAANR_12,Années de référence,38,2012
+SAANR_12,Années de référence,39,2011
+SAANR_12,Années de référence,40,2010
+SAANR_12,Années de référence,41,2009
+SAANR_12,Années de référence,42,2008
+SAANR_12,Années de référence,43,2007
+SAANR_12,Années de référence,44,2006
+SAANR_12,Années de référence,45,2005
+SAANR_12,Années de référence,46,2004
+SAANR_12,Années de référence,47,2003
+SAANR_12,Années de référence,48,2002
+SAANR_12,Années de référence,49,2001
+SAANR_12,Années de référence,50,2000
+SAANR_12,Indicateur,001,Livraisons à l'industrie (hl)
+SAANR_12,Indicateur,002,Fabrication de produits fermiers (hl)
+SAANR_12,Indicateur,003,dont livraisons à l'industrie de produits fermiers (hl)
+SAANR_12,Indicateur,004,Vente directe et autoconsommation de lait entier (hl)
+SAANR_12,Indicateur,005,Production finale (hl)
+SAANR_12,Indicateur,006,Taux butyreux (g/l)
+SAANR_12,Indicateur,007,Matière protéique (g/l)
+SAANR_12,Produit,001,Lait de vache
+SAANR_12,Produit,002,Lait de chèvre
+SAANR_12,Produit,003,Lait de brebis
+SAANR_12,Thème,001,Production de lait et utilisation à la ferme
+SAANR_13,Années de référence,30,2020
+SAANR_13,Années de référence,31,2019
+SAANR_13,Années de référence,32,2018
+SAANR_13,Années de référence,33,2017
+SAANR_13,Années de référence,34,2016
+SAANR_13,Années de référence,35,2015
+SAANR_13,Années de référence,36,2014
+SAANR_13,Années de référence,37,2013
+SAANR_13,Années de référence,38,2012
+SAANR_13,Années de référence,39,2011
+SAANR_13,Années de référence,40,2010
+SAANR_13,Années de référence,41,2009
+SAANR_13,Années de référence,42,2008
+SAANR_13,Années de référence,43,2007
+SAANR_13,Années de référence,44,2006
+SAANR_13,Années de référence,45,2005
+SAANR_13,Années de référence,46,2004
+SAANR_13,Années de référence,47,2003
+SAANR_13,Années de référence,48,2002
+SAANR_13,Années de référence,49,2001
+SAANR_13,Années de référence,50,2000
+SAANR_13,Indicateur,001,Nombre moyen de pondeuses (1000 têtes)
+SAANR_13,Indicateur,002,Production moyenne (oeuf/an)
+SAANR_13,Indicateur,003,Production totale (1000 oeufs)
+SAANR_13,Produit,001,Oeufs de consommation
+SAANR_13,Produit,002,Oeufs à couver
+SAANR_13,Thème,001,Production d'oeufs
+SAANR_14,Années de référence,30,2020
+SAANR_14,Années de référence,31,2019
+SAANR_14,Années de référence,32,2018
+SAANR_14,Années de référence,33,2017
+SAANR_14,Années de référence,34,2016
+SAANR_14,Années de référence,35,2015
+SAANR_14,Années de référence,36,2014
+SAANR_14,Années de référence,37,2013
+SAANR_14,Années de référence,38,2012
+SAANR_14,Années de référence,39,2011
+SAANR_14,Années de référence,40,2010
+SAANR_14,Années de référence,41,2009
+SAANR_14,Années de référence,42,2008
+SAANR_14,Années de référence,43,2007
+SAANR_14,Années de référence,44,2006
+SAANR_14,Années de référence,45,2005
+SAANR_14,Années de référence,46,2004
+SAANR_14,Années de référence,47,2003
+SAANR_14,Années de référence,48,2002
+SAANR_14,Années de référence,49,2001
+SAANR_14,Années de référence,50,2000
+SAANR_14,Indicateur,001,Nombre de ruches en production (nombre)
+SAANR_14,Indicateur,002,Production moyenne par ruche (kg/ruche/an)
+SAANR_14,Indicateur,003,Production récoltée (kg)
+SAANR_14,Produit,001,Miel
+SAANR_14,Thème,001,Apiculture des exploitants agricoles
+SAANR_4,Années de référence,30,2020
+SAANR_4,Années de référence,31,2019
+SAANR_4,Années de référence,32,2018
+SAANR_4,Années de référence,33,2017
+SAANR_4,Années de référence,34,2016
+SAANR_4,Années de référence,35,2015
+SAANR_4,Années de référence,36,2014
+SAANR_4,Années de référence,37,2013
+SAANR_4,Années de référence,38,2012
+SAANR_4,Années de référence,39,2011
+SAANR_4,Années de référence,40,2010
+SAANR_4,Années de référence,41,2009
+SAANR_4,Années de référence,42,2008
+SAANR_4,Années de référence,43,2007
+SAANR_4,Années de référence,44,2006
+SAANR_4,Années de référence,45,2005
+SAANR_4,Années de référence,46,2004
+SAANR_4,Années de référence,47,2003
+SAANR_4,Années de référence,48,2002
+SAANR_4,Années de référence,49,2001
+SAANR_4,Années de référence,50,2000
+SAANR_4,Indicateur,001,Superficie maximum occupée (ha)
+SAANR_4,Produit,001,Fleurs et feuillages coupés
+SAANR_4,Produit,002,Plantes en pots fleuries et plantes vertes
+SAANR_4,Produit,003,Plantes à massif en arrachis ou en mottes et plantes vivaces
+SAANR_4,Produit,004,"Bulbiculture (bulbe, oignon, tubercule, rhizome, griffe)"
+SAANR_4,Produit,005,Pépinières florales
+SAANR_4,Thème,001,Cultures florales
+SAANR_5,Années de référence,42,2008
+SAANR_5,Années de référence,43,2007
+SAANR_5,Années de référence,44,2006
+SAANR_5,Années de référence,45,2005
+SAANR_5,Années de référence,46,2004
+SAANR_5,Années de référence,47,2003
+SAANR_5,Années de référence,48,2002
+SAANR_5,Années de référence,49,2001
+SAANR_5,Années de référence,50,2000
+SAANR_5,Indicateur,001,Surface totale (ha)
+SAANR_5,Indicateur,002,Surface en production (ha)
+SAANR_5,Indicateur,003,Rendement (100 kg/ha)
+SAANR_5,Indicateur,004,Production de raisin (100 kg)
+SAANR_5,Indicateur,005,Quantité récoltée pour le fruit (100 kg)
+SAANR_5,Indicateur,006,Rendement (hl/ha)
+SAANR_5,Indicateur,007,Production de vins blancs (hl)
+SAANR_5,Indicateur,008,Production de vins rouges (hl)
+SAANR_5,Indicateur,009,Production de vins (hl)
+SAANR_5,Produit,001,Vignes à raisin de table
+SAANR_5,Produit,002,Vignes à raisin de cuve
+SAANR_5,Produit,003,Vignes
+SAANR_5,Produit,004,AOC autres que VDN
+SAANR_5,Produit,005,VDN en AOC
+SAANR_5,Produit,006,Récolte AOC
+SAANR_5,Produit,007,dont production AOC revendiquée
+SAANR_5,Produit,008,dont DPLC en AOC
+SAANR_5,Produit,009,Récolte VDQS
+SAANR_5,Produit,010,dont production VDQS revendiquée
+SAANR_5,Produit,011,dont DPLC en VDQS
+SAANR_5,Produit,013,dont production VQPRD revendiquée
+SAANR_5,Produit,014,dont DPLC
+SAANR_5,Produit,015,Vins pour eaux de vie AOC
+SAANR_5,Produit,016,Vins autres
+SAANR_5,Produit,017,Récolte d'autres vins
+SAANR_5,Produit,018,dont vins de pays
+SAANR_5,Produit,019,dont autres vins
+SAANR_5,Produit,020,Total vins
+SAANR_5,Thème,001,Production du vignoble
+SAANR_5,Thème,002,"Production de vins, jus et moûts"
+SAANR_6,Années de référence,30,2020
+SAANR_6,Années de référence,31,2019
+SAANR_6,Années de référence,32,2018
+SAANR_6,Années de référence,33,2017
+SAANR_6,Années de référence,34,2016
+SAANR_6,Années de référence,35,2015
+SAANR_6,Années de référence,36,2014
+SAANR_6,Années de référence,37,2013
+SAANR_6,Années de référence,38,2012
+SAANR_6,Années de référence,39,2011
+SAANR_6,Années de référence,40,2010
+SAANR_6,Années de référence,41,2009
+SAANR_6,Années de référence,42,2008
+SAANR_6,Années de référence,43,2007
+SAANR_6,Années de référence,44,2006
+SAANR_6,Années de référence,45,2005
+SAANR_6,Années de référence,46,2004
+SAANR_6,Années de référence,47,2003
+SAANR_6,Années de référence,48,2002
+SAANR_6,Années de référence,49,2001
+SAANR_6,Années de référence,50,2000
+SAANR_6,Indicateur,001,Effectif dans les exploitations (tête)
+SAANR_6,Produit,001,Vaches laitières
+SAANR_6,Produit,002,Vaches nourrices
+SAANR_6,Produit,003,Toutes vaches
+SAANR_6,Produit,004,Génisses laitières de renouvellement de plus de 2 ans
+SAANR_6,Produit,005,Génisses nourrices de renouvellement de plus de 2 ans
+SAANR_6,Produit,006,Génisses de boucherie de plus de 2 ans
+SAANR_6,Produit,007,Mâles de type laitier de plus de 2 ans
+SAANR_6,Produit,008,Mâles de type viande de plus de 2 ans
+SAANR_6,Produit,009,Total bovins de plus de 2 ans
+SAANR_6,Produit,010,Génisses laitières de renouvellement de 1 à 2 ans
+SAANR_6,Produit,011,Génisses nourrices de renouvellement de 1 à 2 ans
+SAANR_6,Produit,012,Génisses de boucherie de 1 à 2 ans
+SAANR_6,Produit,013,Mâles de type laitier de 1 à 2 ans
+SAANR_6,Produit,014,Mâles de type viande de 1 à 2 ans
+SAANR_6,Produit,015,Total autres bovins de 1 à 2 ans
+SAANR_6,Produit,016,Veaux de boucherie
+SAANR_6,Produit,017,Autres femelles de moins de 1 an
+SAANR_6,Produit,018,Autres mâles de moins de 1 an
+SAANR_6,Produit,019,Total bovins de moins de 1 an
+SAANR_6,Produit,020,Ensemble espèce bovine
+SAANR_6,Produit,021,Porcelets
+SAANR_6,Produit,022,Jeunes porcs de 20 à 50 kg
+SAANR_6,Produit,023,Truies de 50 kg et plus
+SAANR_6,Produit,024,Verrats de 50 kg et plus
+SAANR_6,Produit,025,Porcs à l'engrais de 50 kg et plus
+SAANR_6,Produit,026,Ensemble espèce porcine
+SAANR_6,Produit,027,Chevrettes
+SAANR_6,Produit,028,Chèvres (femelles ayant mis bas)
+SAANR_6,Produit,029,Autres caprins (y compris boucs)
+SAANR_6,Produit,030,Ensemble espèce caprine
+SAANR_6,Produit,031,Agnelles
+SAANR_6,Produit,032,Brebis-mères (y c. réforme)
+SAANR_6,Produit,033,dont brebis-mères laitières
+SAANR_6,Produit,034,Autres ovins (y compris béliers)
+SAANR_6,Produit,035,Ensemble espèce ovine
+SAANR_6,Thème,001,Espèce bovine
+SAANR_6,Thème,002,Espèce porcine
+SAANR_6,Thème,003,Espèce caprine
+SAANR_6,Thème,004,Espèce ovine
+SAANR_8,Années de référence,30,2020
+SAANR_8,Années de référence,31,2019
+SAANR_8,Années de référence,32,2018
+SAANR_8,Années de référence,33,2017
+SAANR_8,Années de référence,34,2016
+SAANR_8,Années de référence,35,2015
+SAANR_8,Années de référence,36,2014
+SAANR_8,Années de référence,37,2013
+SAANR_8,Années de référence,38,2012
+SAANR_8,Années de référence,39,2011
+SAANR_8,Années de référence,40,2010
+SAANR_8,Années de référence,41,2009
+SAANR_8,Années de référence,42,2008
+SAANR_8,Années de référence,43,2007
+SAANR_8,Années de référence,44,2006
+SAANR_8,Années de référence,45,2005
+SAANR_8,Années de référence,46,2004
+SAANR_8,Années de référence,47,2003
+SAANR_8,Années de référence,48,2002
+SAANR_8,Années de référence,49,2001
+SAANR_8,Années de référence,50,2000
+SAANR_8,Indicateur,001,Effectif dans les exploitations (1000 têtes)
+SAANR_8,Produit,001,Poules pondeuses d'oeufs à couver
+SAANR_8,Produit,002,Poules pondeuses d'oeufs de consommation
+SAANR_8,Produit,003,Poulettes
+SAANR_8,Produit,004,Poulets de chair (y compris coqs et coquelets)
+SAANR_8,Produit,005,Ensemble gallus
+SAANR_8,Produit,006,Canards à gaver
+SAANR_8,Produit,007,Canards à rôtir
+SAANR_8,Produit,008,Dindes et dindons (au 1er octobre)
+SAANR_8,Produit,009,"Oies au 1er octobre (à rôtir, à gaver)"
+SAANR_8,Produit,010,Pintades
+SAANR_8,Produit,011,Cailles d'élevage
+SAANR_8,Produit,012,Lapines reproductrices
+SAANR_8,Thème,001,Volailles et lapins
+SAANR_9,Années de référence,30,2020
+SAANR_9,Années de référence,31,2019
+SAANR_9,Années de référence,32,2018
+SAANR_9,Années de référence,33,2017
+SAANR_9,Années de référence,34,2016
+SAANR_9,Années de référence,35,2015
+SAANR_9,Années de référence,36,2014
+SAANR_9,Années de référence,37,2013
+SAANR_9,Années de référence,38,2012
+SAANR_9,Années de référence,39,2011
+SAANR_9,Années de référence,40,2010
+SAANR_9,Années de référence,41,2009
+SAANR_9,Années de référence,42,2008
+SAANR_9,Années de référence,43,2007
+SAANR_9,Années de référence,44,2006
+SAANR_9,Années de référence,45,2005
+SAANR_9,Années de référence,46,2004
+SAANR_9,Années de référence,47,2003
+SAANR_9,Années de référence,48,2002
+SAANR_9,Années de référence,49,2001
+SAANR_9,Années de référence,50,2000
+SAANR_9,Indicateur,001,Production totale (tête)
+SAANR_9,Indicateur,002,Poids moyen (kg net/tête)
+SAANR_9,Indicateur,003,Poids produit (tonne équivalent carcasse)
+SAANR_9,Produit,001,Vaches de réforme laitières
+SAANR_9,Produit,002,Vaches de réforme nourrices
+SAANR_9,Produit,003,Total vaches de réforme
+SAANR_9,Produit,004,Génisses laitières de plus de 2 ans
+SAANR_9,Produit,005,Génisses viande de plus de 2 ans
+SAANR_9,Produit,006,Total génisses de plus de 2 ans
+SAANR_9,Produit,007,Génisses laitières de 1 à 2 ans
+SAANR_9,Produit,008,Génisses viande 1 à 2 ans
+SAANR_9,Produit,009,Total génisses de 1 à 2 ans
+SAANR_9,Produit,010,Génisses de 8 mois à 1 an
+SAANR_9,Produit,011,Total génisses
+SAANR_9,Produit,012,Mâles de plus de 2 ans
+SAANR_9,Produit,013,Mâles de 1 à 2 ans
+SAANR_9,Produit,014,Mâles de 8 mois à 1 an
+SAANR_9,Produit,015,Total mâles
+SAANR_9,Produit,016,Veaux de boucherie laitiers
+SAANR_9,Produit,017,Veaux de boucherie viande
+SAANR_9,Produit,018,Total veaux de boucherie
+SAANR_9,Produit,019,Ensemble bovins
+SAANR_9,Produit,020,Porcelets
+SAANR_9,Produit,021,Porcs charcutiers
+SAANR_9,Produit,022,Truies et verrats de réforme
+SAANR_9,Produit,023,Ensemble porcins
+SAANR_9,Produit,024,Chevreaux de lait
+SAANR_9,Produit,025,Autres chevreaux
+SAANR_9,Produit,026,Caprins de réforme
+SAANR_9,Produit,027,Ensemble caprins
+SAANR_9,Produit,028,Agneaux de lait
+SAANR_9,Produit,029,Autres agneaux
+SAANR_9,Produit,030,Moutons et ovins de réforme
+SAANR_9,Produit,031,Ensemble ovins
+SAANR_9,Thème,001,Bovins
+SAANR_9,Thème,002,Porcins
+SAANR_9,Thème,003,Caprins
+SAANR_9,Thème,004,Ovins
+SAANR_DEVELOPPE_2,Années de référence,30,2020
+SAANR_DEVELOPPE_2,Années de référence,31,2019
+SAANR_DEVELOPPE_2,Années de référence,32,2018
+SAANR_DEVELOPPE_2,Années de référence,33,2017
+SAANR_DEVELOPPE_2,Années de référence,34,2016
+SAANR_DEVELOPPE_2,Années de référence,35,2015
+SAANR_DEVELOPPE_2,Années de référence,36,2014
+SAANR_DEVELOPPE_2,Années de référence,37,2013
+SAANR_DEVELOPPE_2,Années de référence,38,2012
+SAANR_DEVELOPPE_2,Années de référence,39,2011
+SAANR_DEVELOPPE_2,Années de référence,40,2010
+SAANR_DEVELOPPE_2,Années de référence,41,2009
+SAANR_DEVELOPPE_2,Années de référence,42,2008
+SAANR_DEVELOPPE_2,Années de référence,43,2007
+SAANR_DEVELOPPE_2,Années de référence,44,2006
+SAANR_DEVELOPPE_2,Années de référence,45,2005
+SAANR_DEVELOPPE_2,Années de référence,46,2004
+SAANR_DEVELOPPE_2,Années de référence,47,2003
+SAANR_DEVELOPPE_2,Années de référence,48,2002
+SAANR_DEVELOPPE_2,Années de référence,49,2001
+SAANR_DEVELOPPE_2,Années de référence,50,2000
+SAANR_DEVELOPPE_2,Cultures développées,1,"Céréales, oléagineux, protéagineux"
+SAANR_DEVELOPPE_2,Cultures développées,1.11,Céréales
+SAANR_DEVELOPPE_2,Cultures développées,1.11.1,Blé
+SAANR_DEVELOPPE_2,Cultures développées,1.11.1.11,Blé tendre et épeautre
+SAANR_DEVELOPPE_2,Cultures développées,1.11.1.11.1,Blé tendre d'hiver et épeautre
+SAANR_DEVELOPPE_2,Cultures développées,1.11.1.11.2,Blé tendre de printemps
+SAANR_DEVELOPPE_2,Cultures développées,1.11.1.12,Blé dur
+SAANR_DEVELOPPE_2,Cultures développées,1.11.1.12.1,Blé dur d'hiver
+SAANR_DEVELOPPE_2,Cultures développées,1.11.1.12.2,Blé dur de printemps
+SAANR_DEVELOPPE_2,Cultures développées,1.11.2,Orge et escourgeon
+SAANR_DEVELOPPE_2,Cultures développées,1.11.2.11,Orge d'hiver et escourgeon
+SAANR_DEVELOPPE_2,Cultures développées,1.11.2.12,Orge de printemps
+SAANR_DEVELOPPE_2,Cultures développées,1.11.3,Avoine
+SAANR_DEVELOPPE_2,Cultures développées,1.11.3.11,Avoine d'hiver
+SAANR_DEVELOPPE_2,Cultures développées,1.11.3.12,Avoine de printemps
+SAANR_DEVELOPPE_2,Cultures développées,1.11.4,Triticale
+SAANR_DEVELOPPE_2,Cultures développées,1.11.5,Seigle et méteil
+SAANR_DEVELOPPE_2,Cultures développées,1.11.6,Maïs grain et maïs semence
+SAANR_DEVELOPPE_2,Cultures développées,1.11.6.11,Maïs grain (yc maïs grain humide)
+SAANR_DEVELOPPE_2,Cultures développées,1.11.6.11.1,Maïs grain
+SAANR_DEVELOPPE_2,Cultures développées,1.11.6.11.1.11,Maïs grain irrigué
+SAANR_DEVELOPPE_2,Cultures développées,1.11.6.11.1.12,Maïs grain non irrigué
+SAANR_DEVELOPPE_2,Cultures développées,1.11.6.12,Maïs semence
+SAANR_DEVELOPPE_2,Cultures développées,1.11.7,Sorgho grain
+SAANR_DEVELOPPE_2,Cultures développées,1.11.8,Riz
+SAANR_DEVELOPPE_2,Cultures développées,1.11.8.11,Riz indica
+SAANR_DEVELOPPE_2,Cultures développées,1.11.8.19,Autres riz (Japonica)
+SAANR_DEVELOPPE_2,Cultures développées,1.11.9,"Autres céréales, n.c.a. niv. 1"
+SAANR_DEVELOPPE_2,Cultures développées,1.11.9.11,Autres céréales non mélangées
+SAANR_DEVELOPPE_2,Cultures développées,1.11.9.12,"Mélanges de céréales, hors méteil"
+SAANR_DEVELOPPE_2,Cultures développées,1.12,Oléagineux (y c. semences)
+SAANR_DEVELOPPE_2,Cultures développées,1.12.1,Colza grain et navette
+SAANR_DEVELOPPE_2,Cultures développées,1.12.1.11,Colza grain d'hiver
+SAANR_DEVELOPPE_2,Cultures développées,1.12.1.12,Colza grain de printemps et navette
+SAANR_DEVELOPPE_2,Cultures développées,1.12.2,Tournesol
+SAANR_DEVELOPPE_2,Cultures développées,1.12.3,Soja
+SAANR_DEVELOPPE_2,Cultures développées,1.12.9,"Autres oléagineux (lin, oeillette, ricin), n.c.a. niv. 1"
+SAANR_DEVELOPPE_2,Cultures développées,1.12.9.11,Lin oléagineux
+SAANR_DEVELOPPE_2,Cultures développées,1.12.9.19,"Autres oléagineux (hors chanvre), n.c.a. niv. 2"
+SAANR_DEVELOPPE_2,Cultures développées,1.13,Protéagineux (y c. semences)
+SAANR_DEVELOPPE_2,Cultures développées,1.13.1,Pois protéagineux
+SAANR_DEVELOPPE_2,Cultures développées,1.13.2,Féveroles et fèves
+SAANR_DEVELOPPE_2,Cultures développées,1.13.3,Lupin doux
+SAANR_DEVELOPPE_2,Cultures développées,2,"Choux, racines et tubercules fourragers"
+SAANR_DEVELOPPE_2,Cultures développées,2.11,Chou fourrager
+SAANR_DEVELOPPE_2,Cultures développées,2.19,"Autres racines ou tubercules fourragères, n.c.a."
+SAANR_DEVELOPPE_2,Cultures développées,4,Cultures industrielles
+SAANR_DEVELOPPE_2,Cultures développées,4.11,Betteraves industrielles et canne à sucre
+SAANR_DEVELOPPE_2,Cultures développées,4.11.1,Betterave industrielle
+SAANR_DEVELOPPE_2,Cultures développées,4.11.2,Canne à sucre
+SAANR_DEVELOPPE_2,Cultures développées,4.12,Plantes à fibres (y compris semences)
+SAANR_DEVELOPPE_2,Cultures développées,4.12.1,Lin textile
+SAANR_DEVELOPPE_2,Cultures développées,4.12.2,Chanvre papier
+SAANR_DEVELOPPE_2,Cultures développées,4.12.9,"Autres plantes textiles, n.c.a. niv. 1"
+SAANR_DEVELOPPE_2,Cultures développées,4.13,Cultures industrielles diverses
+SAANR_DEVELOPPE_2,Cultures développées,4.13.1,Tabac
+SAANR_DEVELOPPE_2,Cultures développées,4.13.1.11,Tabac Brun
+SAANR_DEVELOPPE_2,Cultures développées,4.13.1.12,Tabac Virginie
+SAANR_DEVELOPPE_2,Cultures développées,4.13.1.13,Tabac Burley
+SAANR_DEVELOPPE_2,Cultures développées,4.13.2,Houblon
+SAANR_DEVELOPPE_2,Cultures développées,4.13.2.11,Houblon en production
+SAANR_DEVELOPPE_2,Cultures développées,4.13.2.12,Houblon non en production
+SAANR_DEVELOPPE_2,Cultures développées,4.13.3,Chicorée à café
+SAANR_DEVELOPPE_2,Cultures développées,4.13.9,Autres cultures industrielles
+SAANR_DEVELOPPE_2,Cultures développées,4.14,"Plantes à parfum, aromatiques, médicinales et condimentaires"
+SAANR_DEVELOPPE_2,Cultures développées,4.14.1,Lavande et lavandin
+SAANR_DEVELOPPE_2,Cultures développées,4.14.1.11,Lavande
+SAANR_DEVELOPPE_2,Cultures développées,4.14.1.12,Lavandin
+SAANR_DEVELOPPE_2,Cultures développées,4.14.2,Vanille
+SAANR_DEVELOPPE_2,Cultures développées,4.14.9,"Autres plantes médicinales et à parfum, n.c.a. niv. 1"
+SAANR_DEVELOPPE_2,Cultures développées,4.14.9.12,Géranium (pelargonium ou geranium)
+SAANR_DEVELOPPE_2,Cultures développées,4.14.9.19,"Autres plantes médicinales et à parfum, n.c.a. niv. 2"
+SAANR_DEVELOPPE_2,Cultures développées,5,Pommes de terre et autres tubercules
+SAANR_DEVELOPPE_2,Cultures développées,5.11,Pommes de terre
+SAANR_DEVELOPPE_2,Cultures développées,5.11.1,Plants de pommes de terre
+SAANR_DEVELOPPE_2,Cultures développées,5.11.1.11,Plants certifiés de pommes de terre
+SAANR_DEVELOPPE_2,Cultures développées,5.11.1.12,Dessus de plants de pommes de terre
+SAANR_DEVELOPPE_2,Cultures développées,5.11.2,Pommes de terre de féculerie
+SAANR_DEVELOPPE_2,Cultures développées,5.11.3,Pommes de terre de consommation
+SAANR_DEVELOPPE_2,Cultures développées,5.11.3.11,Pommes de terre primeurs ou nouvelles
+SAANR_DEVELOPPE_2,Cultures développées,5.11.3.12,Pommes de terre de conservation ou demi-saison
+SAANR_DEVELOPPE_2,Cultures développées,5.12,"Igname, manioc et autres tubercules, n.c.a. niv. 1"
+SAANR_DEVELOPPE_2,Cultures développées,5.12.1,Igname
+SAANR_DEVELOPPE_2,Cultures développées,5.12.2,Manioc
+SAANR_DEVELOPPE_2,Cultures développées,5.12.9,"Autres tubercules, n.c.a. niv. 2"
+SAANR_DEVELOPPE_2,Cultures développées,6,"Légumes frais, melons ou fraises"
+SAANR_DEVELOPPE_2,Cultures développées,6.11,Légumes feuillus et à tige
+SAANR_DEVELOPPE_2,Cultures développées,6.11.1,Artichauts
+SAANR_DEVELOPPE_2,Cultures développées,6.11.2,Asperges en production
+SAANR_DEVELOPPE_2,Cultures développées,6.11.3,Céleris branches
+SAANR_DEVELOPPE_2,Cultures développées,6.11.4,Choux
+SAANR_DEVELOPPE_2,Cultures développées,6.11.4.11,Choux-fleurs
+SAANR_DEVELOPPE_2,Cultures développées,6.11.4.12,Choux brocolis à jets
+SAANR_DEVELOPPE_2,Cultures développées,6.11.4.13,Choux de Bruxelles
+SAANR_DEVELOPPE_2,Cultures développées,6.11.4.14,Choux à choucroute
+SAANR_DEVELOPPE_2,Cultures développées,6.11.4.19,"Autres choux, n.c.a."
+SAANR_DEVELOPPE_2,Cultures développées,6.11.5,Endives
+SAANR_DEVELOPPE_2,Cultures développées,6.11.5.11,Endives racines
+SAANR_DEVELOPPE_2,Cultures développées,6.11.5.12,Endives chicons
+SAANR_DEVELOPPE_2,Cultures développées,6.11.6,Epinards
+SAANR_DEVELOPPE_2,Cultures développées,6.11.7,Poireaux
+SAANR_DEVELOPPE_2,Cultures développées,6.11.8,Salades
+SAANR_DEVELOPPE_2,Cultures développées,6.11.8.11,Laitues
+SAANR_DEVELOPPE_2,Cultures développées,6.11.8.12,Chicorées
+SAANR_DEVELOPPE_2,Cultures développées,6.11.8.12.1,Chicorées frisées
+SAANR_DEVELOPPE_2,Cultures développées,6.11.8.12.2,Chicorées scaroles
+SAANR_DEVELOPPE_2,Cultures développées,6.11.8.13,Cresson
+SAANR_DEVELOPPE_2,Cultures développées,6.11.8.14,Mâche
+SAANR_DEVELOPPE_2,Cultures développées,6.11.8.19,"Autres salades, n.c.a."
+SAANR_DEVELOPPE_2,Cultures développées,6.11.9,"Autres légumes feuillus et à tige, n.c.a. niv. 1"
+SAANR_DEVELOPPE_2,Cultures développées,6.11.9.11,Bettes et cardes
+SAANR_DEVELOPPE_2,Cultures développées,6.11.9.12,Brèdes
+SAANR_DEVELOPPE_2,Cultures développées,6.11.9.13,Persil
+SAANR_DEVELOPPE_2,Cultures développées,6.12,Légumes cultivés pour le fruit
+SAANR_DEVELOPPE_2,Cultures développées,6.12.1,Fraises
+SAANR_DEVELOPPE_2,Cultures développées,6.12.1.11,Fraises sous serres
+SAANR_DEVELOPPE_2,Cultures développées,6.12.1.12,Fraises en plein air
+SAANR_DEVELOPPE_2,Cultures développées,6.12.2,Aubergines
+SAANR_DEVELOPPE_2,Cultures développées,6.12.3,Cucurbitacées
+SAANR_DEVELOPPE_2,Cultures développées,6.12.3.11,Pastèque
+SAANR_DEVELOPPE_2,Cultures développées,6.12.3.12,Cantaloups et autres melons
+SAANR_DEVELOPPE_2,Cultures développées,6.12.3.12.1,Cantaloups et autres melons sous serres
+SAANR_DEVELOPPE_2,Cultures développées,6.12.3.12.2,Cantaloups et autres melons en plein air
+SAANR_DEVELOPPE_2,Cultures développées,6.12.3.13,Chayote ou christophine
+SAANR_DEVELOPPE_2,Cultures développées,6.12.3.14,"Citrouilles, potirons, courgettes"
+SAANR_DEVELOPPE_2,Cultures développées,6.12.3.14.1,Courgette
+SAANR_DEVELOPPE_2,Cultures développées,6.12.3.14.2,"Autres citrouilles [Courge], potirons, n.c.a. niv. 1"
+SAANR_DEVELOPPE_2,Cultures développées,6.12.3.15,Concombres et cornichons
+SAANR_DEVELOPPE_2,Cultures développées,6.12.3.15.1,Concombre
+SAANR_DEVELOPPE_2,Cultures développées,6.12.3.15.1.11,Concombre sous serres
+SAANR_DEVELOPPE_2,Cultures développées,6.12.3.15.1.12,Concombre en plein air
+SAANR_DEVELOPPE_2,Cultures développées,6.12.3.15.2,Cornichon
+SAANR_DEVELOPPE_2,Cultures développées,6.12.4,Tomate
+SAANR_DEVELOPPE_2,Cultures développées,6.12.4.11,Tomate sous serres
+SAANR_DEVELOPPE_2,Cultures développées,6.12.4.12,Tomate en plein air
+SAANR_DEVELOPPE_2,Cultures développées,6.12.5,"Poivron, piment, gombo"
+SAANR_DEVELOPPE_2,Cultures développées,6.12.5.11,"Poivron, piment"
+SAANR_DEVELOPPE_2,Cultures développées,6.12.5.12,Gombo
+SAANR_DEVELOPPE_2,Cultures développées,6.12.6,Banane plantain
+SAANR_DEVELOPPE_2,Cultures développées,6.13,"Racines, bulbes et tubercules"
+SAANR_DEVELOPPE_2,Cultures développées,6.13.1,Carottes
+SAANR_DEVELOPPE_2,Cultures développées,6.13.1.11,Carottes pour le frais
+SAANR_DEVELOPPE_2,Cultures développées,6.13.1.12,Carottes pour l'industrie
+SAANR_DEVELOPPE_2,Cultures développées,6.13.2,Navet potager
+SAANR_DEVELOPPE_2,Cultures développées,6.13.3,Ail
+SAANR_DEVELOPPE_2,Cultures développées,6.13.3.11,Ail (en vert)
+SAANR_DEVELOPPE_2,Cultures développées,6.13.3.12,Ail (en sec)
+SAANR_DEVELOPPE_2,Cultures développées,6.13.4,Oignon et échalote
+SAANR_DEVELOPPE_2,Cultures développées,6.13.4.11,Oignon
+SAANR_DEVELOPPE_2,Cultures développées,6.13.4.11.1,Oignon blanc
+SAANR_DEVELOPPE_2,Cultures développées,6.13.4.11.2,Oignon de couleur
+SAANR_DEVELOPPE_2,Cultures développées,6.13.4.12,Echalote
+SAANR_DEVELOPPE_2,Cultures développées,6.13.5,Betterave potagère
+SAANR_DEVELOPPE_2,Cultures développées,6.13.6,Radis
+SAANR_DEVELOPPE_2,Cultures développées,6.13.7,Céleri rave
+SAANR_DEVELOPPE_2,Cultures développées,6.13.8,Salsifis et scorsonère
+SAANR_DEVELOPPE_2,Cultures développées,6.14,Légumes à cosse
+SAANR_DEVELOPPE_2,Cultures développées,6.14.1,Petits pois
+SAANR_DEVELOPPE_2,Cultures développées,6.14.2,Haricots frais
+SAANR_DEVELOPPE_2,Cultures développées,6.14.2.11,Haricots à écosser et demi-secs (grain)
+SAANR_DEVELOPPE_2,Cultures développées,6.14.2.12,Haricots verts (y c. haricots beurre)
+SAANR_DEVELOPPE_2,Cultures développées,6.14.3,Légumes à cosse d'origine tropicale
+SAANR_DEVELOPPE_2,Cultures développées,6.15,Maïs doux
+SAANR_DEVELOPPE_2,Cultures développées,6.16,Légumes secs
+SAANR_DEVELOPPE_2,Cultures développées,6.16.1,Haricots secs (y compris semences)
+SAANR_DEVELOPPE_2,Cultures développées,6.16.2,Lentilles (y compris semences)
+SAANR_DEVELOPPE_2,Cultures développées,6.16.3,Pois secs (pois de casserie) (y compris semences)
+SAANR_DEVELOPPE_2,Cultures développées,6.17,Champignons et truffes
+SAANR_DEVELOPPE_2,Cultures développées,6.17.1,Champignons cultivés
+SAANR_DEVELOPPE_2,Cultures développées,6.17.2,Truffes
+SAANR_DEVELOPPE_2,Groupe d'indicateurs,020.01,Production (volume)
+SAANR_DEVELOPPE_2,Groupe d'indicateurs,050.08,Superficie developpee
+SAANR_DEVELOPPE_2,Groupe d'indicateurs,070.01,Rendement
+SAANR_FOURRAGE_2,Années de référence,30,2020
+SAANR_FOURRAGE_2,Années de référence,31,2019
+SAANR_FOURRAGE_2,Années de référence,32,2018
+SAANR_FOURRAGE_2,Années de référence,33,2017
+SAANR_FOURRAGE_2,Années de référence,34,2016
+SAANR_FOURRAGE_2,Années de référence,35,2015
+SAANR_FOURRAGE_2,Années de référence,36,2014
+SAANR_FOURRAGE_2,Années de référence,37,2013
+SAANR_FOURRAGE_2,Années de référence,38,2012
+SAANR_FOURRAGE_2,Années de référence,39,2011
+SAANR_FOURRAGE_2,Années de référence,40,2010
+SAANR_FOURRAGE_2,Années de référence,41,2009
+SAANR_FOURRAGE_2,Années de référence,42,2008
+SAANR_FOURRAGE_2,Années de référence,43,2007
+SAANR_FOURRAGE_2,Années de référence,44,2006
+SAANR_FOURRAGE_2,Années de référence,45,2005
+SAANR_FOURRAGE_2,Années de référence,46,2004
+SAANR_FOURRAGE_2,Années de référence,47,2003
+SAANR_FOURRAGE_2,Années de référence,48,2002
+SAANR_FOURRAGE_2,Années de référence,49,2001
+SAANR_FOURRAGE_2,Années de référence,50,2000
+SAANR_FOURRAGE_2,Cultures développées,3,"Fourrages annuels, prairies non permanentes et STH"
+SAANR_FOURRAGE_2,Cultures développées,3.11,Fourrages annuels
+SAANR_FOURRAGE_2,Cultures développées,3.11.1,Maïs fourrage et ensilage (plante entière)
+SAANR_FOURRAGE_2,Cultures développées,3.11.1.11,Maïs fourrage et ensilage (plante entière) irrigué
+SAANR_FOURRAGE_2,Cultures développées,3.11.1.12,Maïs fourrage et ensilage (plante entière) non irrigué
+SAANR_FOURRAGE_2,Cultures développées,3.11.9,"Autres fourrages annuels, n.c.a."
+SAANR_FOURRAGE_2,Cultures développées,3.12,Prairies non permanentes et STH
+SAANR_FOURRAGE_2,Cultures développées,3.12.1,Prairies non permanentes
+SAANR_FOURRAGE_2,Cultures développées,3.12.1.11,"Prairie artificielle (luzerne, trèfle violet, ...)"
+SAANR_FOURRAGE_2,Cultures développées,3.12.1.11.1,Luzerne pour déshydratation
+SAANR_FOURRAGE_2,Cultures développées,3.12.1.11.2,Autres prairies artificielles
+SAANR_FOURRAGE_2,Cultures développées,3.12.1.12,Prairies temporaires
+SAANR_FOURRAGE_2,Cultures développées,3.12.2,Superficie toujours en herbe (STH)
+SAANR_FOURRAGE_2,Cultures développées,3.12.2.11,Prairies naturelles ou semées depuis plus de 6 ans
+SAANR_FOURRAGE_2,Cultures développées,3.12.2.12,STH (Superficies toujours en herbe) peu productives (pâturages pauvres)
+SAANR_FOURRAGE_2,Groupe d'indicateurs,020.08,Production seche (volume)
+SAANR_FOURRAGE_2,Groupe d'indicateurs,050.07,Superficie correspondante (hectare)
+SAANR_FOURRAGE_2,Groupe d'indicateurs,070.02,Rendement matiere seche
+SAANR_FRUITS,Années de référence,30,2020
+SAANR_FRUITS,Années de référence,31,2019
+SAANR_FRUITS,Années de référence,32,2018
+SAANR_FRUITS,Années de référence,33,2017
+SAANR_FRUITS,Années de référence,34,2016
+SAANR_FRUITS,Années de référence,35,2015
+SAANR_FRUITS,Années de référence,36,2014
+SAANR_FRUITS,Années de référence,37,2013
+SAANR_FRUITS,Années de référence,38,2012
+SAANR_FRUITS,Années de référence,39,2011
+SAANR_FRUITS,Années de référence,40,2010
+SAANR_FRUITS,Années de référence,41,2009
+SAANR_FRUITS,Années de référence,42,2008
+SAANR_FRUITS,Années de référence,43,2007
+SAANR_FRUITS,Années de référence,44,2006
+SAANR_FRUITS,Années de référence,45,2005
+SAANR_FRUITS,Années de référence,46,2004
+SAANR_FRUITS,Années de référence,47,2003
+SAANR_FRUITS,Années de référence,48,2002
+SAANR_FRUITS,Années de référence,49,2001
+SAANR_FRUITS,Années de référence,50,2000
+SAANR_FRUITS,Cultures fruitières,0.1,Fruits à noyaux
+SAANR_FRUITS,Cultures fruitières,0.1.11,Abricots
+SAANR_FRUITS,Cultures fruitières,0.1.12,Cerises
+SAANR_FRUITS,Cultures fruitières,0.1.12.1,Bigarreau
+SAANR_FRUITS,Cultures fruitières,0.1.12.9,"Autre variété de cerises, n.c.a. niv. 1"
+SAANR_FRUITS,Cultures fruitières,0.1.13,"Pavies, pêches, nectarines et brugnons"
+SAANR_FRUITS,Cultures fruitières,0.1.13.1,Pavie
+SAANR_FRUITS,Cultures fruitières,0.1.13.2,"Pêches, nectarines et brugnons"
+SAANR_FRUITS,Cultures fruitières,0.1.13.2.11,Pêche
+SAANR_FRUITS,Cultures fruitières,0.1.13.2.12,Nectarine et brugnon
+SAANR_FRUITS,Cultures fruitières,0.1.14,Prunes
+SAANR_FRUITS,Cultures fruitières,0.1.14.1,Prune d'ente et hybride
+SAANR_FRUITS,Cultures fruitières,0.1.14.2,Mirabelle
+SAANR_FRUITS,Cultures fruitières,0.1.14.3,Reine-claude
+SAANR_FRUITS,Cultures fruitières,0.1.14.4,Quetsche
+SAANR_FRUITS,Cultures fruitières,0.1.14.9,"Autres variétés prunes n.c.a., niv. 1"
+SAANR_FRUITS,Cultures fruitières,0.1.15,Olives
+SAANR_FRUITS,Cultures fruitières,0.2,Fruits à pépins
+SAANR_FRUITS,Cultures fruitières,0.2.11,Pommes de table
+SAANR_FRUITS,Cultures fruitières,0.2.11.1,Golden
+SAANR_FRUITS,Cultures fruitières,0.2.11.2,Gala
+SAANR_FRUITS,Cultures fruitières,0.2.11.3,Granny Smith
+SAANR_FRUITS,Cultures fruitières,0.2.11.9,"Autres variétés de pommes, n.c.a. niv. 1"
+SAANR_FRUITS,Cultures fruitières,0.2.12,Pommes à cidre
+SAANR_FRUITS,Cultures fruitières,0.2.13,Poires de table
+SAANR_FRUITS,Cultures fruitières,0.2.13.1,Poires d'été
+SAANR_FRUITS,Cultures fruitières,0.2.13.1.11,William's
+SAANR_FRUITS,Cultures fruitières,0.2.13.1.12,Jules Guyot
+SAANR_FRUITS,Cultures fruitières,0.2.13.1.19,"Autres variétés de poires d'été, n.c.a."
+SAANR_FRUITS,Cultures fruitières,0.2.13.2,Poires d'automne
+SAANR_FRUITS,Cultures fruitières,0.2.13.3,Poires d'hiver
+SAANR_FRUITS,Cultures fruitières,0.2.15,Actinidia (Kiwi)
+SAANR_FRUITS,Cultures fruitières,0.2.16,Figues
+SAANR_FRUITS,Cultures fruitières,0.3,Agrumes
+SAANR_FRUITS,Cultures fruitières,0.3.11,"Clémentines, mandarines"
+SAANR_FRUITS,Cultures fruitières,0.3.12,"Pamplemousse, chadèque, pomelo et hybrides"
+SAANR_FRUITS,Cultures fruitières,0.3.19,"Autres agrumes (yc limes, combava), n.c.a. niv. 1"
+SAANR_FRUITS,Cultures fruitières,0.3.19.1,"Citrons, limes, combavas"
+SAANR_FRUITS,Cultures fruitières,0.3.19.2,Oranger et hybrides
+SAANR_FRUITS,Cultures fruitières,0.4,Fruits à coque
+SAANR_FRUITS,Cultures fruitières,0.4.11,Noix
+SAANR_FRUITS,Cultures fruitières,0.4.12,Amandes
+SAANR_FRUITS,Cultures fruitières,0.4.13,Châtaignes
+SAANR_FRUITS,Cultures fruitières,0.4.14,Noisettes
+SAANR_FRUITS,Cultures fruitières,0.5,Petits fruits
+SAANR_FRUITS,Cultures fruitières,0.5.11,Framboises
+SAANR_FRUITS,Cultures fruitières,0.5.12,Groseilles
+SAANR_FRUITS,Cultures fruitières,0.5.13,Cassis et myrtilles
+SAANR_FRUITS,Cultures fruitières,0.6,Fruits tropicaux et subtropicaux
+SAANR_FRUITS,Cultures fruitières,0.6.11,Avocat
+SAANR_FRUITS,Cultures fruitières,0.6.12,Bananes fruits
+SAANR_FRUITS,Cultures fruitières,0.6.13,Mangue
+SAANR_FRUITS,Cultures fruitières,0.6.14,"Goyave, Goyavier"
+SAANR_FRUITS,Cultures fruitières,0.6.15,Ananas
+SAANR_FRUITS,Cultures fruitières,0.6.16,"Letchi, longani, ramboutan"
+SAANR_FRUITS,Cultures fruitières,0.6.17,Abricot pays ou mamey
+SAANR_FRUITS,Cultures fruitières,0.6.18,"Corossol, pomme cannelle"
+SAANR_FRUITS,Cultures fruitières,0.6.19,"Maracuja, fruits de la passion, grenadille"
+SAANR_FRUITS,Cultures fruitières,0.6.20,Noix de coco
+SAANR_FRUITS,Groupe d'indicateurs,020.01,Production (volume)
+SAANR_FRUITS,Groupe d'indicateurs,020.01.02.10,Production commercialisee dirigee vers la transformation
+SAANR_FRUITS,Groupe d'indicateurs,050.07,Superficie correspondante (hectare)
+SAANR_FRUITS,Groupe d'indicateurs,070.01,Rendement
+SAANR_PAILLE_2,Années de référence,30,2020
+SAANR_PAILLE_2,Années de référence,31,2019
+SAANR_PAILLE_2,Années de référence,32,2018
+SAANR_PAILLE_2,Années de référence,33,2017
+SAANR_PAILLE_2,Années de référence,34,2016
+SAANR_PAILLE_2,Années de référence,35,2015
+SAANR_PAILLE_2,Années de référence,36,2014
+SAANR_PAILLE_2,Années de référence,37,2013
+SAANR_PAILLE_2,Années de référence,38,2012
+SAANR_PAILLE_2,Années de référence,39,2011
+SAANR_PAILLE_2,Années de référence,40,2010
+SAANR_PAILLE_2,Années de référence,41,2009
+SAANR_PAILLE_2,Années de référence,42,2008
+SAANR_PAILLE_2,Années de référence,43,2007
+SAANR_PAILLE_2,Années de référence,44,2006
+SAANR_PAILLE_2,Années de référence,45,2005
+SAANR_PAILLE_2,Années de référence,46,2004
+SAANR_PAILLE_2,Années de référence,47,2003
+SAANR_PAILLE_2,Années de référence,48,2002
+SAANR_PAILLE_2,Années de référence,49,2001
+SAANR_PAILLE_2,Années de référence,50,2000
+SAANR_PAILLE_2,Groupe d'indicateurs,020.09,Production de pailles (volume)
+SAA_VIGNE,Années de référence,30,2020
+SAA_VIGNE,Années de référence,31,2019
+SAA_VIGNE,Années de référence,32,2018
+SAA_VIGNE,Années de référence,33,2017
+SAA_VIGNE,Années de référence,34,2016
+SAA_VIGNE,Années de référence,35,2015
+SAA_VIGNE,Années de référence,36,2014
+SAA_VIGNE,Années de référence,37,2013
+SAA_VIGNE,Années de référence,38,2012
+SAA_VIGNE,Années de référence,39,2011
+SAA_VIGNE,Années de référence,40,2010
+SAA_VIGNE,Années de référence,41,2009
+SAA_VIGNE,Années de référence,42,2008
+SAA_VIGNE,Années de référence,43,2007
+SAA_VIGNE,Années de référence,44,2006
+SAA_VIGNE,Années de référence,45,2005
+SAA_VIGNE,Années de référence,46,2004
+SAA_VIGNE,Années de référence,47,2003
+SAA_VIGNE,Années de référence,48,2002
+SAA_VIGNE,Années de référence,49,2001
+SAA_VIGNE,Années de référence,50,2000
+SAA_VIGNE,Culture de la vigne,1,Vignes et pépinières viticoles
+SAA_VIGNE,Culture de la vigne,1.11,Vigne à raisin de cuve
+SAA_VIGNE,Culture de la vigne,1.12,Vigne à raisin de table
+SAA_VIGNE,Groupe d'indicateurs,020.01,Production (volume)
+SAA_VIGNE,Groupe d'indicateurs,020.02.06,Production pour le fruit (volume)
+SAA_VIGNE,Groupe d'indicateurs,050,Surface
+SAA_VIGNE,Groupe d'indicateurs,050.07.01,Superficie en production
+SAA_VIGNE,Groupe d'indicateurs,070.01,Rendement
+SAA_VIGNE_ex_regions,Années de référence,30,2020
+SAA_VIGNE_ex_regions,Années de référence,31,2019
+SAA_VIGNE_ex_regions,Années de référence,32,2018
+SAA_VIGNE_ex_regions,Années de référence,33,2017
+SAA_VIGNE_ex_regions,Années de référence,34,2016
+SAA_VIGNE_ex_regions,Années de référence,35,2015
+SAA_VIGNE_ex_regions,Années de référence,36,2014
+SAA_VIGNE_ex_regions,Années de référence,37,2013
+SAA_VIGNE_ex_regions,Années de référence,38,2012
+SAA_VIGNE_ex_regions,Années de référence,39,2011
+SAA_VIGNE_ex_regions,Années de référence,40,2010
+SAA_VIGNE_ex_regions,Années de référence,41,2009
+SAA_VIGNE_ex_regions,Années de référence,42,2008
+SAA_VIGNE_ex_regions,Années de référence,43,2007
+SAA_VIGNE_ex_regions,Années de référence,44,2006
+SAA_VIGNE_ex_regions,Années de référence,45,2005
+SAA_VIGNE_ex_regions,Années de référence,46,2004
+SAA_VIGNE_ex_regions,Années de référence,47,2003
+SAA_VIGNE_ex_regions,Années de référence,48,2002
+SAA_VIGNE_ex_regions,Années de référence,49,2001
+SAA_VIGNE_ex_regions,Années de référence,50,2000
+SAA_VIGNE_ex_regions,Culture de la vigne,1,Vignes et pépinières viticoles
+SAA_VIGNE_ex_regions,Culture de la vigne,1.11,Vigne à raisin de cuve
+SAA_VIGNE_ex_regions,Culture de la vigne,1.12,Vigne à raisin de table
+SAA_VIGNE_ex_regions,Groupe d'indicateurs,020.01,Production (volume)
+SAA_VIGNE_ex_regions,Groupe d'indicateurs,020.02.06,Production pour le fruit (volume)
+SAA_VIGNE_ex_regions,Groupe d'indicateurs,050,Surface
+SAA_VIGNE_ex_regions,Groupe d'indicateurs,050.07.01,Superficie en production
+SAA_VIGNE_ex_regions,Groupe d'indicateurs,070.01,Rendement
+SAA_VINS,Années de référence,30,2020
+SAA_VINS,Années de référence,31,2019
+SAA_VINS,Années de référence,32,2018
+SAA_VINS,Années de référence,33,2017
+SAA_VINS,Années de référence,34,2016
+SAA_VINS,Années de référence,35,2015
+SAA_VINS,Années de référence,36,2014
+SAA_VINS,Années de référence,37,2013
+SAA_VINS,Années de référence,38,2012
+SAA_VINS,Années de référence,39,2011
+SAA_VINS,Années de référence,40,2010
+SAA_VINS,Années de référence,41,2009
+SAA_VINS,Groupe d'indicateurs,020.01,Production (volume)
+SAA_VINS,Groupe d'indicateurs,020.01.06,Production de vins blancs
+SAA_VINS,Groupe d'indicateurs,020.01.07,Production de vins rouges et roses
+SAA_VINS,Groupe d'indicateurs,050.07.01,Superficie en production
+SAA_VINS,Groupe d'indicateurs,070.01,Rendement
+SAA_VINS,Production de vins,1,TOTAL VINS
+SAA_VINS,Production de vins,1.11,Récoltes de vins en AOP et vins doux naturels (VDN) AOP
+SAA_VINS,Production de vins,1.11.1,"Récolte de vins en AOP, hors vins doux naturel (VDN), hors vins pour eau-de-vie"
+SAA_VINS,Production de vins,1.11.2,Récolte de vins doux naturels (VDN) en AOP
+SAA_VINS,Production de vins,1.12,Récolte pour eaux-de-vie
+SAA_VINS,Production de vins,1.13,Récolte en IGP
+SAA_VINS,Production de vins,1.14,Récoltes de vins sans IG et récoltes non classées en AOP/IGP/eaux-de-vie
+SAA_VINS,Production de vins,1.14.1,Récolte de vins sans IG
+SAA_VINS,Production de vins,1.14.1.11,Récolte de vins sans IG avec mention de cépage
+SAA_VINS,Production de vins,1.14.1.12,Récolte de vins sans IG sans mention de cépage
+SAA_VINS,Production de vins,1.14.2,Récolte en AOP/IGP/eaux-de-vie non classée (non utilisée en vin)
+SAA_VINS_ex_regions,Années de référence,30,2020
+SAA_VINS_ex_regions,Années de référence,31,2019
+SAA_VINS_ex_regions,Années de référence,32,2018
+SAA_VINS_ex_regions,Années de référence,33,2017
+SAA_VINS_ex_regions,Années de référence,34,2016
+SAA_VINS_ex_regions,Années de référence,35,2015
+SAA_VINS_ex_regions,Années de référence,36,2014
+SAA_VINS_ex_regions,Années de référence,37,2013
+SAA_VINS_ex_regions,Années de référence,38,2012
+SAA_VINS_ex_regions,Années de référence,39,2011
+SAA_VINS_ex_regions,Années de référence,40,2010
+SAA_VINS_ex_regions,Années de référence,41,2009
+SAA_VINS_ex_regions,Groupe d'indicateurs,020.01,Production (volume)
+SAA_VINS_ex_regions,Groupe d'indicateurs,020.01.06,Production de vins blancs
+SAA_VINS_ex_regions,Groupe d'indicateurs,020.01.07,Production de vins rouges et roses
+SAA_VINS_ex_regions,Groupe d'indicateurs,050.07.01,Superficie en production
+SAA_VINS_ex_regions,Groupe d'indicateurs,070.01,Rendement
+SAA_VINS_ex_regions,Production de vins,1,TOTAL VINS
+SAA_VINS_ex_regions,Production de vins,1.11,Récoltes de vins en AOP et vins doux naturels (VDN) AOP
+SAA_VINS_ex_regions,Production de vins,1.11.1,"Récolte de vins en AOP, hors vins doux naturel (VDN), hors vins pour eau-de-vie"
+SAA_VINS_ex_regions,Production de vins,1.11.2,Récolte de vins doux naturels (VDN) en AOP
+SAA_VINS_ex_regions,Production de vins,1.12,Récolte pour eaux-de-vie
+SAA_VINS_ex_regions,Production de vins,1.13,Récolte en IGP
+SAA_VINS_ex_regions,Production de vins,1.14,Récoltes de vins sans IG et récoltes non classées en AOP/IGP/eaux-de-vie
+SAA_VINS_ex_regions,Production de vins,1.14.1,Récolte de vins sans IG
+SAA_VINS_ex_regions,Production de vins,1.14.1.11,Récolte de vins sans IG avec mention de cépage
+SAA_VINS_ex_regions,Production de vins,1.14.1.12,Récolte de vins sans IG sans mention de cépage
+SAA_VINS_ex_regions,Production de vins,1.14.2,Récolte en AOP/IGP/eaux-de-vie non classée (non utilisée en vin)
 SCIAR01,Années de référence,35,2015
 SCIAR01,Années de référence,36,2014
 SCIAR01,Années de référence,37,2013
