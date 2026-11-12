@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
 """
-Clean Disaron text-field CSV and add ``disaron:nom`` from inventaire.
+Clean Disaron text-field CSV and add ``disaron:nom`` from mapping CSVs.
 
 Reads a CSV produced by ``get_raw_text_fields`` (columns:
 ``disaron:nom_old``, ``has_html_principal``, ``has_html_secondaire``,
 ``has_notes``, ``html_principal``, ``html_secondaire``, ``notes``) and writes
 the same columns with ``disaron:nom`` prepended.
 
-``disaron:nom`` is resolved from the inventaire CSV via ``disaron:nom_old``.
-Matching inventaire rows with ``Garder/Exclure == Garder`` are preferred over
-``Exclure``. If more than one distinct ``disaron:nom`` remains after that
-filter, the script crashes. If no inventaire match is found, ``disaron:nom``
-is filled with ``disaron:nom_old``.
+``disaron:nom`` is resolved from ``disaron:nom_old`` via ``disaron_mapper``
+(inventaire + dedicated mapping CSV). Unmapped names keep
+``disaron:nom = disaron:nom_old``.
 
 HTML cleaning (``html_principal`` / ``html_secondaire``): remove ``<p>`` nodes
 with no meaningful content (blank text after normalizing ``&nbsp;`` / ``\\xa0``,
@@ -20,15 +18,15 @@ and no media/structure children such as ``img``, ``a``, ``iframe``, ``table``,
 have real text or media. Removals are written to a log CSV.
 
 Input ``disaron:nom_old`` values must be unique (stripped). Output
-``disaron:nom`` and ``disaron:nom_old`` must each be unique. Inventaire
-duplicates are allowed.
+``disaron:nom`` and ``disaron:nom_old`` must each be unique. Mapping-source
+duplicates are allowed (subject to Garder/Exclure rules).
 
 TODO: links and images still point at old Agreste content and should be
 updated later.
 
 Defaults:
 - ``--input-file``: ``metadata_editor/html/data/2026-05-18_Disarons_raw_text_fields.csv``
-- ``--inventaire-file``: ``2026-11-05_Inventaire-Nuxeo-v20.csv``
+- ``--disaron-mapping-files``: Inventaire v20 + ``2026-10-28_data_disaron_old_new_mapping.csv``
 - ``--output-file``: ``metadata_editor/html/output/<YYYY-MM-DD_HH-MM-SS>_clean_text_fields.csv``
 - ``--log-file``: ``metadata_editor/html/output/<YYYY-MM-DD_HH-MM-SS>_clean_text_fields_log.csv``
 
@@ -48,7 +46,11 @@ from pathlib import Path
 
 from bs4 import BeautifulSoup, NavigableString, Tag
 
-from disaron_mapper import load_inventaire_nom_map
+from disaron_mapper import (
+    DEFAULT_DISARON_MAPPING_FILES,
+    load_disaron_nom_map,
+    resolve_disaron_nom,
+)
 
 INPUT_FIELDS = [
     "disaron:nom_old",
@@ -169,7 +171,7 @@ def process_rows(
 
     for row in rows:
         old = (row.get("disaron:nom_old") or "").strip()
-        nom = nom_map.get(old, old)
+        nom = resolve_disaron_nom(old, nom_map)
 
         cleaned_fields: dict[str, str] = {}
         for field in HTML_FIELDS:
@@ -235,9 +237,13 @@ def main() -> int:
         help="Raw text-fields CSV from get_raw_text_fields.",
     )
     parser.add_argument(
-        "--inventaire-file",
-        default="2026-11-05_Inventaire-Nuxeo-v20.csv",
-        help="Inventaire CSV used to resolve disaron:nom.",
+        "--disaron-mapping-files",
+        nargs="+",
+        default=list(DEFAULT_DISARON_MAPPING_FILES),
+        help=(
+            "CSVs with disaron:nom_old → disaron:nom "
+            f"(default: {DEFAULT_DISARON_MAPPING_FILES!r})."
+        ),
     )
     parser.add_argument(
         "--output-file",
@@ -258,11 +264,15 @@ def main() -> int:
     args = parser.parse_args()
 
     input_file = Path(args.input_file).resolve()
-    inventaire_file = Path(args.inventaire_file).resolve()
     if not input_file.exists():
         raise FileNotFoundError(f"Input file not found: {input_file}")
-    if not inventaire_file.exists():
-        raise FileNotFoundError(f"Inventaire file not found: {inventaire_file}")
+
+    mapping_files = [Path(p).resolve() for p in args.disaron_mapping_files]
+    for mapping_file in mapping_files:
+        if not mapping_file.exists():
+            raise FileNotFoundError(
+                f"Disaron mapping file not found: {mapping_file}"
+            )
 
     prefix = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     if args.output_file:
@@ -280,7 +290,7 @@ def main() -> int:
             / f"{prefix}_clean_text_fields_log.csv"
         )
 
-    nom_map = load_inventaire_nom_map(inventaire_file)
+    nom_map = load_disaron_nom_map(mapping_files)
     rows = load_input_rows(input_file)
     out_rows, log_rows = process_rows(rows, nom_map)
 
