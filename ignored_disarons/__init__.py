@@ -1,4 +1,8 @@
-"""Classify Disaron noms for upload skips vs page-lookup candidates."""
+"""Skip rules for Disarons that should not drive CMS page updates.
+
+See ``ignored_disarons.classify`` for curated lists, non-public / cutoff checks,
+and ``classify_disaron``.
+"""
 
 from ignored_disarons.classify import (
     DATA_CUTOFF,

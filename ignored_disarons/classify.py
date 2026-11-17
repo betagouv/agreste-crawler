@@ -1,4 +1,26 @@
-"""Classify Disaron noms for upload skips vs page-lookup candidates."""
+"""
+Decide whether a Disaron should be skipped when updating CMS pages.
+
+CMS scripts (e.g. ``set_text_fields``, ``set_issue_number``) walk Disaron noms
+from dumps or CSVs and look up matching ``PublicationPage``s. Before that
+lookup, call ``classify_disaron`` to see if the nom should be skipped instead
+of treated as a failure when no page exists.
+
+Skip checks, in order:
+
+1. Curated lists in this package:
+   ``will_not_upload`` (never upload) and ``not_uploaded_yet`` (deferred).
+2. Non-public: Disarons JSON restit communities lack ``DISAR-PUBLIC``.
+3. Too recent for the crawl: publication after ``2026-03-01``, or data after
+   ``2026-09-30`` (type ``t``, or type ``p`` with ``SeriesLongues`` in the nom).
+
+Anything else is ``other`` — the caller should look up the page as usual.
+
+Helpers: ``load_upload_exception_reasons`` / ``load_disaron_meta`` load the CSVs
+and Disarons JSON; ``classify_missing_by_cutoff`` and
+``missing_page_before_cutoff_error`` handle the cutoff case when a page is
+already known to be missing.
+"""
 
 from __future__ import annotations
 
