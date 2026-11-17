@@ -33,8 +33,8 @@ On success, saves a revision and re-publishes if the page was live.
 Defaults:
 - ``--data-file``: ``metadata_editor/html/data/2026-05-18_Disarons_clean_text_fields.csv``
 - ``--disarons-json``: ``2026-05-18_Disarons.json``
-- ``--will-not-upload-file``: ``2026-10-28_will_not_upload.csv``
-- ``--not-uploaded-yet-file``: ``2026-10-28_not_uploaded_yet.csv``
+- ``--will-not-upload-file``: ``ignored_disarons/2026-10-28_will_not_upload.csv``
+- ``--not-uploaded-yet-file``: ``ignored_disarons/2026-10-28_not_uploaded_yet.csv``
 
 Usage:
     just set_text_fields \\
@@ -72,7 +72,7 @@ from publications.models import (  # noqa: E402
     PublicationPage,
 )
 
-from disaron_finder import (  # noqa: E402
+from ignored_disarons import (  # noqa: E402
     DEFAULT_NOT_UPLOADED_YET_FILE,
     DEFAULT_WILL_NOT_UPLOAD_FILE,
     DisaronMeta,

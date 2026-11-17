@@ -1,6 +1,6 @@
 """Classify Disaron noms for upload skips vs page-lookup candidates."""
 
-from disaron_finder.classify import (
+from ignored_disarons.classify import (
     DATA_CUTOFF,
     DEFAULT_NOT_UPLOADED_YET_FILE,
     DEFAULT_WILL_NOT_UPLOAD_FILE,

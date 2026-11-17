@@ -21,8 +21,8 @@ SKIP_LABEL_WILL_NOT_UPLOAD = "will not upload"
 SKIP_LABEL_NOT_UPLOADED_YET = "not uploaded yet"
 DISAR_PUBLIC = "DISAR-PUBLIC"
 
-DEFAULT_WILL_NOT_UPLOAD_FILE = "2026-10-28_will_not_upload.csv"
-DEFAULT_NOT_UPLOADED_YET_FILE = "2026-10-28_not_uploaded_yet.csv"
+DEFAULT_WILL_NOT_UPLOAD_FILE = "ignored_disarons/2026-10-28_will_not_upload.csv"
+DEFAULT_NOT_UPLOADED_YET_FILE = "ignored_disarons/2026-10-28_not_uploaded_yet.csv"
 
 CutoffClassifyResult = Literal[
     "skip_publication",

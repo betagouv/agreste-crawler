@@ -9,7 +9,7 @@ Reads Nuxeo Disaron documents from ``--input-file`` (default
 
 Maps each ``disaron:nom`` to the CMS ``disaron_id`` via
 ``disaron_mapper`` (``--disaron-mapping-files``). Before page lookup,
-``disaron_finder.classify_disaron`` skips curated upload exceptions,
+``ignored_disarons.classify_disaron`` skips curated upload exceptions,
 non-public (``DISAR-PUBLIC`` missing from ``disaron:communaute_restit``),
 and post-cutoff noms. Remaining noms look up the matching
 ``PublicationPage`` under any ``PublicationIndexPage`` and set
@@ -23,8 +23,8 @@ numerotations for the same mapped nom are logged as failures.
 Defaults:
 - ``--input-file``: ``2026-05-18_Disarons.json``
 - ``--disaron-mapping-files``: Inventaire v20 + ``2026-10-28_data_disaron_old_new_mapping.csv``
-- ``--will-not-upload-file``: ``2026-10-28_will_not_upload.csv``
-- ``--not-uploaded-yet-file``: ``2026-10-28_not_uploaded_yet.csv``
+- ``--will-not-upload-file``: ``ignored_disarons/2026-10-28_will_not_upload.csv``
+- ``--not-uploaded-yet-file``: ``ignored_disarons/2026-10-28_not_uploaded_yet.csv``
 - ``--failures-file``: ``metadata_editor/output/<YYYY-MM-DD_HH-MM-SS>_issue_number_failures.csv``
 - ``--successes-file``: ``metadata_editor/output/<YYYY-MM-DD_HH-MM-SS>_issue_number_successes.csv``
 - ``--noops-file``: ``metadata_editor/output/<YYYY-MM-DD_HH-MM-SS>_issue_number_noops.csv``
@@ -61,7 +61,7 @@ from publications.models import (  # noqa: E402
     PublicationPage,
 )
 
-from disaron_finder import (  # noqa: E402
+from ignored_disarons import (  # noqa: E402
     DEFAULT_NOT_UPLOADED_YET_FILE,
     DEFAULT_WILL_NOT_UPLOAD_FILE,
     DisaronMeta,
@@ -141,7 +141,7 @@ def load_issue_numbers_by_nom(
     Return (issue_number_by_mapped_nom, conflict_failures).
 
     Includes every document with a non-empty ``disaron:Numerotation``;
-    restit / public filtering is left to ``disaron_finder``.
+    restit / public filtering is left to ``ignored_disarons``.
     ``conflict_failures`` lists mapped noms that appear with more than one
     distinct Numerotation.
     """
