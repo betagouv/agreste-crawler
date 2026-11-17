@@ -15,3 +15,4 @@ theme-mapper/output/
 missing_data_filler/output/
 page_creator/output/
 data_exporter/output/
+data_migration/output/

@@ -91,3 +91,6 @@ hierarchize_modalities *args:
 clean_text_fields *args:
     PYTHONPATH=. uv run python -m metadata_editor.html.clean_text_fields "$@"
 
+migrate_to_freeform_publications *args:
+    PYTHONPATH=. uv run python -m data_migration.migrate_to_freeform_publications "$@"
+
