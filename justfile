@@ -37,6 +37,9 @@ set_reference_years_and_geographic_levels *args:
 set_nomenclatures *args:
     PYTHONPATH=. uv run python -m metadata_editor.set_nomenclatures "$@"
 
+show_nomenclatures *args:
+    PYTHONPATH=. uv run python -m data_exporter.show_nomenclatures "$@"
+
 set_issue_number *args:
     PYTHONPATH=. uv run python -m metadata_editor.set_issue_number "$@"
 
