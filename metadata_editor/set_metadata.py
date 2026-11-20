@@ -40,10 +40,11 @@ def add_common_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--wagtail-project-root",
         type=str,
-        default="",
+        default="../agreste",
         help=(
             "Root directory of the Wagtail/Django project "
-            "(contains config/settings.py)."
+            "(contains config/settings.py). "
+            "Default: ../agreste."
         ),
     )
     add_scalingo_app_args(parser)

@@ -3,6 +3,8 @@ import os
 import sys
 from pathlib import Path
 
+DEFAULT_WAGTAIL_PROJECT_ROOT = "../agreste"
+
 
 def _get_wagtail_project_root_arg() -> str | None:
     for i, arg in enumerate(sys.argv):
@@ -25,12 +27,9 @@ def _get_wagtail_project_root_arg() -> str | None:
 
 
 def _resolve_django_project_root(current_file: str) -> Path:
-    project_root_arg = _get_wagtail_project_root_arg()
-    if not project_root_arg:
-        raise ValueError(
-            "--wagtail-project-root is required and must point "
-            "to the Django project root."
-        )
+    project_root_arg = (
+        _get_wagtail_project_root_arg() or DEFAULT_WAGTAIL_PROJECT_ROOT
+    )
     project_root = Path(project_root_arg).expanduser()
     if not project_root.is_absolute():
         project_root = (Path.cwd() / project_root).resolve()

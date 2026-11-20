@@ -353,8 +353,12 @@ def main() -> int:
     parser.add_argument(
         "--wagtail-project-root",
         type=str,
-        default="",
-        help="Root directory of the Wagtail/Django project (contains config/settings.py).",
+        default="../agreste",
+        help=(
+            "Root directory of the Wagtail/Django project "
+            "(contains config/settings.py). "
+            "Default: ../agreste."
+        ),
     )
     add_scalingo_app_args(parser)
     parser.add_argument("--title", type=str, default="", help="Page title")

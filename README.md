@@ -132,5 +132,5 @@ just disaron_fixer --wagtail-project-root ../agreste --parent-id 30
 
 - `create_blog_entry.py` validates draft/publish state and raises an error if the resulting `live` state is not what was requested.
 - `clear_child_page.py` runs `Page.fix_tree(destructive=False)` to repair Wagtail tree metadata after operations.
-- `--wagtail-project-root` is required for page-creator scripts and must point to the Django project root (`config/settings.py`).
+- `--wagtail-project-root` points to the Django project root (`config/settings.py`). It defaults to `../agreste` when omitted.
 - Per-project READMEs are available in `my-downloader/`, `my-data-finder/`, and `my-crawler/`.
