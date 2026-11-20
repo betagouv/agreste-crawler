@@ -75,6 +75,9 @@ UNDERSCORE_COLLAPSE_KEYS = frozenset(
         ("COMEXIAA", "Géographie d'échanges"),
         ("COMEXLEG", "Géographie d'échanges"),
         ("COMEXLEG", "Produit"),
+        ("D_0015", "Géographie d'échanges"),
+        ("D_0015", "Produit"),
+        ("IPC", "Produits"),
         ("L_0017", "Géographie d'échanges"),
     }
 )
