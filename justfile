@@ -50,7 +50,7 @@ set_html *args:
     PYTHONPATH=. uv run python -m metadata_editor.old.set_html "$@"
 
 set_text_fields *args:
-    PYTHONPATH=. uv run python -m metadata_editor.html.set_text_fields "$@"
+    PYTHONPATH=. uv run python -m metadata_editor.html_and_text.set_text_fields "$@"
 
 create_theme_categories *args:
     PYTHONPATH=. uv run python -m metadata_editor.old.create_theme_categories "$@"
@@ -77,10 +77,10 @@ sort_theme_codes_column *args:
     PYTHONPATH=. uv run python -m data_exporter.sort_theme_codes_column "$@"
 
 extract_disaron_links *args:
-    PYTHONPATH=. uv run python -m metadata_editor.html.extract_disaron_links "$@"
+    PYTHONPATH=. uv run python -m metadata_editor.html_and_text.extract_disaron_links "$@"
 
 get_raw_text_fields *args:
-    PYTHONPATH=. uv run python -m metadata_editor.html.get_raw_text_fields "$@"
+    PYTHONPATH=. uv run python -m metadata_editor.html_and_text.get_raw_text_fields "$@"
 
 extract_modalities *args:
     PYTHONPATH=. uv run python -m metadata_editor.extract_modalities "$@"
@@ -89,7 +89,7 @@ hierarchize_modalities *args:
     PYTHONPATH=. uv run python -m metadata_editor.hierarchize_modalities "$@"
 
 clean_text_fields *args:
-    PYTHONPATH=. uv run python -m metadata_editor.html.clean_text_fields "$@"
+    PYTHONPATH=. uv run python -m metadata_editor.html_and_text.clean_text_fields "$@"
 
 migrate_to_freeform_publications *args:
     PYTHONPATH=. uv run python -m data_migration.migrate_to_freeform_publications "$@"

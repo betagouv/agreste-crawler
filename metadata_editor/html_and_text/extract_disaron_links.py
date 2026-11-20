@@ -3,7 +3,7 @@
 Generate timestamped Disaron links CSV files from a raw Disarons JSON dump.
 
 Default output directory:
-- metadata_editor/html/output
+- metadata_editor/html_and_text/output
 
 Outputs:
 - <timestamp>_Disarons_links.csv
@@ -20,7 +20,7 @@ Usage:
 
     just extract_disaron_links \
         --input-file 2026-05-18_Disarons.json \
-        --output-dir metadata_editor/html/output
+        --output-dir metadata_editor/html_and_text/output
 """
 
 from __future__ import annotations
@@ -210,7 +210,7 @@ def main() -> int:
     )
     parser.add_argument(
         "--output-dir",
-        default="metadata_editor/html/output",
+        default="metadata_editor/html_and_text/output",
         help="Directory for generated CSV files.",
     )
     args = parser.parse_args()

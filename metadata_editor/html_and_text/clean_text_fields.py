@@ -25,16 +25,16 @@ TODO: links and images still point at old Agreste content and should be
 updated later.
 
 Defaults:
-- ``--input-file``: ``metadata_editor/html/data/2026-05-18_Disarons_raw_text_fields.csv``
+- ``--input-file``: ``metadata_editor/html_and_text/data/2026-05-18_Disarons_raw_text_fields.csv``
 - ``--disaron-mapping-files``: Inventaire v20 + ``2026-10-28_data_disaron_old_new_mapping.csv``
-- ``--output-file``: ``metadata_editor/html/output/<YYYY-MM-DD_HH-MM-SS>_clean_text_fields.csv``
-- ``--log-file``: ``metadata_editor/html/output/<YYYY-MM-DD_HH-MM-SS>_clean_text_fields_log.csv``
+- ``--output-file``: ``metadata_editor/html_and_text/output/<YYYY-MM-DD_HH-MM-SS>_clean_text_fields.csv``
+- ``--log-file``: ``metadata_editor/html_and_text/output/<YYYY-MM-DD_HH-MM-SS>_clean_text_fields_log.csv``
 
 Usage:
     just clean_text_fields
 
     just clean_text_fields \\
-        --input-file metadata_editor/html/data/2026-05-18_Disarons_raw_text_fields.csv
+        --input-file metadata_editor/html_and_text/data/2026-05-18_Disarons_raw_text_fields.csv
 """
 
 from __future__ import annotations
@@ -233,7 +233,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--input-file",
-        default="metadata_editor/html/data/2026-05-18_Disarons_raw_text_fields.csv",
+        default="metadata_editor/html_and_text/data/2026-05-18_Disarons_raw_text_fields.csv",
         help="Raw text-fields CSV from get_raw_text_fields.",
     )
     parser.add_argument(
@@ -250,7 +250,7 @@ def main() -> int:
         default=None,
         help=(
             "Output CSV path. Default: "
-            "metadata_editor/html/output/<timestamp>_clean_text_fields.csv"
+            "metadata_editor/html_and_text/output/<timestamp>_clean_text_fields.csv"
         ),
     )
     parser.add_argument(
@@ -258,7 +258,7 @@ def main() -> int:
         default=None,
         help=(
             "Change log CSV path. Default: "
-            "metadata_editor/html/output/<timestamp>_clean_text_fields_log.csv"
+            "metadata_editor/html_and_text/output/<timestamp>_clean_text_fields_log.csv"
         ),
     )
     args = parser.parse_args()
@@ -279,14 +279,14 @@ def main() -> int:
         output_file = Path(args.output_file).resolve()
     else:
         output_file = (
-            Path("metadata_editor/html/output").resolve()
+            Path("metadata_editor/html_and_text/output").resolve()
             / f"{prefix}_clean_text_fields.csv"
         )
     if args.log_file:
         log_file = Path(args.log_file).resolve()
     else:
         log_file = (
-            Path("metadata_editor/html/output").resolve()
+            Path("metadata_editor/html_and_text/output").resolve()
             / f"{prefix}_clean_text_fields_log.csv"
         )
 

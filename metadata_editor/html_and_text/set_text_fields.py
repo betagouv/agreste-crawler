@@ -31,7 +31,7 @@ On success, saves a revision and re-publishes if the page was live.
 ``--parent-id`` from shared args is not used by this script.
 
 Defaults:
-- ``--data-file``: ``metadata_editor/html/data/2026-05-18_Disarons_clean_text_fields.csv``
+- ``--data-file``: ``metadata_editor/html_and_text/data/2026-05-18_Disarons_clean_text_fields.csv``
 - ``--disarons-json``: ``2026-05-18_Disarons.json``
 - ``--will-not-upload-file``: ``ignored_disarons/2026-10-28_will_not_upload.csv``
 - ``--not-uploaded-yet-file``: ``ignored_disarons/2026-10-28_not_uploaded_yet.csv``
@@ -94,7 +94,7 @@ NOTES_COLUMNS = ("notes", "disaron:notes")
 STANDARD_PUBLICATION_TYPE = "standard_publication"
 
 _DEFAULT_DATA_FILE = (
-    "metadata_editor/html/data/2026-05-18_Disarons_clean_text_fields.csv"
+    "metadata_editor/html_and_text/data/2026-05-18_Disarons_clean_text_fields.csv"
 )
 _DEFAULT_DISARONS_JSON = "2026-05-18_Disarons.json"
 

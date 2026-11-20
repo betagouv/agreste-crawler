@@ -19,14 +19,14 @@ Only rows with at least one non-empty of ``html_principal``,
 
 Defaults:
 - ``--input-file``: ``2026-05-18_Disarons.json``
-- ``--output-file``: ``metadata_editor/html/output/<YYYY-MM-DD_HH-MM-SS>_raw_text_fields.csv``
+- ``--output-file``: ``metadata_editor/html_and_text/output/<YYYY-MM-DD_HH-MM-SS>_raw_text_fields.csv``
 
 Usage:
     just get_raw_text_fields
 
     just get_raw_text_fields \\
         --input-file 2026-10-08_Disarons_tableaux_publies.json \\
-        --output-file metadata_editor/html/output/raw_text_fields.csv
+        --output-file metadata_editor/html_and_text/output/raw_text_fields.csv
 """
 
 from __future__ import annotations
@@ -38,7 +38,7 @@ from collections.abc import Iterable
 from datetime import datetime
 from pathlib import Path
 
-from metadata_editor.html.extract_disaron_links import _iter_disaron_docs
+from metadata_editor.html_and_text.extract_disaron_links import _iter_disaron_docs
 
 
 FIELDNAMES = [
@@ -122,7 +122,7 @@ def main() -> int:
         default=None,
         help=(
             "Output CSV path. Default: "
-            "metadata_editor/html/output/<timestamp>_raw_text_fields.csv"
+            "metadata_editor/html_and_text/output/<timestamp>_raw_text_fields.csv"
         ),
     )
     args = parser.parse_args()
@@ -136,7 +136,7 @@ def main() -> int:
     else:
         prefix = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         output_file = (
-            Path("metadata_editor/html/output").resolve()
+            Path("metadata_editor/html_and_text/output").resolve()
             / f"{prefix}_raw_text_fields.csv"
         )
     output_file.parent.mkdir(parents=True, exist_ok=True)

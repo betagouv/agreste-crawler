@@ -10,7 +10,7 @@ my-downloader/results/
 my-data-finder/output/
 .env*
 metadata_editor/output/
-metadata_editor/html/output/
+metadata_editor/html_and_text/output/
 theme-mapper/output/
 missing_data_filler/output/
 page_creator/output/
