@@ -19,8 +19,11 @@ Exception: ``L_0018`` / ``Produit`` uses the curated override CSV
 (``2026-05-18_Disarons_modalities_hierarchized_L_0018.csv``) instead of
 auto-detection. Other L_0018 nomenclatures still use the normal path.
 
-``L_0017`` underscore depths use ``underscores // 2 + 1`` (double-underscore
-steps map to consecutive levels).
+For pairs in ``UNDERSCORE_COLLAPSE_KEYS`` (currently ``COMEXIAA`` /
+``Géographie d'échanges`` and ``L_0017`` / ``Géographie d'échanges``),
+underscore depth jumps are collapsed onto the nearest parent instead of
+padding empty levels (so excess leading ``_`` do not invent ``1.2..1``-style
+codes). Other underscore groups keep the pad-with-empty walk.
 
 Output columns: ``disaron:nom``, ``disaron:nom_old``, ``nomenclature``,
 ``isHierarchical``, ``metadonnee_modalite``, ``codes``, ``level1`` … ``levelN``.
@@ -65,6 +68,15 @@ FIXED_FIELDNAMES = [
 ]
 
 L0018_PRODUIT_KEY = ("L_0018", "Produit")
+
+# (disaron:nom, nomenclature) pairs that collapse excess underscore depth
+# jumps onto the nearest parent instead of padding empty levels.
+UNDERSCORE_COLLAPSE_KEYS = frozenset(
+    {
+        ("COMEXIAA", "Géographie d'échanges"),
+        ("L_0017", "Géographie d'échanges"),
+    }
+)
 
 
 def _codes_sort_key(codes: str) -> tuple:
@@ -111,29 +123,47 @@ def _path_dot(row: dict[str, str], by_code: dict[str, dict[str, str]]) -> list[s
     return path
 
 
-def _underscore_depth(libelle: str, disaron_nom: str) -> int:
+def _underscore_depth(libelle: str) -> int:
     leading = len(libelle) - len(libelle.lstrip("_"))
-    # L_0017 uses double underscores per level (depths 1,3,5 → 1,2,3).
-    if disaron_nom == "L_0017":
-        depth = (leading // 2) + 1
-    else:
-        depth = leading + 1
+    depth = leading + 1
     return depth if depth > 0 else 1
 
 
 def _paths_and_codes_underscore(
     rows: list[dict[str, str]],
-    disaron_nom: str,
+    *,
+    collapse: bool,
 ) -> list[tuple[list[str], str]]:
-    """Return (path, generated_code) per row, walking in metadonnee_modalite order."""
+    """Return (path, generated_code) per row, walking in metadonnee_modalite order.
+
+    When ``collapse`` is True, pop by raw underscore depth and attach as a
+    child of the nearest parent (no empty path segments). Otherwise pad
+    missing ancestors with empty labels when depth jumps ahead.
+    """
     ordered = sorted(rows, key=lambda r: r["metadonnee_modalite"])
-    label_stack: list[str] = []
-    code_stack: list[str] = []
     sibling_count: dict[str, int] = defaultdict(int)
     result_by_id: dict[int, tuple[list[str], str]] = {}
 
+    if collapse:
+        # Stack entries: (raw_depth, label, code_segment)
+        stack: list[tuple[int, str, str]] = []
+        for r in ordered:
+            raw_depth = _underscore_depth(r["libelle_modalite"])
+            label = _strip_leading_underscores(r["libelle_modalite"])
+            while stack and stack[-1][0] >= raw_depth:
+                stack.pop()
+            parent_key = ".".join(seg for _, _, seg in stack) if stack else ""
+            sibling_count[parent_key] += 1
+            segment = str(sibling_count[parent_key])
+            code = f"{parent_key}.{segment}" if parent_key else segment
+            stack.append((raw_depth, label, segment))
+            result_by_id[id(r)] = ([lab for _, lab, _ in stack], code)
+        return [result_by_id[id(r)] for r in rows]
+
+    label_stack: list[str] = []
+    code_stack: list[str] = []
     for r in ordered:
-        depth = _underscore_depth(r["libelle_modalite"], disaron_nom)
+        depth = _underscore_depth(r["libelle_modalite"])
         label = _strip_leading_underscores(r["libelle_modalite"])
 
         if len(label_stack) >= depth:
@@ -158,6 +188,7 @@ def _paths_and_codes_underscore(
 def hierarchize_group(
     rows: list[dict[str, str]],
     disaron_nom: str,
+    nomenclature: str,
 ) -> tuple[str, list[tuple[dict[str, str], list[str], str]]]:
     """Return (mode, list of (row, path, codes))."""
     mode = _detect_mode(rows)
@@ -182,7 +213,8 @@ def hierarchize_group(
                 for r in rows
             ],
         )
-    paired = _paths_and_codes_underscore(rows, disaron_nom)
+    collapse = (disaron_nom, nomenclature) in UNDERSCORE_COLLAPSE_KEYS
+    paired = _paths_and_codes_underscore(rows, collapse=collapse)
     return (
         mode,
         [(r, path, code) for r, (path, code) in zip(rows, paired)],
@@ -249,7 +281,7 @@ def hierarchize_rows(
                 )
             continue
 
-        mode, items = hierarchize_group(group, disaron_nom)
+        mode, items = hierarchize_group(group, disaron_nom, metadonnee_nom)
         is_hierarchical = "True" if mode != "flat" else "False"
         for row, path, codes in items:
             max_depth = max(max_depth, len(path))
