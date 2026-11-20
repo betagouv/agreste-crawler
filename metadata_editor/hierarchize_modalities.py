@@ -19,11 +19,10 @@ Exception: ``L_0018`` / ``Produit`` uses the curated override CSV
 (``2026-05-18_Disarons_modalities_hierarchized_L_0018.csv``) instead of
 auto-detection. Other L_0018 nomenclatures still use the normal path.
 
-For pairs in ``UNDERSCORE_COLLAPSE_KEYS`` (currently ``COMEXIAA`` /
-``Géographie d'échanges`` and ``L_0017`` / ``Géographie d'échanges``),
-underscore depth jumps are collapsed onto the nearest parent instead of
-padding empty levels (so excess leading ``_`` do not invent ``1.2..1``-style
-codes). Other underscore groups keep the pad-with-empty walk.
+For pairs in ``UNDERSCORE_COLLAPSE_KEYS``, underscore depth jumps are
+collapsed onto the nearest parent instead of padding empty levels (so excess
+leading ``_`` do not invent ``1.2..1``-style codes). Other underscore groups
+keep the pad-with-empty walk.
 
 Output columns: ``disaron:nom``, ``disaron:nom_old``, ``nomenclature``,
 ``isHierarchical``, ``metadonnee_modalite``, ``codes``, ``level1`` … ``levelN``.
@@ -74,6 +73,8 @@ L0018_PRODUIT_KEY = ("L_0018", "Produit")
 UNDERSCORE_COLLAPSE_KEYS = frozenset(
     {
         ("COMEXIAA", "Géographie d'échanges"),
+        ("COMEXLEG", "Géographie d'échanges"),
+        ("COMEXLEG", "Produit"),
         ("L_0017", "Géographie d'échanges"),
     }
 )
