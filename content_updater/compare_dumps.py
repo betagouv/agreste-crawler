@@ -8,6 +8,11 @@ the normal (non-ignored) files.
 Renames are detected from:
 - exact title match (strip + casefold; no fuzzy / near-title matching), and/or
 - ``disaron_mapper`` old→new mappings (``DEFAULT_DISARON_MAPPING_FILES``).
+
+Appeared noms whose ``disaron:Date_premiere_publication`` is on or after the
+confirmed old-dump date are written to ``new_content`` (+ ``_ignored``); the
+rest stay in ``appeared_content``. The dump date is guessed from the ``--old``
+filename prefix and always confirmed interactively.
 """
 
 from __future__ import annotations
@@ -15,12 +20,15 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import re
 import sys
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import date, datetime
 from pathlib import Path
 from typing import Any
+
+_OLD_DUMP_DATE_RE = re.compile(r"^(?P<day>\d{4}-\d{2}-\d{2})")
 
 from disaron_mapper import (
     DEFAULT_DISARON_MAPPING_FILES,
@@ -87,8 +95,8 @@ class DisaronRecord:
     meta: DisaronMeta
 
 
-def eprint(*args: object) -> None:
-    print(*args, file=sys.stderr)
+def eprint(*args: object, **kwargs: Any) -> None:
+    print(*args, file=sys.stderr, **kwargs)
 
 
 def load_field_list(path: Path) -> FieldListConfig:
@@ -462,6 +470,67 @@ def build_simple_row(
     return row
 
 
+def guess_old_dump_date(old_path: Path) -> date | None:
+    """Parse leading YYYY-MM-DD from the ``--old`` basename, if present."""
+    match = _OLD_DUMP_DATE_RE.match(old_path.name)
+    if not match:
+        return None
+    try:
+        return datetime.strptime(match.group("day"), "%Y-%m-%d").date()
+    except ValueError:
+        return None
+
+
+def prompt_old_dump_date(guess: date | None) -> date:
+    """Always ask the user to confirm or override the guessed old-dump date."""
+    while True:
+        if guess is not None:
+            prompt = (
+                f"Old dump date guessed as {guess.isoformat()}. "
+                "Press Enter to confirm, or type YYYY-MM-DD to override: "
+            )
+        else:
+            prompt = (
+                "Could not guess old dump date from --old filename. "
+                "Enter YYYY-MM-DD: "
+            )
+        eprint(prompt, end="", flush=True)
+        raw = sys.stdin.readline()
+        if raw == "":
+            # EOF without input
+            if guess is not None:
+                eprint(f"EOF; using guessed date {guess.isoformat()}")
+                return guess
+            eprint("ERROR: no old dump date provided")
+            continue
+        text = raw.strip()
+        if not text:
+            if guess is not None:
+                return guess
+            eprint("ERROR: please enter a YYYY-MM-DD date")
+            continue
+        try:
+            return datetime.strptime(text, "%Y-%m-%d").date()
+        except ValueError:
+            eprint(f"ERROR: invalid date {text!r}; expected YYYY-MM-DD")
+
+
+def split_new_from_appeared(
+    rows: list[dict[str, Any]],
+    cutoff: date,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Split appeared rows into (appeared_kept, new_content) by premiere pub day."""
+    appeared: list[dict[str, Any]] = []
+    new_content: list[dict[str, Any]] = []
+    for row in rows:
+        day = _parse_premiere_publication(row.get("disaron:Date_premiere_publication"))
+        if day is not None and day >= cutoff:
+            new_content.append(row)
+        else:
+            appeared.append(row)
+    return appeared, new_content
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--old", default=DEFAULT_OLD, help="Older Disarons JSON dump")
@@ -647,8 +716,20 @@ def main(argv: list[str] | None = None) -> int:
         elif is_normal_kind(c.kind):
             changed_normal.append(row)
 
+    old_dump_date = prompt_old_dump_date(guess_old_dump_date(old_path))
+    eprint(f"Using old dump date {old_dump_date.isoformat()} for new_content split")
+
+    appeared_normal, new_normal = split_new_from_appeared(
+        appeared_normal, old_dump_date
+    )
+    appeared_ignored, new_ignored = split_new_from_appeared(
+        appeared_ignored, old_dump_date
+    )
+
     appeared_normal.sort(key=sort_key_type_nom)
     appeared_ignored.sort(key=sort_key_type_nom)
+    new_normal.sort(key=sort_key_type_nom)
+    new_ignored.sort(key=sort_key_type_nom)
     disappeared_normal.sort(key=sort_key_type_nom)
     disappeared_ignored.sort(key=sort_key_type_nom)
     renames_normal.sort(key=lambda r: sort_key_type_nom(r, "disaron:nom_before"))
@@ -688,6 +769,12 @@ def main(argv: list[str] | None = None) -> int:
         simple_ignored_fields,
         appeared_ignored,
     )
+    write_csv(output_dir / "new_content.csv", simple_fields, new_normal)
+    write_csv(
+        output_dir / "new_content_ignored.csv",
+        simple_ignored_fields,
+        new_ignored,
+    )
     write_csv(output_dir / "disappeared_content.csv", simple_fields, disappeared_normal)
     write_csv(
         output_dir / "disappeared_content_ignored.csv",
@@ -708,6 +795,7 @@ def main(argv: list[str] | None = None) -> int:
     eprint(
         "Wrote CSVs:",
         f"appeared={len(appeared_normal)}/{len(appeared_ignored)} ignored,",
+        f"new={len(new_normal)}/{len(new_ignored)} ignored,",
         f"disappeared={len(disappeared_normal)}/{len(disappeared_ignored)} ignored,",
         f"renames={len(renames_normal)}/{len(renames_ignored)} ignored,",
         f"changed={len(changed_normal)}/{len(changed_ignored)} ignored",
