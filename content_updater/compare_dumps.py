@@ -5,8 +5,9 @@ changed CSVs, split into normal vs ``*_ignored`` via ``classify_disaron``.
 Only ``DISAR-PUBLIC`` docs are considered. After-cutoff classifications stay in
 the normal (non-ignored) files.
 
-Renames are detected by exact title match only (after strip + casefold); there
-is no fuzzy / near-title matching.
+Renames are detected from:
+- exact title match (strip + casefold; no fuzzy / near-title matching), and/or
+- ``disaron_mapper`` old→new mappings (``DEFAULT_DISARON_MAPPING_FILES``).
 """
 
 from __future__ import annotations
@@ -21,6 +22,11 @@ from datetime import date, datetime
 from pathlib import Path
 from typing import Any
 
+from disaron_mapper import (
+    DEFAULT_DISARON_MAPPING_FILES,
+    load_disaron_nom_map,
+    resolve_disaron_nom,
+)
 from ignored_disarons.classify import (
     DEFAULT_NOT_UPLOADED_YET_FILE,
     DEFAULT_WILL_NOT_UPLOAD_FILE,
@@ -330,7 +336,7 @@ def norm_title(title: str) -> str:
     return " ".join(title.strip().casefold().split())
 
 
-def find_rename_pairs(
+def find_title_rename_pairs(
     old_only: set[str],
     new_only: set[str],
     old: dict[str, DisaronRecord],
@@ -356,6 +362,75 @@ def find_rename_pairs(
         # Extra same-title noms without a partner stay in appeared/disappeared.
     pairs.sort(key=lambda p: p[0])
     return pairs
+
+
+def find_mapper_rename_pairs(
+    old_only: set[str],
+    new: dict[str, DisaronRecord],
+    mapping: dict[str, str],
+) -> list[tuple[str, str]]:
+    """old-only → mapped nom present in new dump (and different from before)."""
+    pairs: list[tuple[str, str]] = []
+    for before in sorted(old_only):
+        after = resolve_disaron_nom(before, mapping)
+        if after == before:
+            continue
+        if after not in new:
+            continue
+        pairs.append((before, after))
+    return pairs
+
+
+def merge_rename_pairs(
+    title_pairs: list[tuple[str, str]],
+    mapper_pairs: list[tuple[str, str]],
+) -> list[tuple[str, str, str]]:
+    """Merge title/mapper pairs; print conflicts and omit conflicting pairs.
+
+    Returns ``(before, after, rename_evidence)`` with evidence in
+    ``{title, mapper, title|mapper}``.
+    """
+    evidence_by_pair: dict[tuple[str, str], set[str]] = defaultdict(set)
+    for before, after in title_pairs:
+        evidence_by_pair[(before, after)].add("title")
+    for before, after in mapper_pairs:
+        evidence_by_pair[(before, after)].add("mapper")
+
+    after_by_before: dict[str, set[str]] = defaultdict(set)
+    before_by_after: dict[str, set[str]] = defaultdict(set)
+    for before, after in evidence_by_pair:
+        after_by_before[before].add(after)
+        before_by_after[after].add(before)
+
+    conflicted_befores: set[str] = set()
+    conflicted_afters: set[str] = set()
+    for before, afters in after_by_before.items():
+        if len(afters) > 1:
+            conflicted_befores.add(before)
+            eprint(
+                f"ERROR rename conflict: before {before!r} maps to multiple afters: "
+                + ", ".join(sorted(repr(a) for a in afters))
+            )
+    for after, befores in before_by_after.items():
+        if len(befores) > 1:
+            conflicted_afters.add(after)
+            eprint(
+                f"ERROR rename conflict: after {after!r} claimed by multiple befores: "
+                + ", ".join(sorted(repr(b) for b in befores))
+            )
+
+    out: list[tuple[str, str, str]] = []
+    for (before, after), sources in sorted(evidence_by_pair.items()):
+        if before in conflicted_befores or after in conflicted_afters:
+            continue
+        if sources == {"title", "mapper"}:
+            evidence = "title|mapper"
+        elif sources == {"title"}:
+            evidence = "title"
+        else:
+            evidence = "mapper"
+        out.append((before, after, evidence))
+    return out
 
 
 def write_csv(path: Path, fieldnames: list[str], rows: list[dict[str, Any]]) -> None:
@@ -411,6 +486,15 @@ def main(argv: list[str] | None = None) -> int:
         default=DEFAULT_NOT_UPLOADED_YET_FILE,
         help="Curated not-uploaded-yet CSV",
     )
+    parser.add_argument(
+        "--disaron-mapping-files",
+        nargs="+",
+        default=list(DEFAULT_DISARON_MAPPING_FILES),
+        help=(
+            "CSVs with disaron:nom_old → disaron:nom "
+            f"(default: {DEFAULT_DISARON_MAPPING_FILES!r})."
+        ),
+    )
     args = parser.parse_args(argv)
 
     old_path = Path(args.old)
@@ -422,6 +506,7 @@ def main(argv: list[str] | None = None) -> int:
     config = load_field_list(field_list_path)
     will_not_upload = load_upload_exception_reasons(args.will_not_upload)
     not_uploaded_yet = load_upload_exception_reasons(args.not_uploaded_yet)
+    nom_map = load_disaron_nom_map(args.disaron_mapping_files)
 
     eprint(f"Loading old dump (public only): {old_path}")
     old = load_public_records(old_path, side="old")
@@ -449,24 +534,31 @@ def main(argv: list[str] | None = None) -> int:
     )
     # Noms that slipped as non_public are absent from classifications.
 
-    rename_pairs = find_rename_pairs(old_only, new_only, old, new)
-    rename_noms: set[str] = set()
+    title_pairs = find_title_rename_pairs(old_only, new_only, old, new)
+    mapper_pairs = find_mapper_rename_pairs(old_only, new, nom_map)
+    rename_pairs = merge_rename_pairs(title_pairs, mapper_pairs)
+
+    # before always leaves disappeared; after leaves appeared only if new-only
+    rename_befores: set[str] = set()
+    rename_afters_new_only: set[str] = set()
     renames_normal: list[dict[str, Any]] = []
     renames_ignored: list[dict[str, Any]] = []
 
-    for before, after in rename_pairs:
+    for before, after, evidence in rename_pairs:
         c_before = classifications.get(before)
         c_after = classifications.get(after)
         if c_before is None or c_after is None:
             # Excluded earlier (e.g. non-public slip / title error already handled).
-            rename_noms.add(before)
-            rename_noms.add(after)
+            rename_befores.add(before)
+            if after in new_only:
+                rename_afters_new_only.add(after)
             continue
 
         before_ignored = is_ignored_kind(c_before.kind)
         after_ignored = is_ignored_kind(c_after.kind)
-        rename_noms.add(before)
-        rename_noms.add(after)
+        rename_befores.add(before)
+        if after in new_only:
+            rename_afters_new_only.add(after)
 
         if before_ignored != after_ignored:
             eprint(
@@ -486,6 +578,7 @@ def main(argv: list[str] | None = None) -> int:
             ].date_premiere_publication,
             "disaron:type_disaron": new[after].type_disaron or old[before].type_disaron,
             "title": new[after].title or old[before].title,
+            "rename_evidence": evidence,
         }
         if before_ignored:
             row["ignore_kind"] = (
@@ -502,7 +595,7 @@ def main(argv: list[str] | None = None) -> int:
 
     appeared_normal: list[dict[str, Any]] = []
     appeared_ignored: list[dict[str, Any]] = []
-    for nom in sorted(new_only - rename_noms):
+    for nom in sorted(new_only - rename_afters_new_only):
         c = classifications.get(nom)
         if c is None:
             continue
@@ -514,7 +607,7 @@ def main(argv: list[str] | None = None) -> int:
 
     disappeared_normal: list[dict[str, Any]] = []
     disappeared_ignored: list[dict[str, Any]] = []
-    for nom in sorted(old_only - rename_noms):
+    for nom in sorted(old_only - rename_befores):
         c = classifications.get(nom)
         if c is None:
             continue
@@ -577,6 +670,7 @@ def main(argv: list[str] | None = None) -> int:
         "disaron:Date_premiere_publication_after",
         "disaron:type_disaron",
         "title",
+        "rename_evidence",
     ]
     rename_ignored_fields = rename_fields + ["ignore_kind", "ignore_reason"]
     changed_fields_cols = [
