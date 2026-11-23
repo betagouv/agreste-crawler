@@ -1,0 +1,36 @@
+{
+  "fields": [
+    "disaron:nom",
+    "disaron:type_disaron",
+    "title",
+    "disaron:chapeau",
+    "disaron:Complement_titre",
+    "disaron:Date_premiere_publication",
+    "disaron:date_derniere_publication",
+    "disaron:donnees",
+    "disaron:collection",
+    "disaron:sous_collection",
+    "disaron:theme",
+    "disaron:Numerotation",
+    "disaron:html_principal",
+    "disaron:html_secondaire",
+    "disaron:notes",
+    "disaron:source_signature",
+    "disaron:niveau_geographique",
+    "disaron:annees_reference",
+    "disaron:inventaire_disaron",
+    "disaron:categorie"
+  ],
+  "donnees": {
+    "item_fields": ["Type_de_fichier", "Date_chargement", "Visible"],
+    "fichier_fields": [
+      "name",
+      "mime-type",
+      "encoding",
+      "digestAlgorithm",
+      "digest",
+      "length"
+    ]
+  },
+  "normalize_newlines": true
+}
